@@ -1,19 +1,18 @@
 export async function onRequest(context) {
   const { request, env } = context;
-  const BUCKET = env.BUCKET;
-
-  if (!BUCKET) {
-    return new Response("R2 bucket not bound", { status: 500 });
-  }
+  if (!env.BUCKET) return new Response("R2 bucket not bound", { status: 500 });
 
   try {
-    // This perfectly rebuilds the key to match your R2 bucket exactly
-    const key = 'uploads/' + context.params.file.join('/');
+    // 1. Grab raw URL path (e.g., "/uploads/123.png")
+    // 2. Slice off the first slash (e.g., "uploads/123.png")
+    // 3. Decode any weird URL characters the browser added
+    const key = decodeURIComponent(new URL(request.url).pathname.slice(1));
     
-    const object = await BUCKET.get(key);
+    const object = await env.BUCKET.get(key);
     
     if (!object) {
-      return new Response("Image not found", { status: 404 });
+      // IF IT FAILS, IT WILL NOW PRINT EXACTLY WHAT IT SEARCHED FOR
+      return new Response(`DEBUG ERROR: Image not found. The code searched the R2 bucket for exactly: [${key}]`, { status: 404 });
     }
     
     const headers = new Headers();
@@ -22,6 +21,6 @@ export async function onRequest(context) {
     return new Response(object.body, { headers });
     
   } catch (error) {
-    return new Response("Error fetching image", { status: 500 });
+    return new Response("Server Error: " + error.message, { status: 500 });
   }
 }
