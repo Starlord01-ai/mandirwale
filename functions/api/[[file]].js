@@ -1,10 +1,5 @@
-// functions/uploads/[[file]].js
-// Serves uploaded images stored in R2.
-// Place this file at: functions/uploads/[[file]].js in your Pages project.
-
 export async function onRequest(context) {
   const { request, env } = context;
-  const url = new URL(request.url);
   const BUCKET = env.BUCKET;
 
   if (!BUCKET) {
@@ -12,15 +7,20 @@ export async function onRequest(context) {
   }
 
   try {
-    const key = url.pathname.slice(1); // e.g. "uploads/1234-temple.jpg"
+    // This perfectly rebuilds the key to match your R2 bucket exactly
+    const key = 'uploads/' + context.params.file.join('/');
+    
     const object = await BUCKET.get(key);
+    
     if (!object) {
       return new Response("Image not found", { status: 404 });
     }
+    
     const headers = new Headers();
     object.writeHttpMetadata(headers);
     headers.set("Cache-Control", "public, max-age=31536000, immutable");
     return new Response(object.body, { headers });
+    
   } catch (error) {
     return new Response("Error fetching image", { status: 500 });
   }
