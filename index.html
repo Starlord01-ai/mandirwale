@@ -1007,16 +1007,17 @@
     async function loadCloudState() {
       if (location.protocol === "file:") return null;
       try {
-        const res = await fetch(CLOUD_STATE_PATH, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Cloud state returned ${res.status}`);
-        const data = await res.json();
+        const response = await fetch('/api/state');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
         if (!data || !Array.isArray(data.products)) return null;
         cloudReady = true;
         try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
         return data;
-      } catch (err) {
-        console.log("Cloud API not ready yet.", err);
-        return null;
+      } catch (error) {
+        console.warn('Cloud load failed, using localStorage:', error);
+        const stored = localStorage.getItem(STORE_KEY);
+        return stored ? JSON.parse(stored) : null;
       }
     }
 
@@ -1028,22 +1029,17 @@
 
     async function saveStateToCloud() {
       try {
-        let res = await fetch(CLOUD_STATE_PATH, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch('/api/state', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(state)
         });
-        if (!res.ok && (res.status === 404 || res.status === 405)) {
-          res = await fetch(CLOUD_STATE_PATH, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(state)
-          });
-        }
-        if (!res.ok) throw new Error(`Cloud save returned ${res.status}`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        localStorage.setItem(STORE_KEY, JSON.stringify(state));
         cloudReady = true;
-      } catch (err) {
-        console.log("Cloud save failed; local backup kept.", err);
+      } catch (error) {
+        console.warn('Cloud save failed, saving to localStorage only:', error);
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
       }
     }
 
@@ -1051,18 +1047,21 @@
       if (location.protocol === "file:" || !dataUrl || !dataUrl.startsWith("data:image/")) return dataUrl;
       try {
         const blob = await (await fetch(dataUrl)).blob();
-        const form = new FormData();
-        form.append("file", blob, filename);
-        const res = await fetch(CLOUD_UPLOAD_PATH, { method: "POST", body: form });
-        if (!res.ok) throw new Error(`Upload returned ${res.status}`);
-        const data = await res.json().catch(() => ({}));
-        const url = data.url || data.image_url || data.imageUrl || data.path || data.key;
-        if (!url) throw new Error("Upload response did not include an image URL");
+        const formData = new FormData();
+        formData.append('file', blob, filename);
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const result = await response.json();
+        const url = result.url || result.path;
+        if (!url) throw new Error('Upload response did not include an image URL');
         cloudReady = true;
         return String(url).startsWith("/") || /^https?:/i.test(String(url)) ? String(url) : "/" + String(url);
-      } catch (err) {
-        console.log("Cloud image upload failed; using local image backup.", err);
-        return dataUrl;
+      } catch (error) {
+        console.error('Image upload failed:', error);
+        throw new Error('Unable to upload image. Please try again.');
       }
     }
 
