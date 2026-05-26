@@ -253,7 +253,7 @@ export async function onRequest(context) {
           'Authorization': `Bearer ${env.GROQ_API_KEY}`
         },
         body: JSON.stringify({
-          model: 'llama-2-90b-vision', 
+          model: 'llama-3.2-11b-vision-preview',
           max_tokens: 400,
           messages: [{ 
             role: 'user', 
@@ -286,7 +286,7 @@ export async function onRequest(context) {
             'Authorization': `Bearer ${env.GROQ_API_KEY}`
           },
           body: JSON.stringify({
-            model: 'mixtral-8x7b-32768', 
+            model: 'llama-3.3-70b-versatile',
             max_tokens: 200,
             messages: [{ role: 'user', content: `Write a 2-3 sentence product description for an Indian marble shop listing.\nProduct: ${name || 'Marble item'}\nCategory: ${category || 'Temple'}\nMaterial: ${material || 'Marble'}\nSize: ${size || 'Custom'}\nWarm, devotional, specific. Plain text only.` }]
           })
@@ -298,6 +298,7 @@ export async function onRequest(context) {
       // Customer chat (public)
       const { message, history, catalogue } = body;
       const systemPrompt = `You are a helpful, warm assistant for Jainson Marble, a shop selling marble temples (mandirs) and devotional murtis in Delhi. Help customers find products, answer pricing and availability questions, and guide them toward making an enquiry.\n\nCurrent catalogue (name | category | material | size | price):\n${catalogue || 'No catalogue data'}\n\nKeep responses concise (2-4 sentences). Suggest WhatsApp enquiry for custom orders.`;
+      
       const aiRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: { 
@@ -305,10 +306,13 @@ export async function onRequest(context) {
           'Authorization': `Bearer ${env.GROQ_API_KEY}`
         },
         body: JSON.stringify({
-          model: 'mixtral-8x7b-32768', 
+          model: 'llama-3.3-70b-versatile',
           max_tokens: 300, 
-          system: systemPrompt,
-          messages: [...(Array.isArray(history) ? history.slice(-10) : []), { role: 'user', content: message }]
+          messages: [
+            { role: 'system', content: systemPrompt },
+            ...(Array.isArray(history) ? history.slice(-10) : []), 
+            { role: 'user', content: message }
+          ]
         })
       });
       const d = await aiRes.json();
