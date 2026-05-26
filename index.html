@@ -601,6 +601,147 @@
       .cart-row { grid-template-columns: 52px 1fr; }
       .cart-row .qty { grid-column: 2; }
     }
+
+    /* ── AI buttons ─────────────────────────────────────────────────── */
+    .btn.ai {
+      background: linear-gradient(135deg, #4a1d96, #7c3aed);
+      color: #fff;
+      border-color: transparent;
+    }
+    .btn.ai:hover { opacity: .88; }
+    .btn.ai:disabled { opacity: .45; cursor: wait; }
+    .ai-row { display: flex; gap: .45rem; margin-top: .4rem; flex-wrap: wrap; }
+
+    /* ── Chat widget ────────────────────────────────────────────────── */
+    .chat-bubble {
+      position: fixed;
+      bottom: 1.4rem;
+      right: 1.4rem;
+      z-index: 90;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      border: none;
+      box-shadow: 0 6px 24px rgba(7,22,44,.28);
+      font-size: 1.35rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .2s;
+    }
+    .chat-bubble:hover { transform: scale(1.08); }
+    .chat-panel {
+      position: fixed;
+      bottom: 5.2rem;
+      right: 1.4rem;
+      z-index: 90;
+      width: min(360px, calc(100vw - 2rem));
+      height: 480px;
+      background: var(--paper);
+      border: 1px solid rgba(184,138,45,.4);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-panel.open { display: flex; }
+    .chat-head {
+      background: var(--ink);
+      color: var(--paper);
+      padding: .75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .chat-head strong { color: var(--gold2); font-size: .9rem; }
+    .chat-head span { color: rgba(255,250,240,.6); font-size: .75rem; }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: .85rem;
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+    }
+    .chat-msg {
+      max-width: 82%;
+      padding: .6rem .8rem;
+      border-radius: 10px;
+      font-size: .87rem;
+      line-height: 1.5;
+    }
+    .chat-msg.user {
+      align-self: flex-end;
+      background: var(--ink);
+      color: var(--paper);
+      border-bottom-right-radius: 2px;
+    }
+    .chat-msg.bot {
+      align-self: flex-start;
+      background: var(--stone);
+      color: var(--ink);
+      border-bottom-left-radius: 2px;
+    }
+    .chat-msg.typing { opacity: .55; font-style: italic; }
+    .chat-foot {
+      padding: .65rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: .45rem;
+      flex-shrink: 0;
+    }
+    .chat-foot input {
+      flex: 1;
+      background: rgba(255,250,240,.8);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: .55rem .7rem;
+      font: inherit;
+      color: var(--ink);
+      outline: none;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    /* ── Auth / 2FA styles ──────────────────────────────────────────── */
+    .login-box { max-width: 360px; }
+    .login-step { display: none; }
+    .login-step.active { display: block; }
+    .totp-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(74,29,150,.12); color: #4a1d96;
+      border: 1px solid rgba(74,29,150,.3); border-radius: 4px;
+      padding: .3rem .6rem; font-size: .75rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase; margin-bottom: .65rem;
+    }
+    .totp-badge.enabled { background: rgba(5,120,50,.12); color: #057832; border-color: rgba(5,120,50,.3); }
+    .totp-badge.disabled { background: rgba(141,31,20,.08); color: #8d1f14; border-color: rgba(141,31,20,.25); }
+    #qr-container { margin: .75rem 0; display: flex; justify-content: center; }
+    #qr-container canvas, #qr-container img { border-radius: 6px; border: 1px solid var(--line); }
+    .secret-display {
+      background: var(--stone); border: 1px solid var(--line); border-radius: 4px;
+      padding: .5rem .75rem; font-family: monospace; font-size: .88rem;
+      letter-spacing: .1em; text-align: center; word-break: break-all;
+      margin: .5rem 0; color: var(--ink);
+    }
+    .logout-btn {
+      position: absolute; top: 1rem; right: 4rem;
+      background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-size: .7rem; border-radius: 4px;
+      padding: .3rem .55rem; cursor: pointer; font-weight: 700;
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+    .logout-btn:hover { border-color: rgba(141,31,20,.4); color: #8d1f14; }
+    .attempts-bar {
+      height: 3px; background: var(--line); border-radius: 2px;
+      margin: .5rem 0; overflow: hidden;
+    }
+    .attempts-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .3s; }
   </style>
 </head>
 <body>
@@ -703,6 +844,23 @@
       <section class="section page-panel" data-product-page></section>
     </main>
 
+  <!-- ── Chat Widget ───────────────────────────────────────────────── -->
+  <button class="chat-bubble" data-chat-toggle title="Ask about our products">💬</button>
+  <div class="chat-panel" data-chat-panel>
+    <div class="chat-head">
+      <div>
+        <strong>Ask Jainson Marble</strong><br>
+        <span>Ask about products, pricing, or availability</span>
+      </div>
+      <button class="btn small" data-chat-close style="background:transparent;color:rgba(255,250,240,.6);border-color:transparent">✕</button>
+    </div>
+    <div class="chat-messages" data-chat-messages></div>
+    <div class="chat-foot">
+      <input placeholder="Ask anything..." data-chat-input>
+      <button class="btn primary small" data-chat-send>Send</button>
+    </div>
+  </div>
+
     <footer class="footer">
       <div class="footer-inner">
         <div>
@@ -786,12 +944,34 @@
         <button class="btn small" data-close-admin>Close</button>
       </div>
       <div class="dialog-body">
-        <div data-login-box>
-          <label>Password <input class="input" type="password" data-admin-password placeholder="Default: marble123"></label>
-          <br>
-          <button class="btn primary" data-admin-login>Enter Admin</button>
+        <div data-login-box class="login-box">
+          <!-- Step 1: Password -->
+          <div class="login-step active" data-login-step="1">
+            <label style="margin-bottom:.65rem;display:block">
+              Password
+              <input class="input" type="password" data-admin-password placeholder="Enter admin password" style="margin-top:.3rem">
+            </label>
+            <div class="attempts-bar"><div class="attempts-fill" data-attempts-fill style="width:100%"></div></div>
+            <div class="section-note" data-login-error style="color:#8d1f14;min-height:1.2em"></div>
+            <br>
+            <button class="btn primary" data-admin-login>Continue →</button>
+          </div>
+          <!-- Step 2: TOTP (shown only if 2FA is enabled) -->
+          <div class="login-step" data-login-step="2">
+            <div class="totp-badge">🔐 2-Factor Authentication</div>
+            <p style="color:var(--muted);font-size:.88rem;margin:.2rem 0 .75rem">Open your authenticator app and enter the 6-digit code.</p>
+            <label>
+              Authenticator Code
+              <input class="input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" data-admin-totp placeholder="000000" style="margin-top:.3rem;letter-spacing:.2em;font-size:1.2rem;text-align:center">
+            </label>
+            <div class="section-note" data-totp-error style="color:#8d1f14;min-height:1.2em;margin-top:.4rem"></div>
+            <br>
+            <button class="btn primary" data-admin-totp-verify>Verify & Enter Admin</button>
+            <button class="btn small" data-login-back style="margin-left:.5rem">← Back</button>
+          </div>
         </div>
-        <div data-admin-panel style="display:none">
+        <div data-admin-panel style="display:none;position:relative">
+          <button class="logout-btn" data-admin-logout>Logout</button>
           <div class="section-head">
             <div>
               <div class="section-title">Products</div>
@@ -839,8 +1019,18 @@
           </div>
           <br>
           <button class="btn primary" data-save-settings>Save Settings</button>
-          <button class="btn" data-export>Export Data</button>
+          <button class="btn" data-export-json>⬇ JSON</button>
+          <button class="btn" data-export-csv>⬇ CSV</button>
+          <button class="btn" data-export-zip>⬇ ZIP + Images</button>
           <button class="btn danger" data-reset-store>Reset Demo</button>
+
+          <hr>
+          <div class="section-title">Security</div>
+          <br>
+          <div data-totp-section>
+            <div data-totp-status-badge class="totp-badge disabled">2FA: Loading…</div>
+            <div data-totp-manage></div>
+          </div>
         </div>
       </div>
     </div>
@@ -859,8 +1049,18 @@
           <label>Category <input class="input" data-p-category></label>
           <label>Material <input class="input" data-p-material></label>
           <label>Size <input class="input" data-p-size></label>
-          <label>Image <input class="input" type="file" accept="image/*" data-p-image></label>
-          <label class="full">Description <textarea class="textarea" data-p-desc></textarea></label>
+          <label>Image
+            <input class="input" type="file" accept="image/*" data-p-image>
+            <div class="ai-row">
+              <button type="button" class="btn ai small" data-ai-fill>✨ AI Fill from Image</button>
+            </div>
+          </label>
+          <label class="full">Description
+            <textarea class="textarea" data-p-desc></textarea>
+            <div class="ai-row">
+              <button type="button" class="btn ai small" data-ai-desc>✨ Write Description with AI</button>
+            </div>
+          </label>
           <label><input type="checkbox" data-p-featured> Featured</label>
           <label><input type="checkbox" data-p-sold> Sold out</label>
         </div>
@@ -957,6 +1157,7 @@
     let activeProduct = null;
     let editingId = null;
     let imageDraft = "";
+    let sessionToken = sessionStorage.getItem('jm-admin-token') || '';
 
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
@@ -1002,22 +1203,22 @@
       renderProducts();
       renderCart();
       renderRoute();
+      initChatWidget();
     }
 
     async function loadCloudState() {
       if (location.protocol === "file:") return null;
       try {
-        const response = await fetch('/api/state');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
+        const res = await fetch(CLOUD_STATE_PATH, { cache: "no-store" });
+        if (!res.ok) throw new Error(`Cloud state returned ${res.status}`);
+        const data = await res.json();
         if (!data || !Array.isArray(data.products)) return null;
         cloudReady = true;
         try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
         return data;
-      } catch (error) {
-        console.warn('Cloud load failed, using localStorage:', error);
-        const stored = localStorage.getItem(STORE_KEY);
-        return stored ? JSON.parse(stored) : null;
+      } catch (err) {
+        console.log("Cloud API not ready yet.", err);
+        return null;
       }
     }
 
@@ -1031,7 +1232,10 @@
       try {
         const response = await fetch('/api/state', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {})
+          },
           body: JSON.stringify(state)
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1051,6 +1255,7 @@
         formData.append('file', blob, filename);
         const response = await fetch('/api/upload', {
           method: 'POST',
+          headers: sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {},
           body: formData
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1535,11 +1740,97 @@
         if (t.matches("[data-close-product]")) closeModal("product");
         if (t.matches("[data-save-product]")) saveProduct();
         if (t.matches("[data-admin-login]")) {
-          if ($("[data-admin-password]").value === state.settings.password) {
-            $("[data-login-box]").style.display = "none";
-            $("[data-admin-panel]").style.display = "block";
-            renderAdminList();
-          } else toast("Wrong password");
+          const btn = t;
+          btn.disabled = true;
+          btn.textContent = 'Checking…';
+          const pw = $('[data-admin-password]').value;
+          $('[data-login-error]').textContent = '';
+          try {
+            const res = await fetch('/api/admin/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ password: pw })
+            });
+            const data = await res.json();
+            if (data.requireTotp) {
+              // Show step 2
+              $('[data-login-step="1"]').classList.remove('active');
+              $('[data-login-step="2"]').classList.add('active');
+              $('[data-admin-totp]').focus();
+            } else if (data.token) {
+              sessionToken = data.token;
+              sessionStorage.setItem('jm-admin-token', sessionToken);
+              $('[data-login-box]').style.display = 'none';
+              $('[data-admin-panel]').style.display = 'block';
+              renderAdminList();
+              loadTotpStatus();
+            } else {
+              $('[data-login-error]').textContent = data.error || 'Login failed';
+              // Update attempts bar
+              const match = (data.error || '').match(/(\d+) attempt/);
+              if (match) {
+                const left = parseInt(match[1]);
+                $('[data-attempts-fill]').style.width = (left / 5 * 100) + '%';
+                $('[data-attempts-fill]').style.background = left <= 2 ? '#c0392b' : 'var(--gold)';
+              }
+            }
+          } catch (e) {
+            $('[data-login-error]').textContent = 'Connection error. Try again.';
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Continue →';
+          }
+        }
+        if (t.matches("[data-admin-totp-verify]")) {
+          const btn = t;
+          btn.disabled = true;
+          btn.textContent = 'Verifying…';
+          $('[data-totp-error]').textContent = '';
+          const pw = $('[data-admin-password]').value;
+          const code = $('[data-admin-totp]').value.trim();
+          try {
+            const res = await fetch('/api/admin/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ password: pw, totp: code })
+            });
+            const data = await res.json();
+            if (data.token) {
+              sessionToken = data.token;
+              sessionStorage.setItem('jm-admin-token', sessionToken);
+              $('[data-login-box]').style.display = 'none';
+              $('[data-admin-panel]').style.display = 'block';
+              renderAdminList();
+              loadTotpStatus();
+            } else {
+              $('[data-totp-error]').textContent = data.error || 'Invalid code';
+              $('[data-admin-totp]').value = '';
+              $('[data-admin-totp]').focus();
+            }
+          } catch (e) {
+            $('[data-totp-error]').textContent = 'Connection error.';
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Verify & Enter Admin';
+          }
+        }
+        if (t.matches("[data-login-back]")) {
+          $('[data-login-step="2"]').classList.remove('active');
+          $('[data-login-step="1"]').classList.add('active');
+          $('[data-admin-totp]').value = '';
+          $('[data-totp-error]').textContent = '';
+        }
+        if (t.matches("[data-admin-logout]")) {
+          sessionToken = '';
+          sessionStorage.removeItem('jm-admin-token');
+          $('[data-admin-panel]').style.display = 'none';
+          $('[data-login-box]').style.display = 'block';
+          $('[data-login-step="1"]').classList.add('active');
+          $('[data-login-step="2"]').classList.remove('active');
+          $('[data-admin-password]').value = '';
+          $('[data-login-error]').textContent = '';
+          $('[data-attempts-fill]').style.width = '100%';
+          toast('Logged out');
         }
         if (t.matches("[data-save-settings]")) {
           state.settings.name = $("[data-setting-name]").value || state.settings.name;
@@ -1567,6 +1858,53 @@
         if (t.matches("[data-export]")) {
           navigator.clipboard?.writeText(JSON.stringify(state, null, 2));
           toast("Store data copied");
+        }
+        // ── Export buttons ──────────────────────────────────────────
+        if (t.matches("[data-export-json]")) exportJSON();
+        if (t.matches("[data-export-csv]")) exportCSV();
+        if (t.matches("[data-export-zip]")) exportZIP();
+
+        // ── AI Fill from image ──────────────────────────────────────
+        if (t.matches("[data-ai-fill]")) {
+          if (!imageDraft) return toast("Upload an image first");
+          const btn = t;
+          btn.disabled = true;
+          btn.textContent = "Analysing…";
+          try {
+            const result = await aiDescribeImage(imageDraft);
+            if (result.name) $("[data-p-name]").value = result.name;
+            if (result.category) $("[data-p-category]").value = result.category;
+            if (result.material) $("[data-p-material]").value = result.material;
+            if (result.desc) $("[data-p-desc]").value = result.desc;
+            toast("AI filled in product details ✨");
+          } catch (e) {
+            toast("AI unavailable — check API key in Worker settings");
+          } finally {
+            btn.disabled = false;
+            btn.textContent = "✨ AI Fill from Image";
+          }
+        }
+
+        // ── AI Write Description ────────────────────────────────────
+        if (t.matches("[data-ai-desc]")) {
+          const btn = t;
+          btn.disabled = true;
+          btn.textContent = "Writing…";
+          try {
+            const desc = await aiGenerateDescription(
+              $("[data-p-name]").value,
+              $("[data-p-category]").value,
+              $("[data-p-material]").value,
+              $("[data-p-size]").value
+            );
+            if (desc) $("[data-p-desc]").value = desc;
+            toast("Description written ✨");
+          } catch (e) {
+            toast("AI unavailable — check API key in Worker settings");
+          } finally {
+            btn.disabled = false;
+            btn.textContent = "✨ Write Description with AI";
+          }
         }
         if (t.matches("[data-bulk-images]")) $("[data-bulk-image-input]").click();
         if (t.matches("[data-bulk-pdf]")) $("[data-bulk-pdf-input]").click();
@@ -1634,6 +1972,14 @@
         }
       });
       window.addEventListener("hashchange", renderRoute);
+      // Enter key on login fields
+      $('[data-admin-password]').addEventListener('keydown', e => { if (e.key === 'Enter') $('[data-admin-login]').click(); });
+      $('[data-admin-totp]').addEventListener('input', e => {
+        if (e.target.value.replace(/\D/g,'').length === 6) {
+          e.target.value = e.target.value.replace(/\D/g,'');
+          $('[data-admin-totp-verify]').click();
+        }
+      });
       $("[data-setting-hero-image]").addEventListener("change", async (e) => {
         const file = e.target.files?.[0];
         e.target.value = "";
@@ -1664,6 +2010,258 @@
     function escapeHtml(str) {
       return String(str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[m]));
     }
+
+    // ── AI ── ─────────────────────────────────────────────────────────────
+
+    async function aiDescribeImage(imageUrl) {
+      const res = await fetch('/api/ai/describe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: location.origin + imageUrl })
+      });
+      if (!res.ok) throw new Error('AI describe failed');
+      const data = await res.json();
+      return data; // { name, category, material, desc }
+    }
+
+    async function aiGenerateDescription(name, category, material, size) {
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          task: 'describe',
+          name, category, material, size
+        })
+      });
+      if (!res.ok) throw new Error('AI description failed');
+      const data = await res.json();
+      return data.text || '';
+    }
+
+    async function aiChat(message, history) {
+      const catalogue = state.products.slice(0, 60).map(p =>
+        `${p.name} | ${p.category} | ${p.material} | ${p.size} | Rs.${p.price}${p.soldOut ? ' [SOLD OUT]' : ''}`
+      ).join('\n');
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task: 'chat', message, history, catalogue })
+      });
+      if (!res.ok) throw new Error('Chat failed');
+      const data = await res.json();
+      return data.text || 'Sorry, I could not get a response right now.';
+    }
+
+    // ── Export ────────────────────────────────────────────────────────────────
+
+    function downloadBlob(content, filename, mime) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    }
+
+    function exportJSON() {
+      downloadBlob(JSON.stringify(state, null, 2), 'jainson-catalogue.json', 'application/json');
+      toast('JSON downloaded');
+    }
+
+    function exportCSV() {
+      const headers = ['ID','Name','Category','Material','Size','Price','Featured','SoldOut','Description','ImageURL'];
+      const rows = state.products.map(p => [
+        p.id, p.name, p.category, p.material, p.size, p.price,
+        p.featured ? 'Yes' : 'No',
+        p.soldOut ? 'Yes' : 'No',
+        p.desc || '',
+        p.image ? (p.image.startsWith('/') ? location.origin + p.image : p.image) : ''
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+      downloadBlob([headers.join(','), ...rows].join('\n'), 'jainson-catalogue.csv', 'text/csv');
+      toast('CSV downloaded');
+    }
+
+    async function exportZIP() {
+      if (!window.JSZip) return toast('JSZip not loaded, try again');
+      toast('Building ZIP… this may take a moment');
+      const zip = new JSZip();
+      const imgFolder = zip.folder('images');
+
+      // Add JSON and CSV
+      zip.file('catalogue.json', JSON.stringify(state, null, 2));
+      const headers = ['ID','Name','Category','Material','Size','Price','Featured','SoldOut','Description','ImageURL'];
+      const rows = state.products.map(p => [
+        p.id, p.name, p.category, p.material, p.size, p.price,
+        p.featured ? 'Yes' : 'No', p.soldOut ? 'Yes' : 'No',
+        p.desc || '',
+        p.image ? (p.image.startsWith('/') ? location.origin + p.image : p.image) : ''
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+      zip.file('catalogue.csv', [headers.join(','), ...rows].join('\n'));
+
+      // Fetch and bundle each image
+      let fetched = 0;
+      for (const p of state.products) {
+        if (!p.image || p.image.startsWith('data:')) continue;
+        try {
+          const imgUrl = p.image.startsWith('/') ? location.origin + p.image : p.image;
+          const res = await fetch(imgUrl);
+          if (!res.ok) continue;
+          const blob = await res.blob();
+          const ext = blob.type.includes('png') ? 'png' : 'jpg';
+          const safeName = p.id.replace(/[^a-z0-9-]/gi, '_') + '.' + ext;
+          imgFolder.file(safeName, blob);
+          fetched++;
+        } catch (e) { /* skip failed images */ }
+      }
+
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'jainson-catalogue-backup.zip';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      toast(`ZIP downloaded — ${fetched} images bundled`);
+    }
+
+    // ── Chat Widget ───────────────────────────────────────────────────────────
+
+    let chatHistory = [];
+
+    function chatAddMessage(text, role) {
+      const el = $('[data-chat-messages]');
+      const div = document.createElement('div');
+      div.className = `chat-msg ${role}`;
+      div.textContent = text;
+      el.appendChild(div);
+      el.scrollTop = el.scrollHeight;
+      return div;
+    }
+
+    function initChatWidget() {
+      // Show greeting on first open
+      chatAddMessage('Namaste 🙏 I can help you find mandirs, murtis, or answer questions about our products, pricing, and availability. What are you looking for?', 'bot');
+
+      $('[data-chat-toggle]').addEventListener('click', () => {
+        $('[data-chat-panel]').classList.toggle('open');
+      });
+      $('[data-chat-close]').addEventListener('click', () => {
+        $('[data-chat-panel]').classList.remove('open');
+      });
+
+      async function sendChat() {
+        const input = $('[data-chat-input]');
+        const msg = input.value.trim();
+        if (!msg) return;
+        input.value = '';
+        chatAddMessage(msg, 'user');
+        const typing = chatAddMessage('Thinking…', 'bot typing');
+        try {
+          const reply = await aiChat(msg, chatHistory);
+          typing.className = 'chat-msg bot';
+          typing.textContent = reply;
+          chatHistory.push({ role: 'user', content: msg });
+          chatHistory.push({ role: 'assistant', content: reply });
+          // Keep history manageable
+          if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+        } catch (e) {
+          typing.textContent = 'Sorry, chat is unavailable right now.';
+        }
+        $('[data-chat-messages]').scrollTop = $('[data-chat-messages]').scrollHeight;
+      }
+
+      $('[data-chat-send]').addEventListener('click', sendChat);
+      $('[data-chat-input]').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendChat();
+      });
+    }
+
+    // ── TOTP / 2FA Management ─────────────────────────────────────────────────
+
+    async function loadTotpStatus() {
+      try {
+        const res = await fetch('/api/admin/totp-status', {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const { totpEnabled } = await res.json();
+        const badge = $('[data-totp-status-badge]');
+        const manage = $('[data-totp-manage]');
+        if (totpEnabled) {
+          badge.className = 'totp-badge enabled';
+          badge.textContent = '🔐 2FA: Enabled';
+          manage.innerHTML = `
+            <p style="color:var(--muted);font-size:.87rem">Two-factor authentication is active on every login.</p>
+            <button class="btn danger small" data-disable-totp>Disable 2FA</button>`;
+        } else {
+          badge.className = 'totp-badge disabled';
+          badge.textContent = '⚠️ 2FA: Disabled';
+          manage.innerHTML = `
+            <p style="color:var(--muted);font-size:.87rem">Enable 2FA to require an authenticator app code on every login. Works with Google Authenticator, Authy, and any TOTP app.</p>
+            <button class="btn ai small" data-setup-totp>Enable 2FA →</button>`;
+        }
+      } catch (e) {
+        if ($('[data-totp-manage]')) $('[data-totp-manage]').innerHTML = '<div class="section-note">Could not load 2FA status.</div>';
+      }
+    }
+
+    async function startTotpSetup() {
+      const manage = $('[data-totp-manage]');
+      manage.innerHTML = '<div class="section-note">Generating secret…</div>';
+      try {
+        const res = await fetch('/api/admin/setup-totp', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const { secret, uri } = await res.json();
+        manage.innerHTML = `
+          <p style="color:var(--muted);font-size:.87rem;margin:.2rem 0 .5rem"><strong>Step 1:</strong> Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.) or enter the key manually.</p>
+          <div id="qr-container"></div>
+          <div class="secret-display">${secret}</div>
+          <p style="color:var(--muted);font-size:.87rem;margin:.5rem 0"><strong>Step 2:</strong> Enter the 6-digit code from your app to confirm setup.</p>
+          <input class="input" type="text" inputmode="numeric" maxlength="6" id="totp-confirm-input"
+            placeholder="000000" style="letter-spacing:.2em;font-size:1.1rem;text-align:center;max-width:160px">
+          <br><br>
+          <button class="btn primary small" data-confirm-totp data-secret="${secret}">Confirm & Enable 2FA</button>
+          <button class="btn small" data-cancel-totp style="margin-left:.5rem">Cancel</button>
+          <div id="totp-confirm-error" style="color:#8d1f14;font-size:.83rem;margin-top:.4rem;min-height:1em"></div>`;
+        if (window.QRCode) {
+          new QRCode(document.getElementById('qr-container'), {
+            text: uri, width: 180, height: 180,
+            colorDark: '#07162c', colorLight: '#fffaf0'
+          });
+        }
+      } catch (e) {
+        manage.innerHTML = '<div class="section-note" style="color:#8d1f14">Failed to generate. Try again.</div>';
+      }
+    }
+
+    // Wire up TOTP buttons (dynamically rendered so use delegation in bindEvents)
+    document.addEventListener('click', async (e) => {
+      if (e.target.matches('[data-setup-totp]')) startTotpSetup();
+      if (e.target.matches('[data-cancel-totp]')) loadTotpStatus();
+      if (e.target.matches('[data-disable-totp]') && confirm('Disable 2FA? Your next login will only require a password.')) {
+        await fetch('/api/admin/disable-totp', { method: 'POST', headers: { 'Authorization': `Bearer ${sessionToken}` } });
+        toast('2FA disabled'); loadTotpStatus();
+      }
+      if (e.target.matches('[data-confirm-totp]')) {
+        const btn = e.target;
+        const secret = btn.dataset.secret;
+        const code = document.getElementById('totp-confirm-input')?.value.trim();
+        const errEl = document.getElementById('totp-confirm-error');
+        btn.disabled = true; btn.textContent = 'Verifying…';
+        try {
+          const res = await fetch('/api/admin/confirm-totp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sessionToken}` },
+            body: JSON.stringify({ secret, code })
+          });
+          const data = await res.json();
+          if (data.success) { toast('✅ 2FA enabled! Required on next login.'); loadTotpStatus(); }
+          else { if (errEl) errEl.textContent = data.error || 'Code incorrect. Try again.'; btn.disabled = false; btn.textContent = 'Confirm & Enable 2FA'; }
+        } catch (err) {
+          if (errEl) errEl.textContent = 'Connection error.';
+          btn.disabled = false; btn.textContent = 'Confirm & Enable 2FA';
+        }
+      }
+    });
 
     initializeApp();
   </script>
