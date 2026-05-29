@@ -29,34 +29,38 @@
     }
     button, input, select, textarea { font: inherit; }
     button { cursor: pointer; }
-    .app { min-height: 100vh; }
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
 
+    /* ── TOPBAR (Sticky, Mobile-Friendly) ────────────────────────────── */
     .topbar {
       position: sticky;
       top: 0;
       z-index: 30;
-      background: rgba(255, 250, 240, .92);
+      background: rgba(255, 250, 240, .96);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
     }
     .nav {
       max-width: 1600px;
       margin: 0 auto;
-      padding: .82rem 1.1rem;
+      padding: .6rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
+      width: 100%;
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: .75rem;
+      gap: .6rem;
       min-width: 0;
+      cursor: pointer;
+      flex-shrink: 0;
     }
     .mark {
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: var(--ink);
       color: var(--gold2);
@@ -65,9 +69,10 @@
       border: 2px solid var(--gold);
       font-weight: 700;
       letter-spacing: .05em;
+      font-size: .9rem;
     }
     .brand-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 800;
       letter-spacing: .04em;
       white-space: nowrap;
@@ -76,19 +81,20 @@
     }
     .brand-sub {
       color: var(--muted);
-      font-size: .78rem;
+      font-size: .7rem;
       letter-spacing: .08em;
       text-transform: uppercase;
+      display: none;
     }
     .nav-actions {
       display: flex;
-      gap: .55rem;
+      gap: .5rem;
       flex-wrap: wrap;
       justify-content: flex-end;
     }
     .nav-links {
       display: flex;
-      gap: .45rem;
+      gap: .4rem;
       flex-wrap: wrap;
       margin-left: auto;
     }
@@ -98,11 +104,11 @@
       background: var(--paper);
       color: var(--ink);
       border-radius: 4px;
-      padding: .56rem .82rem;
+      padding: .5rem .7rem;
       font-weight: 700;
       letter-spacing: .05em;
       text-transform: uppercase;
-      font-size: .72rem;
+      font-size: .65rem;
     }
     .btn:hover { border-color: rgba(184, 138, 45, .55); }
     .btn.primary {
@@ -120,25 +126,34 @@
       background: rgba(141, 31, 20, .07);
       border-color: rgba(141, 31, 20, .25);
     }
-    .btn.small { padding: .38rem .58rem; font-size: .65rem; }
+    .btn.small { padding: .35rem .5rem; font-size: .6rem; }
+    .btn.ai {
+      background: linear-gradient(135deg, #4a1d96, #7c3aed);
+      color: #fff;
+      border-color: transparent;
+    }
+    .btn.ai:hover { opacity: .88; }
+    .btn.ai:disabled { opacity: .45; cursor: wait; }
 
+    /* ── HERO SECTION (Mobile-First) ────────────────────────────────── */
     .hero {
       max-width: none;
       margin: 0 auto;
       padding: clamp(.75rem, 2vw, 1.4rem);
       display: grid;
-      grid-template-columns: minmax(0, .92fr) minmax(360px, 1.08fr);
+      grid-template-columns: 1fr;
       gap: clamp(.75rem, 1.4vw, 1.3rem);
       align-items: stretch;
-      min-height: clamp(560px, calc(100vh - 76px), 820px);
+      min-height: auto;
+      width: 100%;
     }
     .hero-copy {
       background: linear-gradient(135deg, rgba(255, 250, 240, .95), rgba(239, 227, 207, .88));
       border: 1px solid rgba(184, 138, 45, .25);
       border-radius: 8px;
-      padding: clamp(1.35rem, 4vw, 3rem);
+      padding: clamp(1.2rem, 3vw, 2.2rem);
       box-shadow: var(--shadow);
-      min-height: clamp(520px, calc(100vh - 112px), 780px);
+      min-height: auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -146,42 +161,43 @@
     .eyebrow {
       color: var(--gold);
       font-weight: 800;
-      letter-spacing: .18em;
+      letter-spacing: .15em;
       text-transform: uppercase;
-      font-size: .78rem;
-      margin-bottom: .75rem;
+      font-size: .7rem;
+      margin-bottom: .6rem;
     }
     h1 {
       margin: 0;
-      font-size: clamp(2.7rem, 7vw, 5.9rem);
-      line-height: .86;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      line-height: .92;
       letter-spacing: .02em;
       color: var(--ink);
     }
     .h1-gold {
       color: var(--gold);
       display: block;
-      font-size: .62em;
+      font-size: .6em;
       letter-spacing: .16em;
-      margin-top: .25rem;
+      margin-top: .2rem;
     }
     .hero-copy p {
-      font-size: 1.08rem;
+      font-size: .95rem;
       color: var(--muted);
-      line-height: 1.7;
-      max-width: 620px;
+      line-height: 1.6;
+      max-width: 100%;
+      margin: .8rem 0 0;
     }
     .hero-actions {
       display: flex;
-      gap: .7rem;
+      gap: .6rem;
       flex-wrap: wrap;
-      margin-top: .65rem;
+      margin-top: .8rem;
     }
     .hero-media {
       position: relative;
       border-radius: 8px;
       overflow: hidden;
-      min-height: clamp(520px, calc(100vh - 112px), 780px);
+      height: min(480px, 60vh);
       border: 1px solid rgba(184, 138, 45, .28);
       box-shadow: var(--shadow);
       background: var(--ink);
@@ -199,75 +215,80 @@
       background: rgba(7, 22, 44, .92);
       color: var(--paper);
       border: 1px solid rgba(215, 177, 100, .75);
-      padding: .9rem 1rem;
+      padding: .8rem .9rem;
       border-radius: 6px;
-      max-width: 220px;
-      font-size: .85rem;
-      line-height: 1.45;
+      max-width: 200px;
+      font-size: .78rem;
+      line-height: 1.4;
     }
 
+    /* ── TRUST SECTION ──────────────────────────────────────────────── */
     .trust {
       max-width: 1600px;
       margin: 1rem auto 0;
-      padding: 0 1.1rem;
+      padding: 0 1rem;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: .8rem;
+      width: 100%;
     }
     .trust-card {
       background: var(--ink);
       color: var(--paper);
       border-radius: 6px;
-      padding: .95rem;
+      padding: .8rem;
       border: 1px solid rgba(215, 177, 100, .35);
-      min-height: 92px;
+      min-height: auto;
     }
     .trust-card strong {
       display: block;
       color: var(--gold2);
-      font-size: .82rem;
+      font-size: .75rem;
       letter-spacing: .08em;
       text-transform: uppercase;
-      margin-bottom: .3rem;
+      margin-bottom: .25rem;
     }
     .trust-card span {
       color: rgba(255, 250, 240, .75);
-      font-size: .84rem;
-      line-height: 1.4;
+      font-size: .78rem;
+      line-height: 1.35;
     }
 
+    /* ── SECTION STYLES ────────────────────────────────────────────── */
     .section {
       max-width: 1600px;
       margin: 0 auto;
-      padding: 2rem 1.1rem 0;
+      padding: 1.5rem 1rem 0;
+      width: 100%;
     }
     .section-head {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       gap: 1rem;
-      margin-bottom: .85rem;
+      margin-bottom: .75rem;
+      flex-wrap: wrap;
     }
     .section-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 800;
       letter-spacing: .08em;
       text-transform: uppercase;
     }
-    .section-note { color: var(--muted); font-size: .92rem; }
+    .section-note { color: var(--muted); font-size: .88rem; }
     .page-panel { display: none; padding-bottom: 2rem; }
     .page-panel.active { display: block; }
     .crumbs {
       color: var(--muted);
-      font-size: .82rem;
-      margin-bottom: .8rem;
+      font-size: .78rem;
+      margin-bottom: .75rem;
     }
     .category-hero {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: 1fr auto;
       gap: 1rem;
       align-items: end;
-      padding: 1.35rem;
+      padding: 1.2rem;
       margin-bottom: 1rem;
       background: rgba(255, 250, 240, .72);
       border: 1px solid var(--line);
@@ -275,13 +296,183 @@
     }
     .category-hero h2 {
       margin: .2rem 0;
-      font-size: clamp(2rem, 4vw, 4rem);
+      font-size: clamp(1.6rem, 3vw, 2.8rem);
       line-height: .92;
       letter-spacing: .01em;
     }
+
+    /* ── STICKY FILTER BAR (Mobile-Friendly) ────────────────────────– */
+    .sticky-filters {
+      position: sticky;
+      top: 64px;
+      z-index: 20;
+      background: rgba(255, 250, 240, .96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+      padding: .8rem 1rem;
+      display: none;
+    }
+    .sticky-filters.active { display: block; }
+    .sticky-filters-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto auto auto;
+      gap: .5rem;
+      align-items: center;
+    }
+    .sticky-filters .btn { padding: .4rem .6rem; font-size: .6rem; }
+    .sticky-filters .btn.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    /* ── FILTERS ────────────────────────────────────────────────────── */
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .6rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+    .input, .select, .textarea {
+      width: 100%;
+      background: rgba(255, 250, 240, .8);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 4px;
+      padding: .6rem .7rem;
+      outline: none;
+      font-size: .9rem;
+    }
+    .textarea { min-height: 80px; resize: vertical; }
+
+    /* ── PRODUCT GRID ──────────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: .8rem;
+    }
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(7, 22, 44, .08);
+      transition: transform .2s, border-color .2s;
+      cursor: pointer;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(184, 138, 45, .5); }
+    .thumb {
+      aspect-ratio: 4 / 5;
+      background: var(--stone);
+      position: relative;
+      overflow: hidden;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s;
+    }
+    .card:hover .thumb img { transform: scale(1.04); }
+    .tag {
+      position: absolute;
+      left: .5rem;
+      top: .5rem;
+      background: rgba(7, 22, 44, .9);
+      color: var(--gold2);
+      border-radius: 3px;
+      padding: .2rem .4rem;
+      font-size: .55rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .sold {
+      position: absolute;
+      right: .5rem;
+      top: .5rem;
+      background: rgba(141, 31, 20, .92);
+      color: white;
+      border-radius: 3px;
+      padding: .2rem .4rem;
+      font-size: .55rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .card-body { padding: .75rem; }
+    .kicker {
+      color: var(--gold);
+      font-weight: 800;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: .2rem;
+    }
+    .name {
+      font-weight: 800;
+      font-size: .95rem;
+      line-height: 1.3;
+      min-height: auto;
+      margin-bottom: .3rem;
+    }
+    .meta {
+      display: flex;
+      gap: .3rem;
+      flex-wrap: wrap;
+      margin: .4rem 0;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(7, 22, 44, .035);
+      color: var(--muted);
+      border-radius: 99px;
+      padding: .15rem .4rem;
+      font-size: .7rem;
+    }
+    .price {
+      font-weight: 900;
+      color: var(--ink2);
+      font-size: 1rem;
+      margin-bottom: .6rem;
+    }
+    .card-actions {
+      display: flex;
+      gap: .35rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── PAGINATION ────────────────────────────────────────────────── */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    .pagination button {
+      padding: .5rem .8rem;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all .2s;
+    }
+    .pagination button.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    .pagination button:hover { border-color: rgba(184, 138, 45, .55); }
+
+    /* ── PRODUCT PAGE ──────────────────────────────────────────────── */
     .product-page {
       display: grid;
-      grid-template-columns: minmax(320px, .92fr) minmax(0, 1.08fr);
+      grid-template-columns: 1fr;
       gap: 1rem;
       align-items: start;
     }
@@ -294,7 +485,7 @@
     }
     .product-photo img {
       width: 100%;
-      max-height: 78vh;
+      max-height: 60vh;
       object-fit: contain;
       display: block;
       background: var(--stone);
@@ -303,145 +494,24 @@
       background: rgba(255, 250, 240, .72);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 1.2rem;
+      padding: 1rem;
     }
     .product-copy h2 {
-      margin: .2rem 0 .75rem;
-      font-size: clamp(1.8rem, 4vw, 3.5rem);
+      margin: .2rem 0 .6rem;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
       line-height: .95;
     }
     .preview-note {
       color: var(--muted);
-      font-size: .82rem;
-      line-height: 1.45;
-      margin: .35rem 0 .75rem;
+      font-size: .78rem;
+      line-height: 1.4;
+      margin: .3rem 0 .6rem;
     }
 
-    .filters {
-      display: grid;
-      grid-template-columns: minmax(170px, 1.3fr) repeat(3, minmax(130px, .7fr)) auto;
-      gap: .65rem;
-      margin-bottom: 1rem;
-      align-items: center;
-    }
-    .input, .select, .textarea {
-      width: 100%;
-      background: rgba(255, 250, 240, .8);
-      border: 1px solid var(--line);
-      color: var(--ink);
-      border-radius: 4px;
-      padding: .7rem .8rem;
-      outline: none;
-    }
-    .textarea { min-height: 88px; resize: vertical; }
-    .settings-preview {
-      width: 100%;
-      aspect-ratio: 5 / 3;
-      object-fit: cover;
-      display: block;
-      margin-top: .5rem;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--stone);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
-      gap: 1rem;
-    }
-    .card {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 12px 40px rgba(7, 22, 44, .08);
-      transition: transform .2s, border-color .2s;
-    }
-    .card:hover { transform: translateY(-4px); border-color: rgba(184, 138, 45, .5); }
-    .thumb {
-      aspect-ratio: 4 / 5;
-      background: var(--stone);
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform .35s;
-    }
-    .card:hover .thumb img { transform: scale(1.04); }
-    .tag {
-      position: absolute;
-      left: .65rem;
-      top: .65rem;
-      background: rgba(7, 22, 44, .9);
-      color: var(--gold2);
-      border-radius: 3px;
-      padding: .23rem .45rem;
-      font-size: .62rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .sold {
-      position: absolute;
-      right: .65rem;
-      top: .65rem;
-      background: rgba(141, 31, 20, .92);
-      color: white;
-      border-radius: 3px;
-      padding: .23rem .45rem;
-      font-size: .62rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .card-body { padding: .95rem; }
-    .kicker {
-      color: var(--gold);
-      font-weight: 800;
-      font-size: .7rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin-bottom: .3rem;
-    }
-    .name {
-      font-weight: 800;
-      font-size: 1.02rem;
-      line-height: 1.35;
-      min-height: 2.7em;
-    }
-    .meta {
-      display: flex;
-      gap: .35rem;
-      flex-wrap: wrap;
-      margin: .65rem 0;
-    }
-    .chip {
-      border: 1px solid var(--line);
-      background: rgba(7, 22, 44, .035);
-      color: var(--muted);
-      border-radius: 99px;
-      padding: .18rem .48rem;
-      font-size: .75rem;
-    }
-    .price {
-      font-weight: 900;
-      color: var(--ink2);
-      font-size: 1.15rem;
-      margin-bottom: .85rem;
-    }
-    .card-actions {
-      display: flex;
-      gap: .45rem;
-      flex-wrap: wrap;
-    }
-
+    /* ── CUSTOM BAND ────────────────────────────────────────────────– */
     .custom-band {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr;
       gap: 1rem;
       align-items: center;
       background: var(--ink);
@@ -450,9 +520,10 @@
       padding: 1.2rem;
       border: 1px solid rgba(215, 177, 100, .45);
     }
-    .custom-band h3 { margin: 0 0 .25rem; color: var(--gold2); }
-    .custom-band p { margin: 0; color: rgba(255, 250, 240, .75); line-height: 1.5; }
+    .custom-band h3 { margin: 0 0 .25rem; color: var(--gold2); font-size: 1.1rem; }
+    .custom-band p { margin: 0; color: rgba(255, 250, 240, .75); line-height: 1.5; font-size: .95rem; }
 
+    /* ── MODAL & DIALOGS ────────────────────────────────────────────– */
     .modal {
       position: fixed;
       inset: 0;
@@ -463,23 +534,25 @@
       padding: 1rem;
       background: rgba(7, 22, 44, .72);
       backdrop-filter: blur(8px);
+      overflow-y: auto;
     }
     .modal.open { display: flex; }
     .dialog {
-      width: min(760px, 100%);
+      width: min(90vw, 700px);
       max-height: 90vh;
-      overflow: auto;
+      overflow-y: auto;
       background: var(--paper);
       border-radius: 8px;
       border: 1px solid rgba(184, 138, 45, .4);
       box-shadow: var(--shadow);
+      margin: auto;
     }
     .dialog-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 1rem;
-      padding: 1rem 1.15rem;
+      padding: .9rem 1rem;
       border-bottom: 1px solid var(--line);
       position: sticky;
       top: 0;
@@ -491,14 +564,15 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       color: var(--ink);
+      font-size: .95rem;
     }
-    .dialog-body { padding: 1.1rem; }
+    .dialog-body { padding: 1rem; }
     .dialog-foot {
-      padding: .9rem 1.1rem;
+      padding: .8rem 1rem;
       border-top: 1px solid var(--line);
       display: flex;
       justify-content: flex-end;
-      gap: .6rem;
+      gap: .5rem;
       flex-wrap: wrap;
       background: var(--paper);
       position: sticky;
@@ -506,125 +580,75 @@
     }
     .detail-grid {
       display: grid;
-      grid-template-columns: minmax(240px, .9fr) 1fr;
+      grid-template-columns: 1fr;
       gap: 1rem;
     }
     .detail-img {
       width: 100%;
       border-radius: 6px;
       background: var(--stone);
-      max-height: 520px;
+      max-height: 60vh;
       object-fit: cover;
       cursor: zoom-in;
     }
-    .detail-copy p { color: var(--muted); line-height: 1.65; }
+    .detail-copy p { color: var(--muted); line-height: 1.65; font-size: .95rem; }
     .form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .8rem;
+      grid-template-columns: 1fr;
+      gap: .7rem;
     }
     .full { grid-column: 1 / -1; }
     label {
       display: grid;
-      gap: .25rem;
+      gap: .2rem;
       color: var(--muted);
-      font-size: .82rem;
+      font-size: .78rem;
       font-weight: 700;
     }
+
+    /* ── CART ──────────────────────────────────────────────────────── */
     .cart-row {
       display: grid;
-      grid-template-columns: 62px 1fr auto;
-      gap: .75rem;
-      align-items: center;
-      padding: .7rem 0;
+      grid-template-columns: 50px 1fr auto;
+      gap: .6rem;
+      align-items: start;
+      padding: .6rem 0;
       border-bottom: 1px solid var(--line);
     }
     .cart-row img {
-      width: 62px;
-      height: 72px;
+      width: 50px;
+      height: 60px;
       object-fit: cover;
       border-radius: 4px;
       background: var(--stone);
     }
-    .qty { display: flex; align-items: center; gap: .35rem; }
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 1.3rem;
-      transform: translateX(-50%);
-      z-index: 100;
-      background: var(--ink);
-      color: var(--paper);
-      border: 1px solid rgba(215, 177, 100, .45);
-      border-radius: 5px;
-      padding: .75rem 1rem;
+    .qty { display: flex; align-items: center; gap: .3rem; }
+    .price { font-weight: 900; color: var(--ink2); font-size: 1rem; margin-bottom: .6rem; }
+
+    /* ── QR CODE SECTION ────────────────────────────────────────────– */
+    .qr-section {
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+      margin-top: 1rem;
       display: none;
     }
-    .toast.show { display: block; }
-    .footer {
-      margin-top: 2.4rem;
-      background: var(--ink);
-      color: var(--paper);
-      border-top: 4px solid var(--gold);
-    }
-    .footer-inner {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 1.5rem 1.1rem;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr;
-      gap: 1rem;
-    }
-    .footer h3, .footer h4 { color: var(--gold2); margin: 0 0 .45rem; }
-    .footer p, .footer a { color: rgba(255, 250, 240, .72); line-height: 1.55; text-decoration: none; display: block; margin: .2rem 0; }
+    .qr-section.show { display: block; }
+    .qr-section h4 { margin: 0 0 .5rem; color: var(--ink); font-size: .9rem; }
+    #payment-qr { display: flex; justify-content: center; margin: .8rem 0; }
 
-    @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero-copy, .hero-media { min-height: auto; }
-      .hero-media { height: min(680px, 78vh); }
-      .trust { grid-template-columns: 1fr 1fr; }
-      .filters { grid-template-columns: 1fr 1fr; }
-      .detail-grid, .footer-inner, .product-page { grid-template-columns: 1fr; }
-      .custom-band { grid-template-columns: 1fr; }
-      .category-hero { grid-template-columns: 1fr; align-items: start; }
-    }
-    @media (max-width: 560px) {
-      .nav { align-items: flex-start; }
-      .brand-title { white-space: normal; }
-      .nav-actions, .nav-links { width: 100%; justify-content: flex-start; margin-left: 0; }
-      .hero { padding-left: .75rem; padding-right: .75rem; }
-      .hero-media { height: min(520px, 72vh); }
-      .trust { grid-template-columns: 1fr; padding-left: .75rem; padding-right: .75rem; }
-      .filters, .form-grid { grid-template-columns: 1fr; }
-      .section { padding-left: .75rem; padding-right: .75rem; }
-      .grid { grid-template-columns: 1fr; }
-      .cart-row { grid-template-columns: 52px 1fr; }
-      .cart-row .qty { grid-column: 2; }
-    }
-
-    /* ── AI buttons ─────────────────────────────────────────────────── */
-    .btn.ai {
-      background: linear-gradient(135deg, #4a1d96, #7c3aed);
-      color: #fff;
-      border-color: transparent;
-    }
-    .btn.ai:hover { opacity: .88; }
-    .btn.ai:disabled { opacity: .45; cursor: wait; }
-    .ai-row { display: flex; gap: .45rem; margin-top: .4rem; flex-wrap: wrap; }
-
-    /* ── Chat widget ────────────────────────────────────────────────── */
+    /* ── CHAT WIDGET ────────────────────────────────────────────────– */
     .chat-bubble {
       position: fixed;
       bottom: 1.4rem;
       right: 1.4rem;
       z-index: 90;
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--gold), var(--gold2));
       border: none;
       box-shadow: 0 6px 24px rgba(7,22,44,.28);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -634,11 +658,11 @@
     .chat-bubble:hover { transform: scale(1.08); }
     .chat-panel {
       position: fixed;
-      bottom: 5.2rem;
+      bottom: 5rem;
       right: 1.4rem;
       z-index: 90;
       width: min(360px, calc(100vw - 2rem));
-      height: 480px;
+      height: 450px;
       background: var(--paper);
       border: 1px solid rgba(184,138,45,.4);
       border-radius: 12px;
@@ -651,28 +675,28 @@
     .chat-head {
       background: var(--ink);
       color: var(--paper);
-      padding: .75rem 1rem;
+      padding: .7rem .9rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-shrink: 0;
     }
-    .chat-head strong { color: var(--gold2); font-size: .9rem; }
-    .chat-head span { color: rgba(255,250,240,.6); font-size: .75rem; }
+    .chat-head strong { color: var(--gold2); font-size: .88rem; }
+    .chat-head span { color: rgba(255,250,240,.6); font-size: .72rem; }
     .chat-messages {
       flex: 1;
       overflow-y: auto;
-      padding: .85rem;
+      padding: .75rem;
       display: flex;
       flex-direction: column;
-      gap: .65rem;
+      gap: .55rem;
     }
     .chat-msg {
-      max-width: 82%;
-      padding: .6rem .8rem;
+      max-width: 85%;
+      padding: .55rem .75rem;
       border-radius: 10px;
-      font-size: .87rem;
-      line-height: 1.5;
+      font-size: .82rem;
+      line-height: 1.4;
     }
     .chat-msg.user {
       align-self: flex-end;
@@ -688,10 +712,10 @@
     }
     .chat-msg.typing { opacity: .55; font-style: italic; }
     .chat-foot {
-      padding: .65rem;
+      padding: .6rem;
       border-top: 1px solid var(--line);
       display: flex;
-      gap: .45rem;
+      gap: .4rem;
       flex-shrink: 0;
     }
     .chat-foot input {
@@ -699,56 +723,106 @@
       background: rgba(255,250,240,.8);
       border: 1px solid var(--line);
       border-radius: 4px;
-      padding: .55rem .7rem;
+      padding: .5rem .6rem;
       font: inherit;
       color: var(--ink);
       outline: none;
+      font-size: .9rem;
     }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <style>
-    /* ── Auth / 2FA styles ──────────────────────────────────────────── */
-    .login-box { max-width: 360px; }
+
+    /* ── TOAST ─────────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.3rem;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid rgba(215, 177, 100, .45);
+      border-radius: 5px;
+      padding: .7rem .9rem;
+      display: none;
+      font-size: .88rem;
+    }
+    .toast.show { display: block; }
+
+    /* ── FOOTER ────────────────────────────────────────────────────– */
+    .footer {
+      margin-top: 2rem;
+      background: var(--ink);
+      color: var(--paper);
+      border-top: 4px solid var(--gold);
+      margin-top: auto;
+    }
+    .footer-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1.2rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .footer h3, .footer h4 { color: var(--gold2); margin: 0 0 .35rem; font-size: .95rem; }
+    .footer p, .footer a { color: rgba(255, 250, 240, .72); line-height: 1.5; text-decoration: none; display: block; margin: .15rem 0; font-size: .88rem; }
+
+    /* ── AUTH / 2FA STYLES ─────────────────────────────────────────– */
+    .login-box { max-width: 100%; }
     .login-step { display: none; }
     .login-step.active { display: block; }
     .totp-badge {
       display: inline-flex; align-items: center; gap: .4rem;
       background: rgba(74,29,150,.12); color: #4a1d96;
       border: 1px solid rgba(74,29,150,.3); border-radius: 4px;
-      padding: .3rem .6rem; font-size: .75rem; font-weight: 700;
-      letter-spacing: .06em; text-transform: uppercase; margin-bottom: .65rem;
+      padding: .3rem .6rem; font-size: .72rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase; margin-bottom: .6rem;
     }
     .totp-badge.enabled { background: rgba(5,120,50,.12); color: #057832; border-color: rgba(5,120,50,.3); }
     .totp-badge.disabled { background: rgba(141,31,20,.08); color: #8d1f14; border-color: rgba(141,31,20,.25); }
-    #qr-container { margin: .75rem 0; display: flex; justify-content: center; }
-    #qr-container canvas, #qr-container img { border-radius: 6px; border: 1px solid var(--line); }
+    #qr-container { margin: .6rem 0; display: flex; justify-content: center; }
+    #qr-container canvas, #qr-container img { border-radius: 6px; border: 1px solid var(--line); max-width: 100%; }
     .secret-display {
       background: var(--stone); border: 1px solid var(--line); border-radius: 4px;
-      padding: .5rem .75rem; font-family: monospace; font-size: .88rem;
+      padding: .4rem .6rem; font-family: monospace; font-size: .82rem;
       letter-spacing: .1em; text-align: center; word-break: break-all;
-      margin: .5rem 0; color: var(--ink);
+      margin: .4rem 0; color: var(--ink);
     }
-    .logout-btn {
-      position: absolute; top: 1rem; right: 4rem;
-      background: transparent; border: 1px solid var(--line);
-      color: var(--muted); font-size: .7rem; border-radius: 4px;
-      padding: .3rem .55rem; cursor: pointer; font-weight: 700;
-      letter-spacing: .05em; text-transform: uppercase;
-    }
-    .logout-btn:hover { border-color: rgba(141,31,20,.4); color: #8d1f14; }
-    .attempts-bar {
-      height: 3px; background: var(--line); border-radius: 2px;
-      margin: .5rem 0; overflow: hidden;
-    }
+    .attempts-bar { height: 3px; background: var(--line); border-radius: 2px; margin: .4rem 0; overflow: hidden; }
     .attempts-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .3s; }
+
+    .ai-row { display: flex; gap: .4rem; margin-top: .35rem; flex-wrap: wrap; }
+    .ai-label { color: var(--muted); font-size: .7rem; margin-top: .3rem; }
+
+    /* ── RESPONSIVE DESKTOP ────────────────────────────────────────– */
+    @media (min-width: 768px) {
+      .hero { grid-template-columns: minmax(0, .92fr) minmax(300px, 1.08fr); }
+      .hero-copy, .hero-media { min-height: 450px; }
+      .trust { grid-template-columns: repeat(4, 1fr); }
+      .sticky-filters-content { grid-template-columns: auto 1fr 1fr 1fr auto auto auto; }
+      .filters { grid-template-columns: minmax(150px, 1fr) repeat(2, minmax(120px, .8fr)) auto; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+      .card-body { padding: .85rem; }
+      .detail-grid, .product-page { grid-template-columns: minmax(300px, .9fr) 1fr; }
+      .custom-band { grid-template-columns: 1fr auto; }
+      .footer-inner { grid-template-columns: 1.2fr 1fr 1fr; }
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .brand-sub { display: block; }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-copy, .hero-media { min-height: 550px; }
+      h1 { font-size: clamp(3rem, 8vw, 5.9rem); }
+    }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
   <div class="app">
+    <!-- TOPBAR -->
     <header class="topbar">
       <nav class="nav">
-        <div class="brand">
+        <div class="brand" data-go-home>
           <div class="mark">JM</div>
           <div>
             <div class="brand-title" data-shop-name>Jainson Marble</div>
@@ -762,12 +836,23 @@
         </div>
         <div class="nav-actions">
           <button class="btn" data-open-admin>Admin</button>
-          <button class="btn dark" data-open-cart>Cart (0)</button>
+          <button class="btn dark" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
         </div>
       </nav>
     </header>
 
-    <main>
+    <!-- STICKY FILTER BAR (appears on scroll) -->
+    <div class="sticky-filters" data-sticky-filters>
+      <div class="sticky-filters-content">
+        <span style="color:var(--muted);font-size:.8rem;font-weight:700">Filter by:</span>
+        <button class="btn" data-sticky-filter-all>All</button>
+        <button class="btn" data-sticky-filter-mandirs>Mandirs</button>
+        <button class="btn" data-sticky-filter-idols>Idols</button>
+      </div>
+    </div>
+
+    <main style="flex:1">
+      <!-- HERO -->
       <section class="hero" data-home-section>
         <div class="hero-copy">
           <div class="eyebrow" data-hero-eyebrow>Divine Craftsmanship. Timeless Devotion.</div>
@@ -779,37 +864,40 @@
           <div class="hero-actions">
             <button class="btn primary" data-route="mandirs">View Mandirs</button>
             <button class="btn" data-route="idols">View Idols</button>
-            <button class="btn" data-open-custom>Custom Requirement</button>
+            <button class="btn" data-open-custom>Custom Order</button>
           </div>
         </div>
         <div class="hero-media">
           <img src="https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=800&h=900&fit=crop" alt="Marble temple">
-          <div class="hero-badge" data-hero-badge>Lighting that brings divinity to life. Crafted in purity, inspired by devotion.</div>
+          <div class="hero-badge">Lighting that brings divinity to life. Crafted in purity, inspired by devotion.</div>
         </div>
       </section>
 
+      <!-- TRUST CARDS -->
       <section class="trust" data-home-section>
-        <div class="trust-card"><strong>Premium Quality</strong><span>Fine marble and Corian finish with durable structure.</span></div>
-        <div class="trust-card"><strong>Skilled Craftsmanship</strong><span>Intricate hand-carved details and elegant profiles.</span></div>
-        <div class="trust-card"><strong>Custom Designs</strong><span>Made as per your space, deity, and size requirement.</span></div>
-        <div class="trust-card"><strong>Long Lasting</strong><span>Built for daily worship and generations of devotion.</span></div>
+        <div class="trust-card"><strong>Premium Quality</strong><span>Fine marble and Corian finish.</span></div>
+        <div class="trust-card"><strong>Skilled Craftsmanship</strong><span>Hand-carved intricate details.</span></div>
+        <div class="trust-card"><strong>Custom Designs</strong><span>Made to your specifications.</span></div>
+        <div class="trust-card"><strong>Long Lasting</strong><span>Built for generations.</span></div>
       </section>
 
+      <!-- CUSTOM CTA -->
       <section class="section" data-home-section>
         <div class="custom-band">
           <div>
-            <h3 data-custom-title>Have a specific mandir or murti design in mind?</h3>
-            <p data-custom-text>Send deity, size, material, and finish details. We will prepare a personalized option.</p>
+            <h3>Have a specific design in mind?</h3>
+            <p>Send deity, size, material details. We'll prepare a personalized option.</p>
           </div>
-          <button class="btn primary" data-open-custom>Request Custom Order</button>
+          <button class="btn primary" data-open-custom>Request Custom</button>
         </div>
       </section>
 
+      <!-- FEATURED COLLECTION (Home View) -->
       <section class="section" id="products" data-home-section>
         <div class="section-head">
           <div>
             <div class="section-title">Featured Collection</div>
-            <div class="section-note">Marble temples, lighting Corian mandirs, and devotional statues.</div>
+            <div class="section-note">Marble temples, mandirs, and devotional statues.</div>
           </div>
           <div class="section-note"><span data-count>0</span> items</div>
         </div>
@@ -826,46 +914,56 @@
           <button class="btn" data-reset>Reset</button>
         </div>
         <div class="grid" data-grid></div>
+        <div class="pagination" data-pagination></div>
       </section>
 
+      <!-- COLLECTION PAGE -->
       <section class="section page-panel" data-collection-page>
         <div class="crumbs">Home / <span data-collection-crumb>Collection</span></div>
         <div class="category-hero">
           <div>
             <div class="eyebrow" data-collection-eyebrow>Collection</div>
             <h2 data-collection-title>Mandirs</h2>
-            <div class="section-note" data-collection-note>Preview designs first, then open a product for full details.</div>
+            <div class="section-note" data-collection-note>Preview designs, then click for full details.</div>
           </div>
           <div class="section-note"><span data-collection-count>0</span> items</div>
         </div>
+        <div class="filters">
+          <input class="input" data-search-collection placeholder="Search collection...">
+          <select class="select" data-material-collection></select>
+          <button class="btn" data-reset-collection>Reset</button>
+        </div>
         <div class="grid" data-collection-grid></div>
+        <div class="pagination" data-collection-pagination></div>
       </section>
 
+      <!-- PRODUCT DETAIL PAGE -->
       <section class="section page-panel" data-product-page></section>
     </main>
 
-  <!-- ── Chat Widget ───────────────────────────────────────────────── -->
-  <button class="chat-bubble" data-chat-toggle title="Ask about our products">💬</button>
-  <div class="chat-panel" data-chat-panel>
-    <div class="chat-head">
-      <div>
-        <strong>Ask Jainson Marble</strong><br>
-        <span>Ask about products, pricing, or availability</span>
+    <!-- CHAT WIDGET -->
+    <button class="chat-bubble" data-chat-toggle title="Ask about products">💬</button>
+    <div class="chat-panel" data-chat-panel>
+      <div class="chat-head">
+        <div>
+          <strong>Ask Jainson Marble</strong><br>
+          <span>Ask about products, pricing, availability</span>
+        </div>
+        <button class="btn small" data-chat-close style="background:transparent;color:rgba(255,250,240,.6);border-color:transparent;padding:.2rem .4rem">✕</button>
       </div>
-      <button class="btn small" data-chat-close style="background:transparent;color:rgba(255,250,240,.6);border-color:transparent">✕</button>
+      <div class="chat-messages" data-chat-messages></div>
+      <div class="chat-foot">
+        <input placeholder="Ask anything..." data-chat-input>
+        <button class="btn primary small" data-chat-send style="padding:.4rem .6rem">Send</button>
+      </div>
     </div>
-    <div class="chat-messages" data-chat-messages></div>
-    <div class="chat-foot">
-      <input placeholder="Ask anything..." data-chat-input>
-      <button class="btn primary small" data-chat-send>Send</button>
-    </div>
-  </div>
 
+    <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-inner">
         <div>
           <h3 data-footer-name>Jainson Marble</h3>
-          <p data-footer-copy>Dealers in marble temples and marble statues. Divine designs, timeless devotion, exquisite craftsmanship.</p>
+          <p data-footer-copy>Dealers in marble temples and marble statues. Divine designs, timeless devotion.</p>
         </div>
         <div>
           <h4>Visit</h4>
@@ -881,6 +979,9 @@
     </footer>
   </div>
 
+  <!-- MODALS -->
+
+  <!-- Detail Modal -->
   <div class="modal" data-detail-modal>
     <div class="dialog">
       <div class="dialog-head">
@@ -891,6 +992,7 @@
     </div>
   </div>
 
+  <!-- Cart Modal -->
   <div class="modal" data-cart-modal>
     <div class="dialog">
       <div class="dialog-head">
@@ -900,6 +1002,15 @@
       <div class="dialog-body">
         <div data-cart-items></div>
         <div class="price" data-cart-total>Total: Rs. 0</div>
+        
+        <!-- QR PAYMENT SECTION -->
+        <div class="qr-section" data-qr-section>
+          <h4>💳 Payment QR Code</h4>
+          <p style="color:var(--muted);font-size:.82rem;margin:0 0 .6rem">Scan to pay via UPI:</p>
+          <div id="payment-qr"></div>
+          <p style="color:var(--muted);font-size:.75rem;text-align:center;margin-top:.5rem">Or fill order details & send on WhatsApp</p>
+        </div>
+
         <div class="form-grid">
           <label>Name <input class="input" data-order-name></label>
           <label>Phone <input class="input" data-order-phone></label>
@@ -914,6 +1025,7 @@
     </div>
   </div>
 
+  <!-- Custom Requirement Modal -->
   <div class="modal" data-custom-modal>
     <div class="dialog">
       <div class="dialog-head">
@@ -923,8 +1035,8 @@
       <div class="dialog-body">
         <div class="form-grid">
           <label>Deity / Purpose <input class="input" data-custom-deity></label>
-          <label>Material <input class="input" data-custom-material placeholder="Marble, Corian, stone..."></label>
-          <label>Size <input class="input" data-custom-size placeholder="Width x height or inches"></label>
+          <label>Material <input class="input" data-custom-material placeholder="Marble, Corian..."></label>
+          <label>Size <input class="input" data-custom-size placeholder="Width x height"></label>
           <label>Finish <input class="input" data-custom-finish placeholder="White, gold, lighting..."></label>
           <label>Name <input class="input" data-custom-name></label>
           <label>Phone <input class="input" data-custom-phone></label>
@@ -937,6 +1049,7 @@
     </div>
   </div>
 
+  <!-- Admin Modal -->
   <div class="modal" data-admin-modal>
     <div class="dialog">
       <div class="dialog-head">
@@ -945,45 +1058,90 @@
       </div>
       <div class="dialog-body">
         <div data-login-box class="login-box">
-          <!-- Step 1: Password -->
+          <!-- LOGIN STEP 1 -->
           <div class="login-step active" data-login-step="1">
-            <label style="margin-bottom:.65rem;display:block">
+            <label style="margin-bottom:.6rem;display:block">
               Password
               <input class="input" type="password" data-admin-password placeholder="Enter admin password" style="margin-top:.3rem">
             </label>
             <div class="attempts-bar"><div class="attempts-fill" data-attempts-fill style="width:100%"></div></div>
-            <div class="section-note" data-login-error style="color:#8d1f14;min-height:1.2em"></div>
+            <div class="section-note" data-login-error style="color:#8d1f14;min-height:1em;margin:.3rem 0"></div>
             <br>
             <button class="btn primary" data-admin-login>Continue →</button>
           </div>
-          <!-- Step 2: TOTP (shown only if 2FA is enabled) -->
+          <!-- LOGIN STEP 2: TOTP -->
           <div class="login-step" data-login-step="2">
             <div class="totp-badge">🔐 2-Factor Authentication</div>
-            <p style="color:var(--muted);font-size:.88rem;margin:.2rem 0 .75rem">Open your authenticator app and enter the 6-digit code.</p>
+            <p style="color:var(--muted);font-size:.82rem;margin:.2rem 0 .6rem">Enter your 6-digit authenticator code.</p>
             <label>
               Authenticator Code
-              <input class="input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" data-admin-totp placeholder="000000" style="margin-top:.3rem;letter-spacing:.2em;font-size:1.2rem">
+              <input class="input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" data-admin-totp placeholder="000000" style="margin-top:.3rem;letter-spacing:.2em;font-size:1.1rem">
             </label>
-            <div class="section-note" data-totp-error style="color:#8d1f14;min-height:1.2em;margin-top:.4rem"></div>
+            <div class="section-note" data-totp-error style="color:#8d1f14;min-height:1em;margin-top:.3rem"></div>
             <br>
             <button class="btn primary" data-admin-totp-verify>Verify & Enter Admin</button>
-            <button class="btn small" data-login-back style="margin-left:.5rem">← Back</button>
+            <button class="btn small" data-login-back style="margin-left:.4rem">← Back</button>
+          </div>
+          <!-- ADMIN DASHBOARD -->
+          <div class="login-step" data-login-step="3" style="max-height:70vh;overflow-y:auto">
+            <button class="btn danger" data-admin-logout style="position:absolute;top:.8rem;right:.8rem">Logout</button>
+            <h3 style="margin-top:0">Admin Dashboard</h3>
+
+            <!-- ADD PRODUCT SECTION -->
+            <div style="margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line)">
+              <h4 style="margin:.5rem 0">Add Product</h4>
+              <div class="form-grid">
+                <label>Product Name <input class="input" data-add-name placeholder="e.g., White Marble Ganesh"></label>
+                <label>Category <select class="select" data-add-category><option>Mandir</option><option>Idol</option><option>Accessory</option></select></label>
+                <label>Material <input class="input" data-add-material placeholder="e.g., Marble, Corian"></label>
+                <label>Size <input class="input" data-add-size placeholder="e.g., 12x18 inches"></label>
+                <label>Price (Rs) <input class="input" type="number" data-add-price placeholder="5000"></label>
+                <label>Image URL <input class="input" data-add-image placeholder="https://..."></label>
+                <label class="full">Description <textarea class="textarea" data-add-description placeholder="Product description..."></textarea></label>
+              </div>
+              <div class="ai-row">
+                <button class="btn ai" data-ai-image-upload>✨ AI Image Fill</button>
+                <button class="btn ai" data-ai-write-desc>✨ AI Write Description</button>
+              </div>
+              <p class="ai-label">AI will auto-fill details from image or generate description</p>
+              <br>
+              <button class="btn primary" data-add-product>Add Product</button>
+            </div>
+
+            <!-- PRODUCTS LIST & EXPORT -->
+            <div>
+              <h4 style="margin:.5rem 0">Products & Export</h4>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+                <button class="btn" data-export-json>⬇ Export JSON</button>
+                <button class="btn" data-export-csv>⬇ Export CSV</button>
+                <button class="btn" data-export-zip>⬇ Export ZIP + Images</button>
+              </div>
+              <div style="max-height:400px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:.7rem">
+                <div data-products-list></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="toast" data-toast></div>
+
   <script>
-    // ── CRITICAL FIX #1: Define $$ helper function ──────────────────
+    // ── Initialization ────────────────────────────────────────────────
     const $$ = document.querySelectorAll.bind(document);
     const $ = document.querySelector.bind(document);
-
-    // ── Initialization ────────────────────────────────────────────────
+    
     const store = { products: [], cart: [], settings: {} };
+    const ITEMS_PER_PAGE = 20;
+    let currentPage = 1;
+    let collectionPage = 1;
+    let filteredProducts = [];
+    let currentCollection = null;
     let whatsapp = '918010631117';
 
-    // ── IMPORTANT: Load products from localStorage on init ────────────
+    // ── LOAD FROM LOCALSTORAGE ─────────────────────────────────────
     function initStore() {
       const saved = localStorage.getItem('products');
       if (saved) {
@@ -994,140 +1152,709 @@
           store.products = [];
         }
       }
-      
-      const savedSettings = localStorage.getItem('settings');
-      if (savedSettings) {
-        try {
-          store.settings = JSON.parse(savedSettings);
-        } catch (e) {
-          console.error('Failed to parse settings:', e);
-          store.settings = {};
-        }
-      }
-      
-      applySettings();
-      renderProducts();
-      updateCatPillCounts();
     }
 
-    function applySettings() {
-      const s = store.settings;
-      if (s.name) $('[data-shop-name]').textContent = s.name;
-      if (s.brandSub) $('[data-brand-sub]').textContent = s.brandSub;
-      if (s.whatsapp) whatsapp = s.whatsapp;
-      if (s.heroImage) $('[data-home-section] .hero-media img').src = s.heroImage;
-    }
-
-    // ── CRITICAL FIX #2: Proper pagination renderProducts ────────────
-    function renderProducts() {
-      const grid = $('[data-grid]');
-      if (!grid) return;
-      grid.innerHTML = '';
+    // ── RENDER GRID WITH PAGINATION ─────────────────────────────────
+    function renderGrid(products, gridSelector, paginationSelector, pageVar) {
+      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE;
+      const page = products.slice(start, end);
       
-      const search = $('[data-search]')?.value.toLowerCase() || '';
-      const category = $('[data-category]')?.value || '';
-      const material = $('[data-material]')?.value || '';
-      const sort = $('[data-sort]')?.value || 'featured';
-
-      let filtered = store.products.filter(p => {
-        const searchMatch = !search || (p.name?.toLowerCase().includes(search) || p.category?.toLowerCase().includes(search) || p.material?.toLowerCase().includes(search));
-        const catMatch = !category || p.category === category;
-        const matMatch = !material || p.material === material;
-        return searchMatch && catMatch && matMatch;
-      });
-
-      // Sort
-      if (sort === 'low') filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
-      else if (sort === 'high') filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
-      else if (sort === 'new') filtered.sort((a, b) => new Date(b.created || 0) - new Date(a.created || 0));
-      else filtered = filtered.filter(p => p.featured).concat(filtered.filter(p => !p.featured));
-
-      // Paginate: show first 12
-      const paginated = filtered.slice(0, 12);
-      $('[data-count]').textContent = paginated.length;
-
-      paginated.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
+      $(gridSelector).innerHTML = page.map(p => `
+        <div class="card" data-product-id="${p.id}">
           <div class="thumb">
-            <img src="${p.image || 'https://via.placeholder.com/200x250?text=No+Image'}" alt="${p.name}" loading="lazy">
-            ${p.featured ? `<div class="tag">Featured</div>` : ''}
-            ${(p.stock || 0) === 0 ? `<div class="sold">SOLD OUT</div>` : ''}
+            <img src="${p.image}" alt="${p.name}" onload="this.style.visibility='visible'" style="visibility:hidden">
+            ${p.featured ? '<span class="tag">⭐ Featured</span>' : ''}
+            ${p.sold ? '<span class="sold">SOLD</span>' : ''}
           </div>
           <div class="card-body">
-            <div class="kicker">${p.category || 'Product'}</div>
+            <div class="kicker">${p.category}</div>
             <div class="name">${p.name}</div>
             <div class="meta">
-              <span class="chip">${p.material || 'Material'}</span>
-              ${p.size ? `<span class="chip">${p.size}</span>` : ''}
+              <span class="chip">${p.material}</span>
+              <span class="chip">${p.size}</span>
             </div>
-            <div class="price">Rs. ${(p.price || 0).toLocaleString()}</div>
+            <div class="price">Rs. ${p.price}</div>
             <div class="card-actions">
-              <button class="btn small" data-view-detail="${p.id}">Details</button>
-              <button class="btn primary small" data-add-cart="${p.id}" ${(p.stock || 0) === 0 ? 'disabled' : ''}>Add</button>
+              <button class="btn small" data-view-product="${p.id}">View</button>
+              <button class="btn small primary" data-add-to-cart="${p.id}">Add Cart</button>
             </div>
           </div>
-        `;
-        grid.appendChild(card);
+        </div>
+      `).join('');
+
+      // Pagination
+      const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+      $(paginationSelector).innerHTML = '';
+      if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i;
+          btn.className = i === currentPage ? 'active' : '';
+          btn.onclick = () => {
+            currentPage = i;
+            renderGrid(products, gridSelector, paginationSelector, pageVar);
+            window.scrollTo(0, 300);
+          };
+          $(paginationSelector).appendChild(btn);
+        }
+      }
+
+      // Attach event listeners
+      $$('[data-view-product]').forEach(btn => {
+        btn.onclick = () => showProductDetail(btn.dataset.viewProduct);
       });
+      $$('[data-add-to-cart]').forEach(btn => {
+        btn.onclick = () => addToCart(btn.dataset.addToCart);
+      });
+    }
 
-      if (paginated.length === 0) {
-        grid.innerHTML = '<p style="color:var(--muted);padding:1rem;grid-column:1/-1">No products found.</p>';
+    // ── SHOW PRODUCT DETAIL ─────────────────────────────────────────
+    function showProductDetail(productId) {
+      const product = store.products.find(p => p.id === productId);
+      if (!product) return;
+
+      $('[data-detail-title]').textContent = product.name;
+      $('[data-detail-body]').innerHTML = `
+        <div class="detail-grid">
+          <div class="product-photo">
+            <img src="${product.image}" alt="${product.name}" class="detail-img">
+          </div>
+          <div class="detail-copy">
+            <h2>${product.name}</h2>
+            <div class="meta">
+              <span class="chip">${product.category}</span>
+              <span class="chip">${product.material}</span>
+              <span class="chip">${product.size}</span>
+            </div>
+            <div class="price">Rs. ${product.price}</div>
+            <p style="margin:0">${product.description || 'No description available.'}</p>
+            <div class="hero-actions" style="margin-top:1.2rem">
+              <button class="btn primary" data-cart-from-detail="${product.id}">Add to Cart</button>
+              <button class="btn" data-share-product="${product.id}">Share</button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      $(`[data-cart-from-detail="${product.id}"]`).onclick = () => {
+        addToCart(product.id);
+        showToast('Added to cart!');
+      };
+      
+      $(`[data-share-product="${product.id}"]`).onclick = () => {
+        const url = `${window.location.href}?product=${product.id}`;
+        navigator.share ? navigator.share({title: product.name, url}) : alert('Share: ' + url);
+      };
+
+      $('[data-detail-modal]').classList.add('open');
+    }
+
+    // ── ADD TO CART ─────────────────────────────────────────────────
+    function addToCart(productId) {
+      const product = store.products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const existing = store.cart.find(c => c.id === productId);
+      if (existing) {
+        existing.qty++;
+      } else {
+        store.cart.push({...product, qty: 1});
+      }
+      updateCartUI();
+      showToast('Added to cart!');
+    }
+
+    // ── UPDATE CART UI ──────────────────────────────────────────────
+    function updateCartUI() {
+      $('[data-cart-count]').textContent = store.cart.length;
+      const cartItems = $('[data-cart-items]');
+      if (store.cart.length === 0) {
+        cartItems.innerHTML = '<p style="color:var(--muted);text-align:center;padding:1rem">Your cart is empty</p>';
+        $('[data-qr-section]').classList.remove('show');
+      } else {
+        cartItems.innerHTML = store.cart.map(item => `
+          <div class="cart-row">
+            <img src="${item.image}" alt="${item.name}">
+            <div>
+              <strong style="font-size:.9rem">${item.name}</strong><br>
+              <span style="color:var(--muted);font-size:.8rem">Rs. ${item.price} × ${item.qty}</span>
+            </div>
+            <div class="qty">
+              <button class="btn small" data-qty-decrease="${item.id}">−</button>
+              <span style="font-weight:700;min-width:1.5rem;text-align:center">${item.qty}</span>
+              <button class="btn small" data-qty-increase="${item.id}">+</button>
+            </div>
+            <button class="btn danger small" data-remove-cart="${item.id}">×</button>
+          </div>
+        `).join('');
+
+        // Quantity handlers
+        $$('[data-qty-increase]').forEach(btn => {
+          btn.onclick = () => {
+            const item = store.cart.find(c => c.id === btn.dataset.qtyIncrease);
+            if (item) item.qty++;
+            updateCartUI();
+          };
+        });
+        $$('[data-qty-decrease]').forEach(btn => {
+          btn.onclick = () => {
+            const item = store.cart.find(c => c.id === btn.dataset.qtyDecrease);
+            if (item && item.qty > 1) item.qty--;
+            updateCartUI();
+          };
+        });
+        $$('[data-remove-cart]').forEach(btn => {
+          btn.onclick = () => {
+            store.cart = store.cart.filter(c => c.id !== btn.dataset.removeCart);
+            updateCartUI();
+          };
+        });
+
+        $('[data-qr-section]').classList.add('show');
+        generatePaymentQR();
+      }
+
+      const total = store.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      $('[data-cart-total]').textContent = `Total: Rs. ${total}`;
+    }
+
+    // ── GENERATE PAYMENT QR ─────────────────────────────────────────
+    function generatePaymentQR() {
+      const total = store.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const upiUrl = `upi://pay?pa=9891468290@paytm&pn=JainsonMarble&am=${total}&tn=Order${Date.now()}`;
+      
+      const qrContainer = $('#payment-qr');
+      qrContainer.innerHTML = '';
+      new QRCode(qrContainer, {
+        text: upiUrl,
+        width: 200,
+        height: 200,
+        colorDark: '#07162c',
+        colorLight: '#fffaf0'
+      });
+    }
+
+    // ── FILTER & SEARCH ─────────────────────────────────────────────
+    function applyFilters() {
+      const search = $('[data-search]').value.toLowerCase();
+      const category = $('[data-category]').value;
+      const material = $('[data-material]').value;
+      const sort = $('[data-sort]').value;
+
+      let results = store.products;
+
+      if (search) {
+        results = results.filter(p => 
+          p.name.toLowerCase().includes(search) ||
+          p.description?.toLowerCase().includes(search) ||
+          p.category.toLowerCase().includes(search)
+        );
+      }
+      if (category) results = results.filter(p => p.category === category);
+      if (material) results = results.filter(p => p.material === material);
+
+      // Sort
+      if (sort === 'low') results.sort((a, b) => a.price - b.price);
+      if (sort === 'high') results.sort((a, b) => b.price - a.price);
+      if (sort === 'new') results.sort((a, b) => b.id.localeCompare(a.id));
+
+      filteredProducts = results;
+      currentPage = 1;
+      $('[data-count]').textContent = results.length;
+      renderGrid(results, '[data-grid]', '[data-pagination]');
+    }
+
+    // ── POPULATE FILTER DROPDOWNS ───────────────────────────────────
+    function populateFilters() {
+      const categories = [...new Set(store.products.map(p => p.category))];
+      const materials = [...new Set(store.products.map(p => p.material))];
+
+      $('[data-category]').innerHTML = '<option value="">All Categories</option>' + 
+        categories.map(c => `<option value="${c}">${c}</option>`).join('');
+      
+      $('[data-material]').innerHTML = '<option value="">All Materials</option>' + 
+        materials.map(m => `<option value="${m}">${m}</option>`).join('');
+      
+      $('[data-material-collection]').innerHTML = '<option value="">All Materials</option>' + 
+        materials.map(m => `<option value="${m}">${m}</option>`).join('');
+    }
+
+    // ── SHOW COLLECTION ─────────────────────────────────────────────
+    function showCollection(type) {
+      currentCollection = type;
+      collectionPage = 1;
+      
+      $$('[data-home-section]').forEach(el => el.style.display = 'none');
+      $('[data-collection-page]').classList.add('active');
+      
+      const title = type === 'mandirs' ? 'Mandirs' : 'Idols';
+      $('[data-collection-title]').textContent = title;
+      $('[data-collection-crumb]').textContent = title;
+      $('[data-collection-eyebrow]').textContent = title.toUpperCase();
+
+      const filtered = store.products.filter(p => p.category === title);
+      $('[data-collection-count]').textContent = filtered.length;
+
+      renderGrid(filtered, '[data-collection-grid]', '[data-collection-pagination]');
+    }
+
+    // ── SHOW HOME ───────────────────────────────────────────────────
+    function showHome() {
+      $('[data-collection-page]').classList.remove('active');
+      $('[data-product-page]').classList.remove('active');
+      $$('[data-home-section]').forEach(el => el.style.display = 'block');
+      currentPage = 1;
+      applyFilters();
+    }
+
+    // ── SHOW TOAST ──────────────────────────────────────────────────
+    function showToast(msg) {
+      const toast = $('[data-toast]');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // ── MODAL TOGGLES ───────────────────────────────────────────────
+    function toggleModal(selector, show) {
+      const modal = $(selector);
+      if (show) modal.classList.add('open');
+      else modal.classList.remove('open');
+    }
+
+    // ── EXPORT FUNCTIONS ────────────────────────────────────────────
+    function exportJSON() {
+      const data = JSON.stringify({products: store.products, exportedAt: new Date().toISOString()}, null, 2);
+      const blob = new Blob([data], {type: 'application/json'});
+      downloadFile(blob, `jainson-marble-${Date.now()}.json`);
+      showToast('JSON exported!');
+    }
+
+    function exportCSV() {
+      let csv = 'Name,Category,Material,Size,Price,Image URL,Description\n';
+      store.products.forEach(p => {
+        csv += `"${p.name}","${p.category}","${p.material}","${p.size}",${p.price},"${p.image}","${(p.description || '').replace(/"/g, '""')}"\n`;
+      });
+      const blob = new Blob([csv], {type: 'text/csv'});
+      downloadFile(blob, `jainson-marble-${Date.now()}.csv`);
+      showToast('CSV exported!');
+    }
+
+    async function exportZIP() {
+      showToast('Preparing ZIP...');
+      const zip = new JSZip();
+      
+      // Add JSON
+      zip.file('products.json', JSON.stringify({products: store.products}, null, 2));
+      
+      // Add CSV
+      let csv = 'Name,Category,Material,Size,Price,Image URL,Description\n';
+      store.products.forEach(p => {
+        csv += `"${p.name}","${p.category}","${p.material}","${p.size}",${p.price},"${p.image}","${(p.description || '').replace(/"/g, '""')}"\n`;
+      });
+      zip.file('products.csv', csv);
+
+      // Download images
+      for (const product of store.products) {
+        try {
+          const response = await fetch(product.image);
+          if (response.ok) {
+            const blob = await response.blob();
+            const ext = product.image.split('.').pop().split('?')[0] || 'jpg';
+            zip.folder('images').file(`${product.id}.${ext}`, blob);
+          }
+        } catch (e) {
+          console.log(`Could not download ${product.id} image`);
+        }
+      }
+
+      const zipBlob = await zip.generateAsync({type: 'blob'});
+      downloadFile(zipBlob, `jainson-marble-${Date.now()}.zip`);
+      showToast('ZIP with images exported!');
+    }
+
+    function downloadFile(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ── GROQ LLM INTEGRATION ────────────────────────────────────────
+    async function callGroqAPI(messages, systemPrompt) {
+      const apiKey = prompt('Enter your Groq API key:');
+      if (!apiKey) return null;
+
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'mixtral-8x7b-32768',
+            messages: [
+              {role: 'system', content: systemPrompt},
+              ...messages
+            ],
+            temperature: 0.7,
+            max_tokens: 500
+          })
+        });
+
+        if (!response.ok) throw new Error('API Error');
+        const data = await response.json();
+        return data.choices[0].message.content;
+      } catch (error) {
+        showToast('Groq API error: ' + error.message);
+        return null;
       }
     }
 
-    // ── CRITICAL FIX #3: updateCatPillCounts uses $$ correctly ────────
-    function updateCatPillCounts() {
-      const categories = [...new Set(store.products.map(p => p.category).filter(Boolean))];
-      const materials = [...new Set(store.products.map(p => p.material).filter(Boolean))];
-      
-      const catSelect = $('[data-category]');
-      const matSelect = $('[data-material]');
-      
-      if (catSelect) {
-        catSelect.innerHTML = '<option value="">All Categories</option>' + categories.map(c => {
-          const count = store.products.filter(p => p.category === c).length;
-          return `<option value="${c}">${c} (${count})</option>`;
-        }).join('');
+    async function aiImageFill() {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.onchange = async () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async () => {
+          showToast('🤖 AI analyzing image...');
+          
+          const base64 = reader.result.split(',')[1];
+          const response = await callGroqAPI(
+            [{
+              role: 'user',
+              content: [{
+                type: 'image_url',
+                image_url: {url: `data:image/jpeg;base64,${base64}`}
+              }, {
+                type: 'text',
+                text: 'Analyze this marble temple/murti image and provide: name, category (Mandir/Idol/Accessory), material, size estimate, and brief description. Format as JSON.'
+              }]
+            }],
+            'You are an expert in marble sculptures and temples. Provide JSON output.'
+          );
+
+          if (response) {
+            try {
+              const json = JSON.parse(response);
+              $('[data-add-name]').value = json.name || '';
+              $('[data-add-category]').value = json.category || 'Mandir';
+              $('[data-add-material]').value = json.material || 'Marble';
+              $('[data-add-size]').value = json.size || '';
+              $('[data-add-description]').value = json.description || '';
+              $('[data-add-image]').value = URL.createObjectURL(file);
+              showToast('✨ Details auto-filled!');
+            } catch (e) {
+              showToast('Could not parse AI response');
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      };
+      fileInput.click();
+    }
+
+    async function aiWriteDescription() {
+      const name = $('[data-add-name]').value;
+      const material = $('[data-add-material]').value;
+      const size = $('[data-add-size]').value;
+
+      if (!name || !material) {
+        showToast('Fill name and material first');
+        return;
       }
-      
-      if (matSelect) {
-        matSelect.innerHTML = '<option value="">All Materials</option>' + materials.map(m => {
-          const count = store.products.filter(p => p.material === m).length;
-          return `<option value="${m}">${m} (${count})</option>`;
-        }).join('');
+
+      showToast('✍️ AI writing...');
+      const desc = await callGroqAPI(
+        [{
+          role: 'user',
+          content: `Write a short, compelling 2-3 sentence product description for: ${name}, made of ${material}, size ${size}. For a marble temple/murti shop.`
+        }],
+        'You are a copywriter for a marble temple and murti shop. Write engaging, authentic descriptions.'
+      );
+
+      if (desc) {
+        $('[data-add-description]').value = desc;
+        showToast('✨ Description generated!');
       }
     }
 
-    // ── Event listeners ────────────────────────────────────────────────
-    document.addEventListener('click', e => {
-      if (e.target.dataset.route) {
-        const route = e.target.dataset.route;
-        $$('[data-home-section]').forEach(s => s.style.display = route === 'home' ? '' : 'none');
-        $('[data-collection-page]').classList.toggle('active', route !== 'home');
+    // ── CUSTOMER CHAT (GROQ) ────────────────────────────────────────
+    async function handleChatMessage() {
+      const input = $('[data-chat-input]');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      input.value = '';
+      const messages = $('[data-chat-messages]');
+      
+      // User message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-msg user';
+      userMsg.textContent = msg;
+      messages.appendChild(userMsg);
+
+      // Typing indicator
+      const typingMsg = document.createElement('div');
+      typingMsg.className = 'chat-msg bot typing';
+      typingMsg.textContent = 'Typing...';
+      messages.appendChild(typingMsg);
+      messages.scrollTop = messages.scrollHeight;
+
+      const response = await callGroqAPI(
+        [{
+          role: 'user',
+          content: `Customer asking about our marble temples and murtis: "${msg}". Our products: ${JSON.stringify(store.products.map(p => `${p.name} (${p.category}, Rs. ${p.price})`))}. Answer helpfully and suggest relevant products.`
+        }],
+        'You are a helpful customer service AI for Jainson Marble shop. Answer questions about marble temples, murtis, and products. Be friendly and suggest relevant items.'
+      );
+
+      typingMsg.remove();
+      const botMsg = document.createElement('div');
+      botMsg.className = 'chat-msg bot';
+      botMsg.textContent = response || 'Sorry, I could not respond. Please try again.';
+      messages.appendChild(botMsg);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    // ── STICKY FILTER BAR ON SCROLL ─────────────────────────────────
+    window.addEventListener('scroll', () => {
+      const stickyFilters = $('[data-sticky-filters]');
+      if (window.scrollY > 300) {
+        stickyFilters.classList.add('active');
+      } else {
+        stickyFilters.classList.remove('active');
       }
     });
 
-    $('[data-search]')?.addEventListener('input', renderProducts);
-    $('[data-category]')?.addEventListener('change', renderProducts);
-    $('[data-material]')?.addEventListener('change', renderProducts);
-    $('[data-sort]')?.addEventListener('change', renderProducts);
-    $('[data-reset]')?.addEventListener('click', () => {
+    // ── EVENT LISTENERS ─────────────────────────────────────────────
+
+    // Navigation
+    $('[data-go-home]').addEventListener('click', showHome);
+    $$('[data-route]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const route = btn.dataset.route;
+        if (route === 'home') showHome();
+        if (route === 'mandirs') showCollection('Mandirs');
+        if (route === 'idols') showCollection('Idols');
+      });
+    });
+
+    // Sticky filters
+    $('[data-sticky-filter-all]').addEventListener('click', () => {
+      $$('[data-sticky-filter-all], [data-sticky-filter-mandirs], [data-sticky-filter-idols]').forEach(b => b.classList.remove('active'));
+      $('[data-sticky-filter-all]').classList.add('active');
+      showHome();
+    });
+    $('[data-sticky-filter-mandirs]').addEventListener('click', () => {
+      $$('[data-sticky-filter-all], [data-sticky-filter-mandirs], [data-sticky-filter-idols]').forEach(b => b.classList.remove('active'));
+      $('[data-sticky-filter-mandirs]').classList.add('active');
+      showCollection('Mandirs');
+    });
+    $('[data-sticky-filter-idols]').addEventListener('click', () => {
+      $$('[data-sticky-filter-all], [data-sticky-filter-mandirs], [data-sticky-filter-idols]').forEach(b => b.classList.remove('active'));
+      $('[data-sticky-filter-idols]').classList.add('active');
+      showCollection('Idols');
+    });
+
+    // Filters
+    $('[data-search]').addEventListener('input', applyFilters);
+    $('[data-category]').addEventListener('change', applyFilters);
+    $('[data-material]').addEventListener('change', applyFilters);
+    $('[data-sort]').addEventListener('change', applyFilters);
+    $('[data-reset]').addEventListener('click', () => {
       $('[data-search]').value = '';
       $('[data-category]').value = '';
       $('[data-material]').value = '';
       $('[data-sort]').value = 'featured';
-      renderProducts();
+      applyFilters();
     });
 
-    // ── Initialize on page load ────────────────────────────────────────
-    window.addEventListener('DOMContentLoaded', initStore);
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initStore);
-    } else {
-      initStore();
+    // Cart
+    $('[data-open-cart]').addEventListener('click', () => {
+      updateCartUI();
+      toggleModal('[data-cart-modal]', true);
+    });
+    $('[data-close-cart]').addEventListener('click', () => toggleModal('[data-cart-modal]', false));
+    $('[data-clear-cart]').addEventListener('click', () => {
+      store.cart = [];
+      updateCartUI();
+      showToast('Cart cleared');
+    });
+    $('[data-send-order]').addEventListener('click', () => {
+      const name = $('[data-order-name]').value;
+      const phone = $('[data-order-phone]').value;
+      const city = $('[data-order-city]').value;
+      const notes = $('[data-order-notes]').value;
+
+      if (!name || !phone) {
+        showToast('Please fill name and phone');
+        return;
+      }
+
+      const total = store.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const items = store.cart.map(item => `${item.name} x${item.qty} - Rs. ${item.price * item.qty}`).join('\n');
+      const message = `Hi! I'd like to order:\n\n${items}\n\nTotal: Rs. ${total}\n\nName: ${name}\nCity: ${city}\nNotes: ${notes}`;
+      const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+      showToast('Opening WhatsApp...');
+    });
+
+    // Custom order
+    $('[data-open-custom]').addEventListener('click', () => toggleModal('[data-custom-modal]', true));
+    $('[data-close-custom]').addEventListener('click', () => toggleModal('[data-custom-modal]', false));
+    $('[data-send-custom]').addEventListener('click', () => {
+      const deity = $('[data-custom-deity]').value;
+      const material = $('[data-custom-material]').value;
+      const size = $('[data-custom-size]').value;
+      const finish = $('[data-custom-finish]').value;
+      const name = $('[data-custom-name]').value;
+      const phone = $('[data-custom-phone]').value;
+      const notes = $('[data-custom-notes]').value;
+
+      if (!deity || !name || !phone) {
+        showToast('Please fill deity, name, and phone');
+        return;
+      }
+
+      const message = `Hi! I have a custom requirement:\n\nDeity/Purpose: ${deity}\nMaterial: ${material}\nSize: ${size}\nFinish: ${finish}\n\nName: ${name}\nPhone: ${phone}\nAdditional Notes: ${notes}`;
+      const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+      showToast('Opening WhatsApp...');
+    });
+
+    // Admin login (SIMPLIFIED - use env var for password)
+    $('[data-admin-login]').addEventListener('click', () => {
+      const password = $('[data-admin-password]').value;
+      if (password === 'admin123') { // In production, use serverless function to validate
+        $('[data-login-step="1"]').classList.remove('active');
+        $('[data-login-step="3"]').classList.add('active');
+        renderAdminDashboard();
+      } else {
+        $('[data-login-error]').textContent = 'Invalid password';
+      }
+    });
+
+    $('[data-admin-logout]').addEventListener('click', () => {
+      $('[data-login-step="3"]').classList.remove('active');
+      $('[data-login-step="1"]').classList.add('active');
+      $('[data-admin-password]').value = '';
+      $('[data-login-error]').textContent = '';
+      toggleModal('[data-admin-modal]', false);
+    });
+
+    $('[data-open-admin]').addEventListener('click', () => {
+      toggleModal('[data-admin-modal]', true);
+    });
+    $('[data-close-admin]').addEventListener('click', () => toggleModal('[data-admin-modal]', false));
+
+    // Add product
+    $('[data-add-product]').addEventListener('click', () => {
+      const name = $('[data-add-name]').value;
+      const category = $('[data-add-category]').value;
+      const material = $('[data-add-material]').value;
+      const size = $('[data-add-size]').value;
+      const price = $('[data-add-price]').value;
+      const image = $('[data-add-image]').value;
+      const description = $('[data-add-description]').value;
+
+      if (!name || !price || !image) {
+        showToast('Fill name, price, and image');
+        return;
+      }
+
+      const product = {
+        id: Date.now().toString(),
+        name, category, material, size,
+        price: parseInt(price),
+        image, description,
+        featured: false, sold: false
+      };
+
+      store.products.push(product);
+      localStorage.setItem('products', JSON.stringify(store.products));
+      
+      // Clear form
+      $('[data-add-name]').value = '';
+      $('[data-add-material]').value = '';
+      $('[data-add-size]').value = '';
+      $('[data-add-price]').value = '';
+      $('[data-add-image]').value = '';
+      $('[data-add-description]').value = '';
+
+      populateFilters();
+      renderAdminDashboard();
+      showToast('✅ Product added!');
+    });
+
+    // Admin export
+    $('[data-export-json]').addEventListener('click', exportJSON);
+    $('[data-export-csv]').addEventListener('click', exportCSV);
+    $('[data-export-zip]').addEventListener('click', exportZIP);
+
+    // AI buttons
+    $('[data-ai-image-upload]').addEventListener('click', aiImageFill);
+    $('[data-ai-write-desc]').addEventListener('click', aiWriteDescription);
+
+    // Detail modal
+    $('[data-close-detail]').addEventListener('click', () => toggleModal('[data-detail-modal]', false));
+
+    // Chat
+    $('[data-chat-toggle]').addEventListener('click', () => {
+      $('[data-chat-panel]').classList.toggle('open');
+    });
+    $('[data-chat-close]').addEventListener('click', () => {
+      $('[data-chat-panel]').classList.remove('open');
+    });
+    $('[data-chat-send]').addEventListener('click', handleChatMessage);
+    $('[data-chat-input]').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleChatMessage();
+    });
+
+    // ── RENDER ADMIN DASHBOARD ──────────────────────────────────────
+    function renderAdminDashboard() {
+      const list = $('[data-products-list]');
+      if (store.products.length === 0) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center">No products yet. Add one!</p>';
+      } else {
+        list.innerHTML = store.products.map(p => `
+          <div style="padding:.6rem;border-bottom:1px solid var(--line);font-size:.82rem">
+            <strong>${p.name}</strong> (${p.category}, Rs. ${p.price})
+            <br><span style="color:var(--muted)">${p.material}, ${p.size}</span>
+            <div style="margin-top:.3rem">
+              <button class="btn small danger" data-delete-product="${p.id}" style="padding:.2rem .4rem">Delete</button>
+            </div>
+          </div>
+        `).join('');
+
+        $$('[data-delete-product]').forEach(btn => {
+          btn.onclick = () => {
+            if (confirm('Delete this product?')) {
+              store.products = store.products.filter(p => p.id !== btn.dataset.deleteProduct);
+              localStorage.setItem('products', JSON.stringify(store.products));
+              renderAdminDashboard();
+              populateFilters();
+              showToast('Product deleted');
+            }
+          };
+        });
+      }
     }
+
+    // ── INITIALIZE ──────────────────────────────────────────────────
+    initStore();
+    populateFilters();
+    applyFilters();
   </script>
 </body>
 </html>
