@@ -1233,6 +1233,12 @@
               Admin Password
               <input class="input" type="password" data-admin-password placeholder="Enter password" style="margin-top:.3rem" autocomplete="current-password">
             </label>
+            <div data-totp-row style="display:none;margin-bottom:.5rem">
+              <label style="display:block">
+                Authenticator Code
+                <input class="input" type="text" data-admin-totp placeholder="6-digit code" maxlength="6" style="margin-top:.3rem;letter-spacing:.2em;font-size:1.1rem" inputmode="numeric">
+              </label>
+            </div>
             <div class="attempts-bar"><div class="attempts-fill" data-attempts-fill style="width:100%"></div></div>
             <div class="section-note" data-login-error style="color:#8d1f14;min-height:1.2em;margin:.3rem 0;font-size:.8rem"></div>
             <br>
@@ -1260,12 +1266,22 @@
                   <label>Category <select class="select" data-add-category><option>Mandir</option><option>Idol</option><option>Accessory</option></select></label>
                   <label>Material <input class="input" data-add-material placeholder="e.g., Marble, Corian"></label>
                   <label>Size <input class="input" data-add-size placeholder="e.g., 12x18 inches"></label>
-                  <label>Price (Rs) <input class="input" type="number" data-add-price placeholder="5000"></label>
-                  <label>Image URL <input class="input" data-add-image placeholder="https://..."></label>
+                  <label>Price (₹) <input class="input" type="number" data-add-price placeholder="5000"></label>
+                  <label class="full">
+                    Image
+                    <div style="display:flex;gap:.4rem;margin-top:.3rem;align-items:center">
+                      <input class="input" data-add-image placeholder="https://... or upload →" style="flex:1">
+                      <label class="btn small" style="cursor:pointer;white-space:nowrap;margin:0">
+                        📷 Upload
+                        <input type="file" accept="image/*" data-add-image-file style="display:none">
+                      </label>
+                    </div>
+                    <div data-upload-progress style="display:none;font-size:.74rem;color:var(--muted);margin-top:.2rem">Uploading…</div>
+                  </label>
                   <label class="full">Description <textarea class="textarea" data-add-description placeholder="Product description..."></textarea></label>
                 </div>
                 <div style="display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap">
-                  <button class="btn ai" data-ai-image-upload>✨ AI Image Fill</button>
+                  <button class="btn ai" data-ai-describe>✨ AI Fill from Image</button>
                   <button class="btn ai" data-ai-write-desc>✨ AI Write Description</button>
                 </div>
                 <br><br>
@@ -1391,29 +1407,49 @@
     let filteredProducts = [];
     let currentCollection = null;
 
-    // ── INIT STORE ─────────────────────────────────────────────
-    function initStore() {
-      // Server-injected data (from Cloudflare KV via middleware) always wins —
-      // this is what every visitor sees. Fall back to localStorage only when
-      // running locally without the middleware.
-      if (window.__PRODUCTS && window.__PRODUCTS.length > 0) {
-        store.products = window.__PRODUCTS;
-        localStorage.setItem('products', JSON.stringify(store.products));
-      } else {
-        const saved = localStorage.getItem('products');
-        if (saved) try { store.products = JSON.parse(saved); } catch (e) { store.products = []; }
-      }
+    // ── AUTH TOKEN ─────────────────────────────────────────────
+    let authToken = sessionStorage.getItem('adminToken') || '';
 
-      if (window.__SETTINGS && Object.keys(window.__SETTINGS).length > 0) {
-        // Merge server settings with local settings so groqKey (never synced to server) is preserved
-        const local = {};
-        try { Object.assign(local, JSON.parse(localStorage.getItem('settings') || '{}')); } catch (e) {}
-        store.settings = { ...window.__SETTINGS, groqKey: local.groqKey || '' };
-      } else {
-        const savedSettings = localStorage.getItem('settings');
-        if (savedSettings) try { store.settings = JSON.parse(savedSettings); } catch (e) { store.settings = {}; }
-      }
+    function authHeaders() {
+      return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` };
+    }
 
+    // Expire session if token is the dev placeholder from an old login
+    async function ensureTokenValid() {
+      if (!authToken || authToken === 'dev-unsigned') return true; // dev mode
+      // Check expiry from JWT payload
+      try {
+        const payload = JSON.parse(atob(authToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+        if (payload.exp && payload.exp < Date.now()) {
+          authToken = '';
+          sessionStorage.removeItem('adminToken');
+          return false;
+        }
+      } catch (e) {}
+      return true;
+    }
+
+    // ── LOAD STATE (replaces initStore) ────────────────────────
+    async function loadState() {
+      try {
+        const res = await fetch('/api/state');
+        if (res.ok) {
+          const data = await res.json();
+          store.products = data.products || [];
+          store.settings = data.settings || {};
+          // Cache locally as offline fallback
+          localStorage.setItem('products', JSON.stringify(store.products));
+          localStorage.setItem('settings', JSON.stringify(store.settings));
+        } else {
+          throw new Error('API unavailable');
+        }
+      } catch (e) {
+        // Offline / local dev — fall back to localStorage cache
+        const p = localStorage.getItem('products');
+        const s = localStorage.getItem('settings');
+        if (p) try { store.products = JSON.parse(p); } catch (_) {}
+        if (s) try { store.settings = JSON.parse(s); } catch (_) {}
+      }
       applySettingsToUI();
     }
 
@@ -1745,34 +1781,32 @@
       URL.revokeObjectURL(url);
     }
 
-    // ── SAVE PRODUCTS (helper) ──────────────────────────────────
+    // ── SAVE PRODUCTS ──────────────────────────────────────────
     function saveProducts() {
       localStorage.setItem('products', JSON.stringify(store.products));
-      syncToServer();
+      saveState();
     }
 
-    // ── SYNC TO CLOUDFLARE KV ──────────────────────────────────
-    // Pushes products + public settings to KV so every visitor sees them.
-    // groqKey is deliberately excluded — it stays in the admin's localStorage only.
-    async function syncToServer() {
+    // ── SAVE STATE TO R2 ───────────────────────────────────────
+    async function saveState() {
+      if (!authToken) return; // not logged in — don't attempt
       try {
-        const { groqKey, ...publicSettings } = store.settings;
-        const res = await fetch('/api/save', {
+        const res = await fetch('/api/state', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            password: ADMIN_PASSWORD,
-            products: store.products,
-            settings: publicSettings
-          })
+          headers: authHeaders(),
+          body: JSON.stringify({ products: store.products, settings: store.settings })
         });
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          if (res.status === 401) showToast('⚠ KV sync failed: wrong password');
-          else showToast('⚠ KV sync failed: ' + (err.error || res.status));
+        if (res.status === 401) {
+          showToast('⚠ Session expired — please log in again');
+          authToken = '';
+          sessionStorage.removeItem('adminToken');
+          $('[data-login-step="2"]').classList.remove('active');
+          $('[data-login-step="1"]').classList.add('active');
+        } else if (!res.ok) {
+          showToast('⚠ Sync failed — changes saved locally');
         }
       } catch (e) {
-        // Running locally without Workers — silent, localStorage is enough
+        // Offline — local cache already updated
       }
     }
 
@@ -1863,9 +1897,9 @@
         groqKey:    $('[data-settings-groq-key]').value.trim()
       };
       localStorage.setItem('settings', JSON.stringify(store.settings));
-      syncToServer();
+      saveState();
       applySettingsToUI();
-      showToast('Settings saved! AI chat ' + (store.settings.groqKey ? '✅ enabled' : '⚠ key not set'));
+      showToast('✅ Settings saved and synced!');
     };
 
     // ── EVENT LISTENERS ────────────────────────────────────────
@@ -1974,41 +2008,59 @@
       showToast('Opening WhatsApp...');
     });
 
-    // Admin — password from Cloudflare secret (window.__ENV) or fallback
-    const ADMIN_PASSWORD = (window.__ENV && window.__ENV.adminPassword) || 'Jainson@2024';
-    const GROQ_KEY = (window.__ENV && window.__ENV.groqKey) || '';
-    let adminAttempts = 5;
-
-    $('[data-admin-login]').addEventListener('click', () => {
+    // Admin auth — all checks happen server-side
+    $('[data-admin-login]').addEventListener('click', async () => {
       const password = $('[data-admin-password]').value;
-      if (password === ADMIN_PASSWORD) {
-        adminAttempts = 5;
-        $('[data-attempts-fill]').style.width = '100%';
-        $('[data-login-step="1"]').classList.remove('active');
-        $('[data-login-step="2"]').classList.add('active');
-        renderAdminDashboard();
-        loadSettings();
-      } else {
-        adminAttempts = Math.max(0, adminAttempts - 1);
-        const pct = (adminAttempts / 5) * 100;
-        $('[data-attempts-fill]').style.width = pct + '%';
-        if (adminAttempts === 0) {
-          $('[data-login-error]').textContent = 'Too many attempts. Refresh to try again.';
-          $('[data-admin-login]').disabled = true;
+      const totpVal  = $('[data-admin-totp]') ? $('[data-admin-totp]').value : '';
+      const btn      = $('[data-admin-login]');
+      btn.disabled   = true;
+      btn.textContent = 'Checking…';
+
+      try {
+        const res  = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password, totp: totpVal })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          authToken = data.token || 'dev-unsigned';
+          sessionStorage.setItem('adminToken', authToken);
+          $('[data-attempts-fill]').style.width = '100%';
+          $('[data-login-step="1"]').classList.remove('active');
+          $('[data-login-step="2"]').classList.add('active');
+          renderAdminDashboard();
+          loadSettings();
+        } else if (data.requireTotp) {
+          $('[data-totp-row]').style.display = 'block';
+          $('[data-login-error]').textContent = 'Enter the 6-digit code from your authenticator app.';
+          $('[data-admin-totp]').focus();
         } else {
-          $('[data-login-error]').textContent = `Wrong password. ${adminAttempts} attempt${adminAttempts !== 1 ? 's' : ''} remaining.`;
+          $('[data-login-error]').textContent = data.error || 'Login failed.';
+          // Drain the attempts bar visually (server already tracks real rate-limiting)
+          const fill = $('[data-attempts-fill]');
+          const cur  = parseFloat(fill.style.width) || 100;
+          fill.style.width = Math.max(0, cur - 20) + '%';
         }
+      } catch (e) {
+        $('[data-login-error]').textContent = 'Could not reach server. Check connection.';
       }
+
+      btn.disabled    = false;
+      btn.textContent = 'Continue →';
     });
 
     $('[data-admin-logout]').addEventListener('click', () => {
+      authToken = '';
+      sessionStorage.removeItem('adminToken');
       $('[data-login-step="2"]').classList.remove('active');
       $('[data-login-step="1"]').classList.add('active');
       $('[data-admin-password]').value = '';
+      $('[data-admin-totp]') && ($('[data-admin-totp]').value = '');
+      $('[data-totp-row]').style.display = 'none';
       $('[data-login-error]').textContent = '';
       $('[data-attempts-fill]').style.width = '100%';
-      adminAttempts = 5;
-      $('[data-admin-login]').disabled = false;
       toggleModal('[data-admin-modal]', false);
     });
 
@@ -2045,8 +2097,8 @@
       const image = $('[data-add-image]').value;
       const description = $('[data-add-description]').value;
 
-      if (!name || !price || !image) {
-        showToast('Fill name, price, and image');
+      if (!name || !price) {
+        showToast('Product name and price are required');
         return;
       }
 
@@ -2294,49 +2346,102 @@
     // Detail modal
     $('[data-close-detail]').addEventListener('click', () => toggleModal('[data-detail-modal]', false));
 
-    // ── GROQ CHAT ──────────────────────────────────────────────
+    // ── IMAGE UPLOAD ───────────────────────────────────────────
+    $('[data-add-image-file]').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!authToken) { showToast('Log in to upload images'); return; }
+      $('[data-upload-progress]').style.display = 'block';
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${authToken}` },
+          body: fd
+        });
+        if (res.ok) {
+          const data = await res.json();
+          $('[data-add-image]').value = data.url;
+          showToast('✅ Image uploaded!');
+        } else {
+          showToast('Upload failed — ' + res.status);
+        }
+      } catch (e) { showToast('Upload error'); }
+      $('[data-upload-progress]').style.display = 'none';
+    });
+
+    // ── AI FILL FROM IMAGE ─────────────────────────────────────
+    $('[data-ai-describe]').addEventListener('click', async () => {
+      const imageUrl = $('[data-add-image]').value.trim();
+      if (!imageUrl) { showToast('Add an image URL or upload an image first'); return; }
+      showToast('🤖 Analysing image…');
+      try {
+        const res = await fetch('/api/ai/describe', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ imageUrl })
+        });
+        if (res.ok) {
+          const d = await res.json();
+          if (d.name)     $('[data-add-name]').value        = d.name;
+          if (d.material) $('[data-add-material]').value    = d.material;
+          if (d.desc)     $('[data-add-description]').value = d.desc;
+          showToast('✅ AI filled in the details!');
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast('AI describe failed: ' + (err.error || res.status));
+        }
+      } catch (e) { showToast('AI error: ' + e.message); }
+    });
+
+    // ── AI WRITE DESCRIPTION ───────────────────────────────────
+    $('[data-ai-write-desc]').addEventListener('click', async () => {
+      const name     = $('[data-add-name]').value.trim();
+      const category = $('[data-add-category]').value;
+      const material = $('[data-add-material]').value.trim();
+      const size     = $('[data-add-size]').value.trim();
+      if (!name) { showToast('Enter a product name first'); return; }
+      showToast('🤖 Writing description…');
+      try {
+        const res = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ task: 'describe', name, category, material, size })
+        });
+        if (res.ok) {
+          const d = await res.json();
+          if (d.text) { $('[data-add-description]').value = d.text; showToast('✅ Description written!'); }
+        } else { showToast('AI failed'); }
+      } catch (e) { showToast('AI error'); }
+    });
+
+    // ── GROQ CHAT (via server — key never exposed to browser) ──
     const chatHistory = [];
 
     async function askGroq(userMessage) {
-      // Priority: admin-saved key → Cloudflare injected ENV key
-      const key = (store.settings.groqKey || GROQ_KEY || '').trim();
-      if (!key) {
-        return 'AI chat needs a Groq API key. Go to Admin → Settings → Groq API Key to add one (free at console.groq.com). 🙏';
-      }
-      const shopName = store.settings.shopName || 'Jainson Marble';
-      const productSnippet = store.products.slice(0, 12)
-        .map(p => `${p.name} (${p.category}, ₹${p.price})`).join(', ');
-      const system = `You are a warm, knowledgeable customer assistant for ${shopName}, a marble temple and idol craftsmanship shop based in Delhi, India.
-Help customers with: product details, marble grades (Makrana/White/Corian), custom mandir & idol designs, sizes, finishes (matte/polished/antique), pricing, and delivery.
-Available products: ${productSnippet || 'custom mandirs, marble idols, accessories'}.
-Keep answers concise (2–4 sentences). Always offer to connect them on WhatsApp for orders.`;
-
+      const catalogue = store.products.slice(0, 20)
+        .map(p => `${p.name} | ${p.category} | ${p.material || '—'} | ${p.size || '—'} | ₹${p.price}`)
+        .join('\n');
       try {
-        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const res = await fetch('/api/ai/chat', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${GROQ_KEY}`
-          },
-          body: JSON.stringify({
-            model: 'llama-3.1-8b-instant',
-            messages: [
-              { role: 'system', content: system },
-              ...chatHistory.slice(-8),
-              { role: 'user', content: userMessage }
-            ],
-            max_tokens: 280,
-            temperature: 0.65
-          })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: userMessage, history: chatHistory.slice(-10), catalogue })
         });
-        if (!res.ok) throw new Error(`${res.status}`);
+        if (!res.ok) {
+          if (res.status === 500) {
+            const e = await res.json().catch(() => ({}));
+            if (e.error?.includes('GROQ_API_KEY')) return 'AI chat is not configured yet. Please WhatsApp us directly! 🙏';
+          }
+          return 'Unable to respond right now. Please WhatsApp us! 🙏';
+        }
         const data = await res.json();
-        return data.choices?.[0]?.message?.content || 'Could not get a response, please try again.';
-      } catch (err) {
-        return 'Connection issue. Please reach out on WhatsApp directly. 🙏';
+        return data.text || 'Sorry, no response.';
+      } catch (e) {
+        return 'Connection issue. Please WhatsApp us! 🙏';
       }
     }
-
     function appendChatMsg(text, role) {
       const messages = $('[data-chat-messages]');
       const div = document.createElement('div');
@@ -2491,9 +2596,11 @@ Keep answers concise (2–4 sentences). Always offer to connect them on WhatsApp
     }
 
     // ── INIT ────────────────────────────────────────────────────
-    initStore();
-    populateFilters();
-    applyFilters();
+    (async () => {
+      await loadState();
+      populateFilters();
+      applyFilters();
+    })();
   </script>
 </body>
 </html>
