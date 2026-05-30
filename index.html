@@ -729,6 +729,25 @@
     .admin-tab-content { display: none; }
     .admin-tab-content.active { display: block; }
 
+    /* ── LOGIN STEPS ────────────────────────────────────────────── */
+    .login-step { display: none; }
+    .login-step.active { display: block; }
+
+    /* ── ATTEMPTS BAR ───────────────────────────────────────────── */
+    .attempts-bar {
+      height: 4px;
+      background: rgba(141,31,20,.12);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: .5rem 0;
+    }
+    .attempts-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      border-radius: 2px;
+      transition: width .4s ease;
+    }
+
     /* ── DESKTOP RESPONSIVE ────────────────────────────────────– */
     @media (min-width: 768px) {
       .hero { grid-template-columns: minmax(0, .92fr) minmax(300px, 1.08fr); }
@@ -750,9 +769,12 @@
       h1 { font-size: clamp(3rem, 8vw, 5.9rem); }
     }
   </style>
+  <!-- CLOUDFLARE_CONFIG -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
   <div class="app">
@@ -802,7 +824,221 @@
           </div>
         </div>
         <div class="hero-media">
-          <img src="https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=800&h=900&fit=crop" alt="Marble temple">
+          <svg viewBox="0 0 480 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;background:#07162c">
+            <defs>
+              <linearGradient id="marbleg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#f7f0e3"/>
+                <stop offset="60%" stop-color="#e8dece"/>
+                <stop offset="100%" stop-color="#d4c5ae"/>
+              </linearGradient>
+              <linearGradient id="goldg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d7b164"/>
+                <stop offset="100%" stop-color="#b88a2d"/>
+              </linearGradient>
+              <linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#07162c"/>
+                <stop offset="100%" stop-color="#0e2543"/>
+              </linearGradient>
+              <radialGradient id="glow" cx="50%" cy="30%" r="55%">
+                <stop offset="0%" stop-color="rgba(215,177,100,0.22)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+              <pattern id="floortile" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                <rect width="24" height="24" fill="#e8dece"/>
+                <rect width="12" height="12" fill="#d4c5ae" opacity="0.45"/>
+                <rect x="12" y="12" width="12" height="12" fill="#d4c5ae" opacity="0.45"/>
+              </pattern>
+            </defs>
+
+            <!-- Sky -->
+            <rect width="480" height="540" fill="url(#skyg)"/>
+            <rect width="480" height="540" fill="url(#glow)"/>
+
+            <!-- Stars -->
+            <circle cx="60" cy="40" r="1.2" fill="rgba(215,177,100,.6)"/>
+            <circle cx="120" cy="25" r="1" fill="rgba(215,177,100,.5)"/>
+            <circle cx="380" cy="35" r="1.4" fill="rgba(215,177,100,.7)"/>
+            <circle cx="430" cy="60" r="1" fill="rgba(215,177,100,.4)"/>
+            <circle cx="30" cy="80" r="0.9" fill="rgba(255,250,240,.5)"/>
+            <circle cx="460" cy="90" r="1.1" fill="rgba(255,250,240,.4)"/>
+            <circle cx="200" cy="18" r="0.8" fill="rgba(215,177,100,.5)"/>
+            <circle cx="330" cy="55" r="0.9" fill="rgba(255,250,240,.35)"/>
+
+            <!-- Floor platform -->
+            <rect x="40" y="480" width="400" height="60" fill="url(#floortile)" rx="2"/>
+            <rect x="40" y="478" width="400" height="5" fill="url(#goldg)" rx="1"/>
+
+            <!-- Base steps -->
+            <rect x="70" y="456" width="340" height="26" fill="url(#marbleg)" rx="3"/>
+            <rect x="70" y="454" width="340" height="4" fill="url(#goldg)" rx="1"/>
+            <rect x="90" y="434" width="300" height="24" fill="url(#marbleg)" rx="3"/>
+            <rect x="90" y="432" width="300" height="4" fill="url(#goldg)" rx="1"/>
+
+            <!-- Main temple body -->
+            <rect x="110" y="280" width="260" height="158" fill="url(#marbleg)" rx="4"/>
+            <!-- Panel details on body -->
+            <rect x="124" y="295" width="70" height="100" fill="rgba(215,177,100,.12)" rx="3" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <rect x="205" y="295" width="70" height="100" fill="rgba(215,177,100,.12)" rx="3" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <rect x="286" y="295" width="70" height="100" fill="rgba(215,177,100,.12)" rx="3" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <!-- Arch on panels -->
+            <path d="M124,305 Q159,285 194,305" stroke="rgba(184,138,45,.5)" stroke-width="1.5" fill="none"/>
+            <path d="M205,305 Q240,285 275,305" stroke="rgba(184,138,45,.5)" stroke-width="1.5" fill="none"/>
+            <path d="M286,305 Q321,285 356,305" stroke="rgba(184,138,45,.5)" stroke-width="1.5" fill="none"/>
+
+            <!-- Columns -->
+            <rect x="118" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="118" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="118" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="156" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="156" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="156" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="224" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="224" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="224" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="306" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="306" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="306" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="344" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="344" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="344" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <!-- Entablature / cornice -->
+            <rect x="108" y="268" width="264" height="16" fill="url(#marbleg)" rx="2"/>
+            <rect x="108" y="265" width="264" height="5" fill="url(#goldg)" rx="1"/>
+            <!-- Frieze pattern -->
+            <rect x="112" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="124" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="136" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="148" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="160" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="172" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="184" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="196" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="208" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="220" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="232" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="244" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="256" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="268" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="280" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="292" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="304" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="316" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="328" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="340" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="352" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="364" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+
+            <!-- Shikhara / tower tiers -->
+            <!-- Tier 1 -->
+            <path d="M150,268 L240,178 L330,268 Z" fill="url(#marbleg)"/>
+            <path d="M150,266 L240,175 L330,266" stroke="url(#goldg)" stroke-width="2.5" fill="none"/>
+            <!-- Tier 1 side ridges -->
+            <line x1="195" y1="268" x2="240" y2="178" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <line x1="285" y1="268" x2="240" y2="178" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <!-- Horizontal bands on tier 1 -->
+            <line x1="164" y1="248" x2="316" y2="248" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+            <line x1="178" y1="228" x2="302" y2="228" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+            <line x1="192" y1="208" x2="288" y2="208" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+            <line x1="208" y1="192" x2="272" y2="192" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+
+            <!-- Tier 2 -->
+            <path d="M180,178 L240,108 L300,178 Z" fill="url(#marbleg)"/>
+            <path d="M180,176 L240,105 L300,176" stroke="url(#goldg)" stroke-width="2" fill="none"/>
+            <line x1="210" y1="178" x2="240" y2="108" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <line x1="270" y1="178" x2="240" y2="108" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <line x1="192" y1="158" x2="288" y2="158" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <line x1="204" y1="138" x2="276" y2="138" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <line x1="218" y1="120" x2="262" y2="120" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+
+            <!-- Tier 3 -->
+            <path d="M205,108 L240,58 L275,108 Z" fill="url(#marbleg)"/>
+            <path d="M205,106 L240,55 L275,106" stroke="url(#goldg)" stroke-width="1.5" fill="none"/>
+            <line x1="222" y1="108" x2="240" y2="58" stroke="rgba(184,138,45,.4)" stroke-width="0.8"/>
+            <line x1="258" y1="108" x2="240" y2="58" stroke="rgba(184,138,45,.4)" stroke-width="0.8"/>
+
+            <!-- Kalash (finial) -->
+            <ellipse cx="240" cy="52" rx="10" ry="14" fill="url(#goldg)"/>
+            <ellipse cx="240" cy="38" rx="6" ry="8" fill="url(#goldg)"/>
+            <circle cx="240" cy="28" r="5" fill="#d7b164"/>
+            <circle cx="240" cy="22" r="3.5" fill="#b88a2d"/>
+            <circle cx="240" cy="17" r="2.5" fill="#d7b164"/>
+            <!-- Flag on top -->
+            <line x1="240" y1="17" x2="240" y2="4" stroke="#b88a2d" stroke-width="1.5"/>
+            <path d="M240,4 L252,8 L240,12 Z" fill="#d7b164"/>
+
+            <!-- Side smaller towers (gopura) -->
+            <path d="M80,338 L130,270 L180,338 Z" fill="url(#marbleg)" opacity="0.85"/>
+            <path d="M80,336 L130,268 L180,336" stroke="url(#goldg)" stroke-width="1.5" fill="none"/>
+            <rect x="96" y="338" width="68" height="96" fill="url(#marbleg)" rx="2"/>
+            <rect x="96" y="336" width="68" height="5" fill="url(#goldg)" rx="1"/>
+            <!-- Left tower kalash -->
+            <ellipse cx="130" cy="265" rx="7" ry="9" fill="url(#goldg)"/>
+            <circle cx="130" cy="254" r="4" fill="#d7b164"/>
+            <circle cx="130" cy="248" r="2.5" fill="#b88a2d"/>
+            <line x1="130" y1="246" x2="130" y2="237" stroke="#b88a2d" stroke-width="1.2"/>
+            <path d="M130,237 L139,240 L130,244 Z" fill="#d7b164"/>
+
+            <path d="M300,338 L350,270 L400,338 Z" fill="url(#marbleg)" opacity="0.85"/>
+            <path d="M300,336 L350,268 L400,336" stroke="url(#goldg)" stroke-width="1.5" fill="none"/>
+            <rect x="316" y="338" width="68" height="96" fill="url(#marbleg)" rx="2"/>
+            <rect x="316" y="336" width="68" height="5" fill="url(#goldg)" rx="1"/>
+            <!-- Right tower kalash -->
+            <ellipse cx="350" cy="265" rx="7" ry="9" fill="url(#goldg)"/>
+            <circle cx="350" cy="254" r="4" fill="#d7b164"/>
+            <circle cx="350" cy="248" r="2.5" fill="#b88a2d"/>
+            <line x1="350" y1="246" x2="350" y2="237" stroke="#b88a2d" stroke-width="1.2"/>
+            <path d="M350,237 L359,240 L350,244 Z" fill="#d7b164"/>
+
+            <!-- Central door arch -->
+            <rect x="204" y="360" width="72" height="78" fill="#0e2543" rx="2"/>
+            <path d="M204,390 Q240,350 276,390" fill="#07162c" stroke="url(#goldg)" stroke-width="2"/>
+            <!-- Door frame -->
+            <rect x="202" y="358" width="76" height="82" fill="none" stroke="url(#goldg)" stroke-width="2" rx="2"/>
+            <!-- Door glow / diya light -->
+            <radialGradient id="diyaglow" cx="50%" cy="85%" r="50%">
+              <stop offset="0%" stop-color="rgba(215,177,100,0.55)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <rect x="204" y="360" width="72" height="78" fill="url(#diyaglow)" rx="2"/>
+
+            <!-- Decorative Om symbol above door -->
+            <text x="240" y="356" text-anchor="middle" font-size="18" fill="rgba(215,177,100,.8)" font-family="serif">ॐ</text>
+
+            <!-- Diya lamps at base -->
+            <ellipse cx="195" cy="440" rx="8" ry="4" fill="#d7b164"/>
+            <circle cx="195" cy="436" r="2.5" fill="#b88a2d"/>
+            <ellipse cx="195" cy="433" rx="2" ry="3" fill="rgba(255,180,50,0.7)"/>
+
+            <ellipse cx="285" cy="440" rx="8" ry="4" fill="#d7b164"/>
+            <circle cx="285" cy="436" r="2.5" fill="#b88a2d"/>
+            <ellipse cx="285" cy="433" rx="2" ry="3" fill="rgba(255,180,50,0.7)"/>
+
+            <!-- Lotus flowers at corners -->
+            <g transform="translate(68,460)" opacity="0.7">
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(-30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#f7f0e3" transform="rotate(90)"/>
+              <circle cx="0" cy="0" r="3.5" fill="#d7b164"/>
+            </g>
+            <g transform="translate(412,460)" opacity="0.7">
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(-30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#f7f0e3" transform="rotate(90)"/>
+              <circle cx="0" cy="0" r="3.5" fill="#d7b164"/>
+            </g>
+
+            <!-- Reflected glow on floor -->
+            <radialGradient id="floorlight" cx="50%" cy="0%" r="60%">
+              <stop offset="0%" stop-color="rgba(215,177,100,0.18)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <rect x="40" y="478" width="400" height="62" fill="url(#floorlight)"/>
+          </svg>
           <div class="hero-badge">Lighting that brings divinity to life. Crafted in purity, inspired by devotion.</div>
         </div>
       </section>
@@ -994,11 +1230,11 @@
           <!-- LOGIN STEP 1 -->
           <div class="login-step active" data-login-step="1">
             <label style="margin-bottom:.6rem;display:block">
-              Password
-              <input class="input" type="password" data-admin-password placeholder="Enter admin password" style="margin-top:.3rem">
+              Admin Password
+              <input class="input" type="password" data-admin-password placeholder="Enter password" style="margin-top:.3rem" autocomplete="current-password">
             </label>
             <div class="attempts-bar"><div class="attempts-fill" data-attempts-fill style="width:100%"></div></div>
-            <div class="section-note" data-login-error style="color:#8d1f14;min-height:1em;margin:.3rem 0"></div>
+            <div class="section-note" data-login-error style="color:#8d1f14;min-height:1.2em;margin:.3rem 0;font-size:.8rem"></div>
             <br>
             <button class="btn primary" data-admin-login>Continue →</button>
           </div>
@@ -1053,7 +1289,13 @@
                 <label>Phone 1 <input class="input" data-settings-phone-1 placeholder="8010631117"></label>
                 <label>Phone 2 <input class="input" data-settings-phone-2 placeholder="9891468290"></label>
                 <label>WhatsApp Number <input class="input" data-settings-whatsapp placeholder="918010631117"></label>
-                <label>Footer Copy <textarea class="textarea" data-settings-footer-copy placeholder="Dealers in marble temples..."></textarea></label>
+                <label>UPI VPA (for QR) <input class="input" data-settings-upi placeholder="9891468290@paytm"></label>
+                <label class="full">Footer Copy <textarea class="textarea" data-settings-footer-copy placeholder="Dealers in marble temples..."></textarea></label>
+                <label class="full" style="border:1px solid rgba(184,138,45,.35);border-radius:6px;padding:.7rem;background:rgba(215,177,100,.06)">
+                  🤖 Groq API Key <span style="font-weight:400;color:var(--muted)">(enables AI chat — get free key at console.groq.com)</span>
+                  <input class="input" type="password" data-settings-groq-key placeholder="gsk_..." style="margin-top:.3rem;font-family:monospace">
+                  <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem">Stored locally in your browser. Set via Cloudflare env var GROQ_KEY for server-side security.</span>
+                </label>
               </div>
               <br>
               <button class="btn primary" data-save-settings>Save Settings</button>
@@ -1069,13 +1311,66 @@
                 <button class="btn" data-export-pdf>⬇ PDF Catalog</button>
               </div>
 
-              <h4 style="margin:.5rem 0 1rem">Import Data</h4>
-              <label class="full">
-                Import JSON
-                <input type="file" accept=".json" data-import-json style="margin-top:.3rem;padding:.5rem">
-              </label>
-              <br>
-              <button class="btn primary" data-import-json-btn>Import JSON File</button>
+              <h4 style="margin:.5rem 0 .6rem">Import Data</h4>
+              <p style="font-size:.78rem;color:var(--muted);margin:0 0 .9rem">
+                CSV / Excel columns expected: <code>Name, Category, Material, Size, Price, Image URL, Description</code>
+              </p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+
+                <!-- JSON -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📄 JSON</div>
+                  <input type="file" accept=".json" data-import-json style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-json-btn style="width:100%">Import JSON</button>
+                </div>
+
+                <!-- CSV -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📊 CSV</div>
+                  <input type="file" accept=".csv,.txt" data-import-csv style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-csv-btn style="width:100%">Import CSV</button>
+                </div>
+
+                <!-- Excel -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📗 Excel (.xlsx / .xls)</div>
+                  <input type="file" accept=".xlsx,.xls" data-import-excel style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-excel-btn style="width:100%">Import Excel</button>
+                </div>
+
+                <!-- PDF -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📕 PDF Catalog</div>
+                  <input type="file" accept=".pdf" data-import-pdf style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-pdf-btn style="width:100%">Extract &amp; Import</button>
+                </div>
+
+              </div>
+
+              <!-- Import Preview -->
+              <div data-import-preview style="display:none;margin-top:1.1rem;border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+                  <strong style="font-size:.82rem" data-import-preview-title>Preview (0 rows)</strong>
+                  <div style="display:flex;gap:.4rem">
+                    <button class="btn small primary" data-import-confirm>✅ Confirm Import</button>
+                    <button class="btn small" data-import-cancel>Cancel</button>
+                  </div>
+                </div>
+                <div style="max-height:220px;overflow-y:auto;font-size:.74rem">
+                  <table style="width:100%;border-collapse:collapse" data-import-table>
+                    <thead>
+                      <tr style="background:var(--stone);position:sticky;top:0">
+                        <th style="padding:.3rem .5rem;text-align:left">Name</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Category</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Material</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Price</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Size</th>
+                      </tr>
+                    </thead>
+                    <tbody data-import-tbody></tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1098,11 +1393,26 @@
 
     // ── INIT STORE ─────────────────────────────────────────────
     function initStore() {
-      const saved = localStorage.getItem('products');
-      if (saved) try { store.products = JSON.parse(saved); } catch (e) { store.products = []; }
+      // Server-injected data (from Cloudflare KV via middleware) always wins —
+      // this is what every visitor sees. Fall back to localStorage only when
+      // running locally without the middleware.
+      if (window.__PRODUCTS && window.__PRODUCTS.length > 0) {
+        store.products = window.__PRODUCTS;
+        localStorage.setItem('products', JSON.stringify(store.products));
+      } else {
+        const saved = localStorage.getItem('products');
+        if (saved) try { store.products = JSON.parse(saved); } catch (e) { store.products = []; }
+      }
 
-      const savedSettings = localStorage.getItem('settings');
-      if (savedSettings) try { store.settings = JSON.parse(savedSettings); } catch (e) { store.settings = {}; }
+      if (window.__SETTINGS && Object.keys(window.__SETTINGS).length > 0) {
+        // Merge server settings with local settings so groqKey (never synced to server) is preserved
+        const local = {};
+        try { Object.assign(local, JSON.parse(localStorage.getItem('settings') || '{}')); } catch (e) {}
+        store.settings = { ...window.__SETTINGS, groqKey: local.groqKey || '' };
+      } else {
+        const savedSettings = localStorage.getItem('settings');
+        if (savedSettings) try { store.settings = JSON.parse(savedSettings); } catch (e) { store.settings = {}; }
+      }
 
       applySettingsToUI();
     }
@@ -1126,7 +1436,7 @@
       $(gridSelector).innerHTML = page.map(p => `
         <div class="card" data-product-id="${p.id}">
           <div class="thumb">
-            <img src="${p.image}" alt="${p.name}">
+            <img src="${p.image || ''}" alt="${p.name}" onerror="this.style.opacity='0'">
             ${p.featured ? '<span class="tag">⭐ Featured</span>' : ''}
             ${p.sold ? '<span class="sold">SOLD</span>' : ''}
           </div>
@@ -1180,7 +1490,7 @@
       $('[data-detail-body]').innerHTML = `
         <div class="detail-grid">
           <div class="product-photo">
-            <img src="${product.image}" alt="${product.name}" class="detail-img">
+            <img src="${product.image || ''}" alt="${product.name}" class="detail-img" onerror="this.style.opacity='0'">
           </div>
           <div class="detail-copy">
             <h2>${product.name}</h2>
@@ -1283,7 +1593,8 @@
     // ── GENERATE PAYMENT QR ────────────────────────────────────
     function generatePaymentQR() {
       const total = store.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      const upiUrl = `upi://pay?pa=9891468290@paytm&pn=JainsonMarble&am=${total}&tn=Order${Date.now()}`;
+      const upiVpa = store.settings.upi || '9891468290@paytm';
+      const upiUrl = `upi://pay?pa=${upiVpa}&pn=JainsonMarble&am=${total}&tn=Order${Date.now()}`;
 
       const qrContainer = $('#payment-qr');
       qrContainer.innerHTML = '';
@@ -1296,48 +1607,20 @@
       });
     }
 
-    // ── APPLY FILTERS ──────────────────────────────────────────
-    function applyFilters() {
-      const search = $('[data-search]').value.toLowerCase();
-      const category = $('[data-category]').value;
-      const material = $('[data-material]').value;
-      const sort = $('[data-sort]').value;
-
-      let results = store.products;
-
-      if (search) {
-        results = results.filter(p =>
-          p.name.toLowerCase().includes(search) ||
-          p.description?.toLowerCase().includes(search) ||
-          p.category.toLowerCase().includes(search)
-        );
-      }
-      if (category) results = results.filter(p => p.category === category);
-      if (material) results = results.filter(p => p.material === material);
-
-      if (sort === 'low') results.sort((a, b) => a.price - b.price);
-      if (sort === 'high') results.sort((a, b) => b.price - a.price);
-      if (sort === 'new') results.sort((a, b) => b.id.localeCompare(a.id));
-
-      filteredProducts = results;
-      currentPage = 1;
-      $('[data-count]').textContent = results.length;
-      renderGrid(results, '[data-grid]', '[data-pagination]');
-    }
-
     // ── POPULATE FILTERS ───────────────────────────────────────
     function populateFilters() {
-      const categories = [...new Set(store.products.map(p => p.category))];
-      const materials = [...new Set(store.products.map(p => p.material))];
+      // Categories are fixed — never pull from product data to avoid dirty values
+      $('[data-category]').innerHTML =
+        '<option value="">All Categories</option>' +
+        ['Mandir', 'Idol', 'Accessory'].map(c => `<option value="${c}">${c}</option>`).join('');
 
-      $('[data-category]').innerHTML = '<option value="">All Categories</option>' +
-        categories.map(c => `<option value="${c}">${c}</option>`).join('');
-
-      $('[data-material]').innerHTML = '<option value="">All Materials</option>' +
+      // Materials come from actual products (could be marble, corian, etc.)
+      const materials = [...new Set(store.products.map(p => p.material).filter(Boolean))].sort();
+      const matHtml = '<option value="">All Materials</option>' +
         materials.map(m => `<option value="${m}">${m}</option>`).join('');
 
-      $('[data-material-collection]').innerHTML = '<option value="">All Materials</option>' +
-        materials.map(m => `<option value="${m}">${m}</option>`).join('');
+      $('[data-material]').innerHTML = matHtml;
+      $('[data-material-collection]').innerHTML = matHtml;
     }
 
     // ── SHOW COLLECTION ────────────────────────────────────────
@@ -1348,11 +1631,17 @@
       $$('[data-home-section]').forEach(el => el.style.display = 'none');
       $('[data-collection-page]').classList.add('active');
 
-      const title = type === 'mandirs' ? 'Mandirs' : 'Idols';
-      $('[data-collection-title]').textContent = title;
-      $('[data-collection-crumb]').textContent = title;
+      // Normalise: nav passes 'Mandirs'/'Idols', filter by singular 'Mandir'/'Idol'
+      const isMandirs = type.toLowerCase().includes('mandir');
+      const singularCat = isMandirs ? 'Mandir' : 'Idol';
+      const displayTitle = isMandirs ? 'Mandirs' : 'Idols';
 
-      const filtered = store.products.filter(p => p.category === title);
+      $('[data-collection-title]').textContent = displayTitle;
+      $('[data-collection-crumb]').textContent = displayTitle;
+
+      const filtered = store.products.filter(p =>
+        p.category === singularCat || p.category === displayTitle
+      );
       $('[data-collection-count]').textContent = filtered.length;
 
       currentPage = 1;
@@ -1456,6 +1745,85 @@
       URL.revokeObjectURL(url);
     }
 
+    // ── SAVE PRODUCTS (helper) ──────────────────────────────────
+    function saveProducts() {
+      localStorage.setItem('products', JSON.stringify(store.products));
+      syncToServer();
+    }
+
+    // ── SYNC TO CLOUDFLARE KV ──────────────────────────────────
+    // Pushes products + public settings to KV so every visitor sees them.
+    // groqKey is deliberately excluded — it stays in the admin's localStorage only.
+    async function syncToServer() {
+      try {
+        const { groqKey, ...publicSettings } = store.settings;
+        const res = await fetch('/api/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password: ADMIN_PASSWORD,
+            products: store.products,
+            settings: publicSettings
+          })
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          if (res.status === 401) showToast('⚠ KV sync failed: wrong password');
+          else showToast('⚠ KV sync failed: ' + (err.error || res.status));
+        }
+      } catch (e) {
+        // Running locally without Workers — silent, localStorage is enough
+      }
+    }
+
+    // ── APPLY FILTERS (home) ───────────────────────────────────
+    function applyFilters() {
+      const search   = $('[data-search]').value.toLowerCase();
+      const category = $('[data-category]').value;
+      const material = $('[data-material]').value;
+      const sort     = $('[data-sort]').value;
+
+      let results = store.products;
+
+      if (search)   results = results.filter(p =>
+        p.name.toLowerCase().includes(search) ||
+        p.description?.toLowerCase().includes(search) ||
+        p.category.toLowerCase().includes(search));
+      if (category) results = results.filter(p => p.category === category);
+      if (material) results = results.filter(p => p.material === material);
+
+      if (sort === 'featured') results = results.slice().sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+      if (sort === 'low')      results = results.slice().sort((a, b) => a.price - b.price);
+      if (sort === 'high')     results = results.slice().sort((a, b) => b.price - a.price);
+      if (sort === 'new')      results = results.slice().sort((a, b) => b.id.localeCompare(a.id));
+
+      filteredProducts = results;
+      currentPage = 1;
+      $('[data-count]').textContent = results.length;
+      renderGrid(results, '[data-grid]', '[data-pagination]');
+    }
+
+    // ── APPLY COLLECTION FILTERS ───────────────────────────────
+    function applyCollectionFilters() {
+      if (!currentCollection) return;
+      const search   = $('[data-search-collection]').value.toLowerCase();
+      const material = $('[data-material-collection]').value;
+      const isMandirs   = currentCollection.toLowerCase().includes('mandir');
+      const singularCat = isMandirs ? 'Mandir' : 'Idol';
+      const displayTitle = isMandirs ? 'Mandirs' : 'Idols';
+
+      let results = store.products.filter(p =>
+        p.category === singularCat || p.category === displayTitle);
+      if (search)   results = results.filter(p =>
+        p.name.toLowerCase().includes(search) ||
+        p.description?.toLowerCase().includes(search));
+      if (material) results = results.filter(p => p.material === material);
+
+      $('[data-collection-count]').textContent = results.length;
+      currentPage = 1;
+      renderGrid(results, '[data-collection-grid]', '[data-collection-pagination]');
+    }
+
     // ── ADMIN TABS ─────────────────────────────────────────────
     $$('.admin-tab-btn').forEach(btn => {
       btn.onclick = () => {
@@ -1469,30 +1837,35 @@
     // ── SETTINGS ────────────────────────────────────────────────
     function loadSettings() {
       const s = store.settings;
-      $('[data-settings-shop-name]').value = s.shopName || '';
-      $('[data-settings-shop-sub]').value = s.shopSub || '';
-      $('[data-settings-address-1]').value = s.address1 || '';
-      $('[data-settings-address-2]').value = s.address2 || '';
-      $('[data-settings-phone-1]').value = s.phone1 || '';
-      $('[data-settings-phone-2]').value = s.phone2 || '';
-      $('[data-settings-whatsapp]').value = s.whatsapp || '';
-      $('[data-settings-footer-copy]').value = s.footerCopy || '';
+      $('[data-settings-shop-name]').value      = s.shopName    || '';
+      $('[data-settings-shop-sub]').value       = s.shopSub     || '';
+      $('[data-settings-address-1]').value      = s.address1    || '';
+      $('[data-settings-address-2]').value      = s.address2    || '';
+      $('[data-settings-phone-1]').value        = s.phone1      || '';
+      $('[data-settings-phone-2]').value        = s.phone2      || '';
+      $('[data-settings-whatsapp]').value       = s.whatsapp    || '';
+      $('[data-settings-upi]').value            = s.upi         || '';
+      $('[data-settings-footer-copy]').value    = s.footerCopy  || '';
+      $('[data-settings-groq-key]').value       = s.groqKey     || '';
     }
 
     $('[data-save-settings]').onclick = () => {
       store.settings = {
-        shopName: $('[data-settings-shop-name]').value,
-        shopSub: $('[data-settings-shop-sub]').value,
-        address1: $('[data-settings-address-1]').value,
-        address2: $('[data-settings-address-2]').value,
-        phone1: $('[data-settings-phone-1]').value,
-        phone2: $('[data-settings-phone-2]').value,
-        whatsapp: $('[data-settings-whatsapp]').value,
-        footerCopy: $('[data-settings-footer-copy]').value
+        shopName:   $('[data-settings-shop-name]').value,
+        shopSub:    $('[data-settings-shop-sub]').value,
+        address1:   $('[data-settings-address-1]').value,
+        address2:   $('[data-settings-address-2]').value,
+        phone1:     $('[data-settings-phone-1]').value,
+        phone2:     $('[data-settings-phone-2]').value,
+        whatsapp:   $('[data-settings-whatsapp]').value,
+        upi:        $('[data-settings-upi]').value,
+        footerCopy: $('[data-settings-footer-copy]').value,
+        groqKey:    $('[data-settings-groq-key]').value.trim()
       };
       localStorage.setItem('settings', JSON.stringify(store.settings));
+      syncToServer();
       applySettingsToUI();
-      showToast('Settings saved!');
+      showToast('Settings saved! AI chat ' + (store.settings.groqKey ? '✅ enabled' : '⚠ key not set'));
     };
 
     // ── EVENT LISTENERS ────────────────────────────────────────
@@ -1535,6 +1908,15 @@
       applyFilters();
     });
 
+    // Collection filters
+    $('[data-search-collection]').addEventListener('input', applyCollectionFilters);
+    $('[data-material-collection]').addEventListener('change', applyCollectionFilters);
+    $('[data-reset-collection]').addEventListener('click', () => {
+      $('[data-search-collection]').value = '';
+      $('[data-material-collection]').value = '';
+      applyCollectionFilters();
+    });
+
     // Cart
     $('[data-open-cart]').addEventListener('click', () => {
       updateCartUI();
@@ -1567,7 +1949,9 @@
     });
 
     // Custom order
-    $('[data-open-custom]').addEventListener('click', () => toggleModal('[data-custom-modal]', true));
+    $$('[data-open-custom]').forEach(btn =>
+      btn.addEventListener('click', () => toggleModal('[data-custom-modal]', true))
+    );
     $('[data-close-custom]').addEventListener('click', () => toggleModal('[data-custom-modal]', false));
     $('[data-send-custom]').addEventListener('click', () => {
       const deity = $('[data-custom-deity]').value;
@@ -1590,16 +1974,30 @@
       showToast('Opening WhatsApp...');
     });
 
-    // Admin
+    // Admin — password from Cloudflare secret (window.__ENV) or fallback
+    const ADMIN_PASSWORD = (window.__ENV && window.__ENV.adminPassword) || 'Jainson@2024';
+    const GROQ_KEY = (window.__ENV && window.__ENV.groqKey) || '';
+    let adminAttempts = 5;
+
     $('[data-admin-login]').addEventListener('click', () => {
       const password = $('[data-admin-password]').value;
-      if (password === 'admin123') {
+      if (password === ADMIN_PASSWORD) {
+        adminAttempts = 5;
+        $('[data-attempts-fill]').style.width = '100%';
         $('[data-login-step="1"]').classList.remove('active');
         $('[data-login-step="2"]').classList.add('active');
         renderAdminDashboard();
         loadSettings();
       } else {
-        $('[data-login-error]').textContent = 'Invalid password';
+        adminAttempts = Math.max(0, adminAttempts - 1);
+        const pct = (adminAttempts / 5) * 100;
+        $('[data-attempts-fill]').style.width = pct + '%';
+        if (adminAttempts === 0) {
+          $('[data-login-error]').textContent = 'Too many attempts. Refresh to try again.';
+          $('[data-admin-login]').disabled = true;
+        } else {
+          $('[data-login-error]').textContent = `Wrong password. ${adminAttempts} attempt${adminAttempts !== 1 ? 's' : ''} remaining.`;
+        }
       }
     });
 
@@ -1608,11 +2006,34 @@
       $('[data-login-step="1"]').classList.add('active');
       $('[data-admin-password]').value = '';
       $('[data-login-error]').textContent = '';
+      $('[data-attempts-fill]').style.width = '100%';
+      adminAttempts = 5;
+      $('[data-admin-login]').disabled = false;
       toggleModal('[data-admin-modal]', false);
     });
 
-    $('[data-open-admin]').addEventListener('click', () => toggleModal('[data-admin-modal]', true));
-    $('[data-close-admin]').addEventListener('click', () => toggleModal('[data-admin-modal]', false));
+    $('[data-open-admin]').addEventListener('click', () => {
+      // Always start at login screen when opening
+      $('[data-login-step="2"]').classList.remove('active');
+      $('[data-login-step="1"]').classList.add('active');
+      $('[data-admin-password]').value = '';
+      $('[data-login-error]').textContent = '';
+      toggleModal('[data-admin-modal]', true);
+      // Focus the password field
+      setTimeout(() => $('[data-admin-password]').focus(), 120);
+    });
+
+    // Enter key on password field
+    $('[data-admin-password]').addEventListener('keypress', e => {
+      if (e.key === 'Enter') $('[data-admin-login]').click();
+    });
+    $('[data-close-admin]').addEventListener('click', () => {
+      $('[data-login-step="2"]').classList.remove('active');
+      $('[data-login-step="1"]').classList.add('active');
+      $('[data-admin-password]').value = '';
+      $('[data-login-error]').textContent = '';
+      toggleModal('[data-admin-modal]', false);
+    });
 
     // Add product
     $('[data-add-product]').addEventListener('click', () => {
@@ -1638,7 +2059,7 @@
       };
 
       store.products.push(product);
-      localStorage.setItem('products', JSON.stringify(store.products));
+      saveProducts();
 
       $('[data-add-name]').value = '';
       $('[data-add-material]').value = '';
@@ -1658,102 +2079,415 @@
     $('[data-export-zip]').addEventListener('click', exportZIP);
     $('[data-export-pdf]').addEventListener('click', exportPDF);
 
-    // Import
-    $('[data-import-json-btn]').addEventListener('click', () => {
-      const fileInput = document.querySelector('input[data-import-json]');
-      if (!fileInput.files[0]) {
-        showToast('Select a JSON file');
-        return;
-      }
+    // ── IMPORT HELPERS ─────────────────────────────────────────
+    let pendingImport = [];
 
+    function rowsToProducts(rows) {
+      // rows: array of objects with any-case keys
+      return rows.map((row, i) => {
+        const get = (...keys) => {
+          for (const k of keys) {
+            const found = Object.keys(row).find(rk => rk.toLowerCase().trim() === k.toLowerCase());
+            if (found && row[found] !== undefined && row[found] !== '') return String(row[found]).trim();
+          }
+          return '';
+        };
+        const cat = get('category', 'type');
+        const validCats = ['Mandir', 'Idol', 'Accessory'];
+        const normCat = validCats.find(c => c.toLowerCase() === cat.toLowerCase()) || 'Mandir';
+        return {
+          id: Date.now().toString() + i,
+          name: get('name', 'product', 'title') || 'Unnamed Product',
+          category: normCat,
+          material: get('material', 'stone'),
+          size: get('size', 'dimension', 'dimensions'),
+          price: parseInt(get('price', 'cost', 'amount')) || 0,
+          image: get('image url', 'image', 'imageurl', 'img', 'photo'),
+          description: get('description', 'desc', 'details'),
+          featured: false,
+          sold: false
+        };
+      }).filter(p => p.name && p.name !== 'Unnamed Product');
+    }
+
+    function showImportPreview(products, label) {
+      pendingImport = products;
+      const preview = $('[data-import-preview]');
+      $('[data-import-preview-title]').textContent = `Preview — ${products.length} row${products.length !== 1 ? 's' : ''} from ${label}`;
+      $('[data-import-tbody]').innerHTML = products.map(p => `
+        <tr style="border-bottom:1px solid var(--line)">
+          <td style="padding:.3rem .5rem">${p.name}</td>
+          <td style="padding:.3rem .5rem">${p.category}</td>
+          <td style="padding:.3rem .5rem">${p.material || '—'}</td>
+          <td style="padding:.3rem .5rem">₹${p.price || '—'}</td>
+          <td style="padding:.3rem .5rem">${p.size || '—'}</td>
+        </tr>`).join('');
+      preview.style.display = products.length ? 'block' : 'none';
+      if (!products.length) showToast('No parseable rows found in file');
+    }
+
+    function parseCSVText(text) {
+      const lines = text.trim().split('\n').filter(l => l.trim());
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+      return lines.slice(1).map(line => {
+        const vals = [];
+        let inQ = false, cur = '';
+        for (let c of line) {
+          if (c === '"') { inQ = !inQ; }
+          else if (c === ',' && !inQ) { vals.push(cur); cur = ''; }
+          else cur += c;
+        }
+        vals.push(cur);
+        const obj = {};
+        headers.forEach((h, i) => { obj[h] = (vals[i] || '').replace(/^"|"$/g, '').trim(); });
+        return obj;
+      });
+    }
+
+    // JSON import
+    $('[data-import-json-btn]').addEventListener('click', () => {
+      const f = $('input[data-import-json]').files[0];
+      if (!f) { showToast('Select a JSON file first'); return; }
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         try {
           const data = JSON.parse(e.target.result);
           if (data.products) {
-            store.products = data.products;
-            localStorage.setItem('products', JSON.stringify(store.products));
+            showImportPreview(data.products, 'JSON');
+            // stash settings too if present
+            if (data.settings) pendingImport._settings = data.settings;
+          } else if (Array.isArray(data)) {
+            showImportPreview(rowsToProducts(data), 'JSON');
+          } else {
+            showToast('JSON must have a "products" array');
           }
-          if (data.settings) {
-            store.settings = data.settings;
-            localStorage.setItem('settings', JSON.stringify(store.settings));
-            applySettingsToUI();
-            loadSettings();
-          }
-          populateFilters();
-          applyFilters();
-          renderAdminDashboard();
-          showToast('✅ Data imported!');
-        } catch (err) {
-          showToast('Invalid JSON file');
-        }
+        } catch { showToast('Invalid JSON file'); }
       };
-      reader.readAsText(fileInput.files[0]);
+      reader.readAsText(f);
+    });
+
+    // CSV import
+    $('[data-import-csv-btn]').addEventListener('click', () => {
+      const f = $('input[data-import-csv]').files[0];
+      if (!f) { showToast('Select a CSV file first'); return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        const rows = parseCSVText(e.target.result);
+        showImportPreview(rowsToProducts(rows), 'CSV');
+      };
+      reader.readAsText(f);
+    });
+
+    // Excel import
+    $('[data-import-excel-btn]').addEventListener('click', () => {
+      const f = $('input[data-import-excel]').files[0];
+      if (!f) { showToast('Select an Excel file first'); return; }
+      if (typeof XLSX === 'undefined') { showToast('SheetJS not loaded — check internet connection'); return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+          showImportPreview(rowsToProducts(rows), 'Excel');
+        } catch { showToast('Could not read Excel file'); }
+      };
+      reader.readAsArrayBuffer(f);
+    });
+
+    // PDF import — extract text then try to detect tabular rows
+    $('[data-import-pdf-btn]').addEventListener('click', async () => {
+      const f = $('input[data-import-pdf]').files[0];
+      if (!f) { showToast('Select a PDF file first'); return; }
+      if (typeof pdfjsLib === 'undefined') { showToast('PDF.js not loaded — check internet connection'); return; }
+      showToast('Reading PDF...');
+      try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const buf = await f.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+        let lines = [];
+        for (let p = 1; p <= pdf.numPages; p++) {
+          const page = await pdf.getPage(p);
+          const tc = await page.getTextContent();
+          // Group items into rows by Y position
+          const byY = {};
+          tc.items.forEach(item => {
+            const y = Math.round(item.transform[5]);
+            if (!byY[y]) byY[y] = [];
+            byY[y].push(item.str);
+          });
+          Object.keys(byY).sort((a,b) => b-a).forEach(y => {
+            lines.push(byY[y].join('\t'));
+          });
+        }
+        // Try to detect header row (contains "name" or "product")
+        const headerIdx = lines.findIndex(l => /name|product/i.test(l));
+        let products = [];
+        if (headerIdx >= 0) {
+          const headers = lines[headerIdx].split('\t');
+          const dataLines = lines.slice(headerIdx + 1).filter(l => l.trim() && !/^page|total/i.test(l));
+          const rows = dataLines.map(l => {
+            const vals = l.split('\t');
+            const obj = {};
+            headers.forEach((h, i) => { obj[h.trim()] = (vals[i] || '').trim(); });
+            return obj;
+          });
+          products = rowsToProducts(rows);
+        }
+        // Fallback: look for lines with price patterns (Rs./₹ followed by digits)
+        if (!products.length) {
+          const priceLines = lines.filter(l => /(?:rs\.?|₹)\s*\d{3,}/i.test(l));
+          products = priceLines.map((l, i) => {
+            const priceMatch = l.match(/(?:rs\.?|₹)\s*(\d+)/i);
+            const clean = l.replace(/(?:rs\.?|₹)\s*\d+/gi, '').replace(/\t/g, ' ').trim();
+            return {
+              id: Date.now().toString() + i,
+              name: clean || `PDF Product ${i+1}`,
+              category: 'Mandir',
+              material: '',
+              size: '',
+              price: priceMatch ? parseInt(priceMatch[1]) : 0,
+              image: '',
+              description: '',
+              featured: false,
+              sold: false
+            };
+          }).filter(p => p.name);
+        }
+        showImportPreview(products, 'PDF');
+        if (products.length === 0) showToast('Could not auto-detect rows — try CSV/Excel instead');
+      } catch (err) {
+        showToast('PDF read error: ' + err.message);
+      }
+    });
+
+    // Confirm import
+    $('[data-import-confirm]').addEventListener('click', () => {
+      if (!pendingImport.length) return;
+      // Merge: avoid duplicate IDs
+      const existingIds = new Set(store.products.map(p => p.id));
+      const fresh = pendingImport.filter(p => !existingIds.has(p.id));
+      store.products.push(...fresh);
+      localStorage.setItem('products', JSON.stringify(store.products));
+      if (pendingImport._settings) {
+        store.settings = pendingImport._settings;
+        localStorage.setItem('settings', JSON.stringify(store.settings));
+        applySettingsToUI();
+        loadSettings();
+      }
+      populateFilters();
+      applyFilters();
+      renderAdminDashboard();
+      $('[data-import-preview]').style.display = 'none';
+      pendingImport = [];
+      showToast(`✅ Imported ${fresh.length} product${fresh.length !== 1 ? 's' : ''}!`);
+    });
+
+    // Cancel import
+    $('[data-import-cancel]').addEventListener('click', () => {
+      pendingImport = [];
+      $('[data-import-preview]').style.display = 'none';
     });
 
     // Detail modal
     $('[data-close-detail]').addEventListener('click', () => toggleModal('[data-detail-modal]', false));
 
-    // Chat
+    // ── GROQ CHAT ──────────────────────────────────────────────
+    const chatHistory = [];
+
+    async function askGroq(userMessage) {
+      // Priority: admin-saved key → Cloudflare injected ENV key
+      const key = (store.settings.groqKey || GROQ_KEY || '').trim();
+      if (!key) {
+        return 'AI chat needs a Groq API key. Go to Admin → Settings → Groq API Key to add one (free at console.groq.com). 🙏';
+      }
+      const shopName = store.settings.shopName || 'Jainson Marble';
+      const productSnippet = store.products.slice(0, 12)
+        .map(p => `${p.name} (${p.category}, ₹${p.price})`).join(', ');
+      const system = `You are a warm, knowledgeable customer assistant for ${shopName}, a marble temple and idol craftsmanship shop based in Delhi, India.
+Help customers with: product details, marble grades (Makrana/White/Corian), custom mandir & idol designs, sizes, finishes (matte/polished/antique), pricing, and delivery.
+Available products: ${productSnippet || 'custom mandirs, marble idols, accessories'}.
+Keep answers concise (2–4 sentences). Always offer to connect them on WhatsApp for orders.`;
+
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${GROQ_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.1-8b-instant',
+            messages: [
+              { role: 'system', content: system },
+              ...chatHistory.slice(-8),
+              { role: 'user', content: userMessage }
+            ],
+            max_tokens: 280,
+            temperature: 0.65
+          })
+        });
+        if (!res.ok) throw new Error(`${res.status}`);
+        const data = await res.json();
+        return data.choices?.[0]?.message?.content || 'Could not get a response, please try again.';
+      } catch (err) {
+        return 'Connection issue. Please reach out on WhatsApp directly. 🙏';
+      }
+    }
+
+    function appendChatMsg(text, role) {
+      const messages = $('[data-chat-messages]');
+      const div = document.createElement('div');
+      div.className = `chat-msg ${role}`;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    let chatWelcomed = false;
     $('[data-chat-toggle]').addEventListener('click', () => {
       $('[data-chat-panel]').classList.toggle('open');
+      if (!chatWelcomed && $('[data-chat-panel]').classList.contains('open')) {
+        chatWelcomed = true;
+        setTimeout(() => appendChatMsg(
+          'Jai Shri Ram! 🙏 Welcome to Jainson Marble. Ask me about mandirs, idols, pricing, materials, or custom designs — I\'m here to help!',
+          'bot'
+        ), 300);
+      }
     });
     $('[data-chat-close]').addEventListener('click', () => {
       $('[data-chat-panel]').classList.remove('open');
     });
-    $('[data-chat-send]').addEventListener('click', () => {
-      const msg = $('[data-chat-input]').value.trim();
-      if (msg) {
-        const messages = $('[data-chat-messages]');
-        const userMsg = document.createElement('div');
-        userMsg.className = 'chat-msg user';
-        userMsg.textContent = msg;
-        messages.appendChild(userMsg);
-        $('[data-chat-input]').value = '';
-        messages.scrollTop = messages.scrollHeight;
 
-        // Simple bot response
-        setTimeout(() => {
-          const botMsg = document.createElement('div');
-          botMsg.className = 'chat-msg bot';
-          botMsg.textContent = 'Thanks for your message! Please send details on WhatsApp for faster response.';
-          messages.appendChild(botMsg);
-          messages.scrollTop = messages.scrollHeight;
-        }, 800);
-      }
-    });
-    $('[data-chat-input]').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') $('[data-chat-send]').click();
+    async function sendChatMessage() {
+      const input = $('[data-chat-input]');
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = '';
+      appendChatMsg(msg, 'user');
+      chatHistory.push({ role: 'user', content: msg });
+
+      // Typing indicator
+      const messages = $('[data-chat-messages]');
+      const typing = document.createElement('div');
+      typing.className = 'chat-msg bot';
+      typing.innerHTML = '<em style="color:var(--muted);font-size:.8rem">typing…</em>';
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+
+      const reply = await askGroq(msg);
+      messages.removeChild(typing);
+      appendChatMsg(reply, 'bot');
+      chatHistory.push({ role: 'assistant', content: reply });
+    }
+
+    $('[data-chat-send]').addEventListener('click', sendChatMessage);
+    $('[data-chat-input]').addEventListener('keypress', e => {
+      if (e.key === 'Enter') sendChatMessage();
     });
 
     // Render admin dashboard
     function renderAdminDashboard() {
       const list = $('[data-products-list]');
-      if (store.products.length === 0) {
-        list.innerHTML = '<p style="color:var(--muted);text-align:center">No products yet. Add one!</p>';
-      } else {
-        list.innerHTML = store.products.map(p => `
-          <div style="padding:.6rem;border-bottom:1px solid var(--line);font-size:.82rem">
-            <strong>${p.name}</strong> (${p.category}, Rs. ${p.price})
-            <br><span style="color:var(--muted)">${p.material}, ${p.size}</span>
-            <div style="margin-top:.3rem">
-              <button class="btn small danger" data-delete-product="${p.id}" style="padding:.2rem .4rem">Delete</button>
+      if (!store.products.length) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:1rem">No products yet. Add one above!</p>';
+        return;
+      }
+      list.innerHTML = store.products.map(p => `
+        <div style="padding:.65rem;border-bottom:1px solid var(--line)" data-ap="${p.id}">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;flex-wrap:wrap">
+            <div style="min-width:0;flex:1">
+              <strong style="font-size:.85rem">${p.name}</strong>
+              <span style="color:var(--muted);font-size:.75rem"> · ${p.category} · ₹${p.price.toLocaleString('en-IN')}</span>
+              ${p.featured ? '<span style="color:var(--gold);font-size:.7rem;margin-left:.3rem">⭐</span>' : ''}
+              ${p.sold ? '<span style="background:#8d1f14;color:#fff;font-size:.6rem;padding:.1rem .3rem;border-radius:3px;margin-left:.3rem">SOLD</span>' : ''}
+              <br><span style="color:var(--muted);font-size:.74rem">${p.material || '—'} · ${p.size || '—'}</span>
+            </div>
+            <div style="display:flex;gap:.22rem;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0">
+              <button class="btn small" data-af="${p.id}">${p.featured ? '★ Unfeature' : '☆ Feature'}</button>
+              <button class="btn small" data-as="${p.id}">${p.sold ? '✓ Available' : '✗ Sold'}</button>
+              <button class="btn small primary" data-ae="${p.id}">Edit</button>
+              <button class="btn small danger" data-ad="${p.id}">Delete</button>
             </div>
           </div>
-        `).join('');
+          <div id="ef-${p.id}" style="display:none;margin-top:.6rem;background:var(--stone);border-radius:6px;padding:.7rem">
+            <div class="form-grid" style="font-size:.8rem">
+              <label>Name <input class="input" id="en-${p.id}" value="${p.name.replace(/"/g,'&quot;')}"></label>
+              <label>Category
+                <select class="select" id="ec-${p.id}">
+                  <option${p.category==='Mandir'?' selected':''}>Mandir</option>
+                  <option${p.category==='Idol'?' selected':''}>Idol</option>
+                  <option${p.category==='Accessory'?' selected':''}>Accessory</option>
+                </select>
+              </label>
+              <label>Material <input class="input" id="em-${p.id}" value="${(p.material||'').replace(/"/g,'&quot;')}"></label>
+              <label>Size <input class="input" id="ez-${p.id}" value="${(p.size||'').replace(/"/g,'&quot;')}"></label>
+              <label>Price ₹ <input class="input" type="number" id="ep-${p.id}" value="${p.price}"></label>
+              <label class="full">Image URL <input class="input" id="ei-${p.id}" value="${(p.image||'').replace(/"/g,'&quot;')}"></label>
+              <label class="full">Description <textarea class="textarea" id="ed-${p.id}" style="min-height:60px">${p.description||''}</textarea></label>
+            </div>
+            <div style="display:flex;gap:.4rem;margin-top:.5rem">
+              <button class="btn small primary" data-sv="${p.id}">💾 Save</button>
+              <button class="btn small" data-cx="${p.id}">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
 
-        $$('[data-delete-product]').forEach(btn => {
-          btn.onclick = () => {
-            if (confirm('Delete this product?')) {
-              store.products = store.products.filter(p => p.id !== btn.dataset.deleteProduct);
-              localStorage.setItem('products', JSON.stringify(store.products));
-              renderAdminDashboard();
-              populateFilters();
-              showToast('Product deleted');
-            }
-          };
-        });
-      }
+      // Toggle featured
+      list.querySelectorAll('[data-af]').forEach(btn => {
+        btn.onclick = () => {
+          const p = store.products.find(x => x.id === btn.dataset.af);
+          if (p) { p.featured = !p.featured; saveProducts(); renderAdminDashboard(); applyFilters(); }
+        };
+      });
+      // Toggle sold
+      list.querySelectorAll('[data-as]').forEach(btn => {
+        btn.onclick = () => {
+          const p = store.products.find(x => x.id === btn.dataset.as);
+          if (p) { p.sold = !p.sold; saveProducts(); renderAdminDashboard(); applyFilters(); }
+        };
+      });
+      // Toggle edit form
+      list.querySelectorAll('[data-ae]').forEach(btn => {
+        btn.onclick = () => {
+          const ef = document.getElementById(`ef-${btn.dataset.ae}`);
+          ef.style.display = ef.style.display === 'none' ? 'block' : 'none';
+        };
+      });
+      // Save edit
+      list.querySelectorAll('[data-sv]').forEach(btn => {
+        btn.onclick = () => {
+          const id = btn.dataset.sv;
+          const p  = store.products.find(x => x.id === id);
+          if (!p) return;
+          p.name        = document.getElementById(`en-${id}`).value;
+          p.category    = document.getElementById(`ec-${id}`).value;
+          p.material    = document.getElementById(`em-${id}`).value;
+          p.size        = document.getElementById(`ez-${id}`).value;
+          p.price       = parseInt(document.getElementById(`ep-${id}`).value) || p.price;
+          p.image       = document.getElementById(`ei-${id}`).value;
+          p.description = document.getElementById(`ed-${id}`).value;
+          saveProducts(); populateFilters(); renderAdminDashboard(); applyFilters();
+          showToast('✅ Product updated!');
+        };
+      });
+      // Cancel edit
+      list.querySelectorAll('[data-cx]').forEach(btn => {
+        btn.onclick = () => { document.getElementById(`ef-${btn.dataset.cx}`).style.display = 'none'; };
+      });
+      // Delete
+      list.querySelectorAll('[data-ad]').forEach(btn => {
+        btn.onclick = () => {
+          if (confirm(`Delete "${store.products.find(x => x.id === btn.dataset.ad)?.name}"?`)) {
+            store.products = store.products.filter(x => x.id !== btn.dataset.ad);
+            saveProducts(); populateFilters(); renderAdminDashboard(); applyFilters();
+            showToast('Product deleted');
+          }
+        };
+      });
     }
 
     // ── INIT ────────────────────────────────────────────────────
