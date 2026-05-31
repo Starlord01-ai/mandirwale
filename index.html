@@ -1457,10 +1457,18 @@
                 <label>Phone 2 <input class="input" data-settings-phone-2 placeholder="9891468290"></label>
                 <label>WhatsApp Number <input class="input" data-settings-whatsapp placeholder="918010631117"></label>
                 <label>UPI VPA (for QR) <input class="input" data-settings-upi placeholder="9891468290@paytm"></label>
-                <label class="full">Hero Image URL <input class="input" data-settings-hero-image placeholder="https://your-image-url.jpg (leave blank to show SVG illustration)"></label>
-                <label>Hero Title <input class="input" data-settings-hero-title placeholder="Jainson"></label>
-                <label>Hero Accent Word <input class="input" data-settings-hero-accent placeholder="Marble"></label>
+              </div>
+
+              <h4 style="margin:1.2rem 0 .6rem;padding-top:.8rem;border-top:1px solid var(--line)">🖼 Hero Section</h4>
+              <div class="form-grid">
+                <label class="full">Hero Image URL <input class="input" data-settings-hero-image placeholder="https://your-photo.jpg  (leave blank = SVG illustration)"></label>
+                <label>Hero Title Word <input class="input" data-settings-hero-title placeholder="Jainson"></label>
+                <label>Hero Gold Accent Word <input class="input" data-settings-hero-accent placeholder="Marble"></label>
                 <label class="full">Hero Subtitle <textarea class="textarea" data-settings-hero-text placeholder="Premium marble temples..."></textarea></label>
+              </div>
+
+              <h4 style="margin:1.2rem 0 .6rem;padding-top:.8rem;border-top:1px solid var(--line)">⚙ Other</h4>
+              <div class="form-grid">
                 <label class="full">Footer Copy <textarea class="textarea" data-settings-footer-copy placeholder="Dealers in marble temples..."></textarea></label>
                 <label class="full" style="border:1px solid rgba(184,138,45,.35);border-radius:6px;padding:.7rem;background:rgba(215,177,100,.06)">
                   🤖 Groq API Key <span style="font-weight:400;color:var(--muted)">(enables AI chat — get free key at console.groq.com)</span>
@@ -1610,33 +1618,43 @@
       return true;
     }
 
-    // ── LOAD STATE (replaces initStore) ────────────────────────
+    // ── LOAD STATE ─────────────────────────────────────────────
     async function loadState() {
+      // Always load localStorage first as the baseline
+      const lp  = localStorage.getItem('products');
+      const ls  = localStorage.getItem('settings');
+      const lg  = localStorage.getItem('gallery');
+      const lgs = localStorage.getItem('gallerySettings');
+      if (lp)  try { store.products        = JSON.parse(lp);  } catch (_) {}
+      if (ls)  try { store.settings        = JSON.parse(ls);  } catch (_) {}
+      if (lg)  try { store.gallery         = JSON.parse(lg);  } catch (_) {}
+      if (lgs) try { store.gallerySettings = JSON.parse(lgs); } catch (_) {}
+
+      // Then try API — only overwrite if API has *more* data than local
       try {
         const res = await fetch('/api/state');
         if (res.ok) {
           const data = await res.json();
-          store.products        = data.products        || [];
-          store.settings        = data.settings        || {};
-          store.gallery         = data.gallery         || [];
-          store.gallerySettings = data.gallerySettings || {};
-          localStorage.setItem('products',        JSON.stringify(store.products));
-          localStorage.setItem('settings',        JSON.stringify(store.settings));
-          localStorage.setItem('gallery',         JSON.stringify(store.gallery));
-          localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings));
-        } else {
-          throw new Error('API unavailable');
+          // Only update each field if API actually returned something
+          if (data.products?.length > 0) {
+            store.products = data.products;
+            localStorage.setItem('products', JSON.stringify(store.products));
+          }
+          if (data.settings && Object.keys(data.settings).length > 0) {
+            store.settings = data.settings;
+            localStorage.setItem('settings', JSON.stringify(store.settings));
+          }
+          if (data.gallery?.length > 0) {
+            store.gallery = data.gallery;
+            localStorage.setItem('gallery', JSON.stringify(store.gallery));
+          }
+          if (data.gallerySettings && Object.keys(data.gallerySettings).length > 0) {
+            store.gallerySettings = data.gallerySettings;
+            localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings));
+          }
         }
       } catch (e) {
-        // Offline / local dev — fall back to localStorage cache
-        const p  = localStorage.getItem('products');
-        const s  = localStorage.getItem('settings');
-        const g  = localStorage.getItem('gallery');
-        const gs = localStorage.getItem('gallerySettings');
-        if (p)  try { store.products        = JSON.parse(p);  } catch (_) {}
-        if (s)  try { store.settings        = JSON.parse(s);  } catch (_) {}
-        if (g)  try { store.gallery         = JSON.parse(g);  } catch (_) {}
-        if (gs) try { store.gallerySettings = JSON.parse(gs); } catch (_) {}
+        // API unavailable — local data already loaded above, continue silently
       }
       applySettingsToUI();
     }
@@ -3102,14 +3120,19 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       if (e.key === 'Enter') { document.getElementById('gal-add-btn').click(); }
     });
 
-    // Image upload for gallery (to R2 via /api/upload)
+    // Image upload for gallery
     document.getElementById('gal-upload').addEventListener('change', async e => {
       const files = [...e.target.files];
       if (!files.length) return;
-      if (!authToken) { showToast('Log in to upload images'); return; }
+
+      if (!authToken) {
+        showToast('⚠ You must be logged into the admin panel to upload');
+        return;
+      }
 
       showToast(`Uploading ${files.length} photo${files.length > 1 ? 's' : ''}…`);
-      let uploaded = 0;
+      let uploaded = 0, failed = 0;
+
       for (const file of files) {
         try {
           const fd = new FormData();
@@ -3119,14 +3142,31 @@ Rules: Only quote the above contact details. If something is "not set", say to W
             headers: { 'Authorization': `Bearer ${authToken}` },
             body: fd
           });
+
           if (res.ok) {
             const d = await res.json();
-            galAddUrl(d.url);
-            uploaded++;
+            if (d.url) { galAddUrl(d.url); uploaded++; }
+            else { failed++; console.error('Upload response missing url:', d); }
+          } else {
+            failed++;
+            const err = await res.json().catch(() => ({}));
+            console.error('Upload failed:', res.status, err);
+            if (res.status === 401) {
+              showToast('⚠ Session expired — please log out and log in again');
+              break;
+            }
+            if (res.status === 500 && failed === 1) {
+              showToast('⚠ Upload failed — R2 bucket may not be bound in Cloudflare. Use URL input instead.');
+            }
           }
-        } catch (_) {}
+        } catch (err) {
+          failed++;
+          console.error('Upload error:', err);
+        }
       }
-      showToast(`✅ ${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded!`);
+
+      if (uploaded > 0) showToast(`✅ ${uploaded} photo${uploaded !== 1 ? 's' : ''} added to gallery!`);
+      else if (failed > 0 && uploaded === 0) showToast(`Upload failed — paste image URLs directly into the URL field instead`);
       e.target.value = '';
     });
 
