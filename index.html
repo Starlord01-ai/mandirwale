@@ -1397,8 +1397,13 @@
 
           <!-- ADMIN PANEL -->
           <div class="login-step" data-login-step="2" style="max-height:70vh;overflow-y:auto">
-            <button class="btn danger" data-admin-logout style="float:right;margin-bottom:1rem">Logout</button>
-            <h3 style="clear:both;margin-top:0">Admin Panel</h3>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;flex-wrap:wrap;gap:.4rem">
+              <h3 style="margin:0">Admin Panel</h3>
+              <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+                <span id="admin-sync-badge" style="font-size:.72rem;color:var(--muted)"></span>
+                <button class="btn danger small" data-admin-logout>Logout</button>
+              </div>
+            </div>
 
             <!-- ADMIN TABS -->
             <div class="admin-tabs">
@@ -1461,7 +1466,20 @@
 
               <h4 style="margin:1.2rem 0 .6rem;padding-top:.8rem;border-top:1px solid var(--line)">🖼 Hero Section</h4>
               <div class="form-grid">
-                <label class="full">Hero Image URL <input class="input" data-settings-hero-image placeholder="https://your-photo.jpg  (leave blank = SVG illustration)"></label>
+                <label class="full">
+                  Hero Photo
+                  <div style="display:flex;gap:.4rem;margin-top:.3rem;flex-wrap:wrap">
+                    <input class="input" data-settings-hero-image placeholder="Or paste image URL..." style="flex:1;min-width:160px">
+                    <label class="btn small primary" style="cursor:pointer;white-space:nowrap;margin:0">
+                      📷 Upload Photo
+                      <input type="file" accept="image/*" id="hero-img-upload" style="display:none">
+                    </label>
+                    <button type="button" class="btn small" id="hero-img-clear">✕ Clear</button>
+                  </div>
+                  <div id="hero-upload-preview" style="display:none;margin-top:.5rem;border-radius:8px;overflow:hidden;height:90px;background:var(--stone)">
+                    <img id="hero-upload-preview-img" style="width:100%;height:100%;object-fit:cover;display:block">
+                  </div>
+                </label>
                 <label>Hero Title Word <input class="input" data-settings-hero-title placeholder="Jainson"></label>
                 <label>Hero Gold Accent Word <input class="input" data-settings-hero-accent placeholder="Marble"></label>
                 <label class="full">Hero Subtitle <textarea class="textarea" data-settings-hero-text placeholder="Premium marble temples..."></textarea></label>
@@ -1595,6 +1613,28 @@
     let collectionPage = 1;
     let filteredProducts = [];
     let currentCollection = null;
+
+    // ── FILE → COMPRESSED BASE64 (no R2 needed) ───────────────
+    // Resizes + compresses any uploaded image client-side via Canvas.
+    // The resulting data URL is stored directly in localStorage/R2.
+    async function fileToBase64(file, maxWidth = 900, quality = 0.78) {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = evt => {
+          const img = new Image();
+          img.onload = () => {
+            const ratio  = Math.min(1, maxWidth / img.width);
+            const canvas = document.createElement('canvas');
+            canvas.width  = Math.round(img.width  * ratio);
+            canvas.height = Math.round(img.height * ratio);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
 
     // ── AUTH TOKEN ─────────────────────────────────────────────
     let authToken = sessionStorage.getItem('adminToken') || '';
@@ -2101,6 +2141,11 @@
       $('[data-settings-whatsapp]').value       = s.whatsapp    || '';
       $('[data-settings-upi]').value            = s.upi         || '';
       $('[data-settings-hero-image]').value     = s.heroImage   || '';
+      if (s.heroImage) {
+        const prev = document.getElementById('hero-upload-preview');
+        const prevImg = document.getElementById('hero-upload-preview-img');
+        if (prev && prevImg) { prevImg.src = s.heroImage; prev.style.display = 'block'; }
+      }
       $('[data-settings-hero-title]').value     = s.heroTitle   || '';
       $('[data-settings-hero-accent]').value    = s.heroAccent  || '';
       $('[data-settings-hero-text]').value      = s.heroText    || '';
@@ -2261,6 +2306,22 @@
           $('[data-login-step="2"]').classList.add('active');
           renderAdminDashboard();
           loadSettings();
+          // Auto-sync: push localStorage products to server in case R2 was empty
+          if (store.products.length > 0) {
+            setTimeout(async () => {
+              try {
+                const r = await fetch('/api/state', {
+                  method: 'POST', headers: authHeaders(),
+                  body: JSON.stringify({ products: store.products, settings: store.settings, gallery: store.gallery, gallerySettings: store.gallerySettings })
+                });
+                const syncBadge = document.getElementById('admin-sync-badge');
+                if (syncBadge) syncBadge.textContent = r.ok ? '✅ Synced to server' : '⚠ Local only';
+              } catch (_) {
+                const syncBadge = document.getElementById('admin-sync-badge');
+                if (syncBadge) syncBadge.textContent = '⚠ Offline — local only';
+              }
+            }, 600);
+          }
         } else if (data.requireTotp) {
           $('[data-totp-row]').style.display = 'block';
           $('[data-login-error]').textContent = 'Enter the 6-digit code from your authenticator app.';
@@ -3120,53 +3181,19 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       if (e.key === 'Enter') { document.getElementById('gal-add-btn').click(); }
     });
 
-    // Image upload for gallery
+    // Gallery image upload — compressed locally, no R2 needed
     document.getElementById('gal-upload').addEventListener('change', async e => {
       const files = [...e.target.files];
       if (!files.length) return;
-
-      if (!authToken) {
-        showToast('⚠ You must be logged into the admin panel to upload');
-        return;
-      }
-
-      showToast(`Uploading ${files.length} photo${files.length > 1 ? 's' : ''}…`);
-      let uploaded = 0, failed = 0;
-
+      showToast(`Processing ${files.length} photo${files.length > 1 ? 's' : ''}…`);
       for (const file of files) {
-        try {
-          const fd = new FormData();
-          fd.append('file', file);
-          const res = await fetch('/api/upload', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${authToken}` },
-            body: fd
-          });
-
-          if (res.ok) {
-            const d = await res.json();
-            if (d.url) { galAddUrl(d.url); uploaded++; }
-            else { failed++; console.error('Upload response missing url:', d); }
-          } else {
-            failed++;
-            const err = await res.json().catch(() => ({}));
-            console.error('Upload failed:', res.status, err);
-            if (res.status === 401) {
-              showToast('⚠ Session expired — please log out and log in again');
-              break;
-            }
-            if (res.status === 500 && failed === 1) {
-              showToast('⚠ Upload failed — R2 bucket may not be bound in Cloudflare. Use URL input instead.');
-            }
-          }
-        } catch (err) {
-          failed++;
-          console.error('Upload error:', err);
-        }
+        const dataUrl = await fileToBase64(file, 900, 0.78);
+        if (!store.gallery) store.gallery = [];
+        store.gallery.push(dataUrl);
       }
-
-      if (uploaded > 0) showToast(`✅ ${uploaded} photo${uploaded !== 1 ? 's' : ''} added to gallery!`);
-      else if (failed > 0 && uploaded === 0) showToast(`Upload failed — paste image URLs directly into the URL field instead`);
+      renderGalleryAdmin();
+      renderGallery();
+      showToast(`✅ ${files.length} photo${files.length > 1 ? 's' : ''} added — click Save Gallery!`);
       e.target.value = '';
     });
 
@@ -3179,6 +3206,30 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       saveGallery();
       renderGallery();
       showToast('✅ Gallery saved!');
+    });
+
+    // ── HERO PHOTO UPLOAD ─────────────────────────────────────
+    document.getElementById('hero-img-upload')?.addEventListener('change', async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      showToast('Processing photo…');
+      const dataUrl = await fileToBase64(file, 1280, 0.85);
+      $('[data-settings-hero-image]').value = dataUrl;
+      const preview    = document.getElementById('hero-upload-preview');
+      const previewImg = document.getElementById('hero-upload-preview-img');
+      if (preview && previewImg) {
+        previewImg.src     = dataUrl;
+        preview.style.display = 'block';
+      }
+      showToast('✅ Photo ready — click Save Settings to apply it');
+      e.target.value = '';
+    });
+
+    document.getElementById('hero-img-clear')?.addEventListener('click', () => {
+      $('[data-settings-hero-image]').value = '';
+      const preview = document.getElementById('hero-upload-preview');
+      if (preview) preview.style.display = 'none';
+      showToast('Hero photo cleared — save settings to restore SVG illustration');
     });
 
     async function saveGallery() {
