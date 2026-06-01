@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jainson Marble - Marble Temples & Murtis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #07162c;
+      --ink2: #0e2543;
+      --gold: #b88a2d;
+      --gold2: #d7b164;
+      --cream: #f7f0e3;
+      --paper: #fffaf0;
+      --stone: #e8dece;
+      --muted: #776b5f;
+      --line: rgba(7,22,44,.14);
+      --shadow: 0 22px 70px rgba(7,22,44,.18);
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans:  'Inter', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    /* Marble texture + rich background */
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-sans);
+      background-color: var(--cream);
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.018 0.042' numOctaves='5' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.96 0 0 0 0 0.93 0 0 0 0 0.86 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 25% 10%, rgba(215,177,100,.18), transparent 28%),
+        linear-gradient(180deg, #fffaf0 0%, #efe3cf 100%);
+      background-size: 600px 600px, cover, cover;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    /* Typography */
+    h1, h2, h3, h4,
+    .section-title, .dialog-title, .gallery-headline,
+    .spotlight-name, .process-step h3 {
+      font-family: var(--font-serif);
+      letter-spacing: .01em;
+    }
+    h1 { font-size: clamp(2.1rem,5vw,3.4rem); font-weight: 600; line-height: 1.1; }
+    h2 { font-size: clamp(1.4rem,3.5vw,2.1rem); font-weight: 600; line-height: 1.2; }
+    h3 { font-size: 1.2rem; font-weight: 600; }
+
+    /* Gold shimmer on brand title */
+    @keyframes shimmer {
+      0%   { background-position: -300% center; }
+      100% { background-position:  300% center; }
+    }
+    .brand-title {
+      font-family: var(--font-serif);
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 30%, #fff4c2 45%, var(--gold2) 55%, var(--gold) 100%);
+      background-size: 300% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 5s linear infinite;
+    }
+    .h1-gold {
+      background: linear-gradient(90deg, var(--gold2) 0%, #ffd97a 40%, var(--gold2) 60%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 6s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <nav class="nav">
+        <div class="brand" data-go-home>
+          <div class="mark">JM</div>
+          <div>
+            <div class="brand-title" data-shop-name>Jainson Marble</div>
+            <div class="brand-sub" data-brand-sub>Marble Temples & Murtis</div>
+          </div>
+        </div>
+        <div class="nav-links">
+          <button class="btn small" data-route="home">Home</button>
+          <button class="btn small" data-route="mandirs">Mandirs</button>
+          <button class="btn small" data-route="idols">Idols</button>
+        </div>
+        <div class="nav-actions">
+          <button class="btn" data-open-admin>Admin</button>
+          <button class="btn dark" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
+        </div>
+      </nav>
+    </header>
+
+    <main style="flex:1">
+      <!-- HERO SECTION -->
+      <section class="hero" data-home-section>
+        <div class="hero-copy">
+          <div class="eyebrow" data-hero-eyebrow>Divine Craftsmanship. Timeless Devotion.</div>
+          <h1><span data-hero-title>Jainson</span> <span class="h1-gold" data-hero-accent>Marble</span></h1>
+          <p data-hero-text>Premium marble temples, lighting Corian mandirs, and marble murtis crafted for homes, offices, ashrams, and spiritual spaces.</p>
+          <div class="hero-actions">
+            <button class="btn primary" data-route="mandirs">View Mandirs</button>
+            <button class="btn" data-route="idols">View Idols</button>
+            <button class="btn" data-open-custom>Custom Order</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // GALLERY STORAGE & LOADING - RESTORED
+    const GALLERY_KEY = 'mandirwale_gallery_images';
+    const PDF_KEY = 'mandirwale_pdf_data';
+
+    // Initialize gallery from localStorage
+    function initializeGalleryFromStorage() {
+      const storedGallery = localStorage.getItem(GALLERY_KEY);
+      if (storedGallery) {
+        try {
+          window.galleryImages = JSON.parse(storedGallery);
+          console.log('✓ Gallery images loaded from storage:', window.galleryImages.length, 'items');
+          renderGallery();
+        } catch (err) {
+          console.warn('Gallery storage corrupted, resetting...');
+          localStorage.removeItem(GALLERY_KEY);
+          window.galleryImages = [];
+        }
+      } else {
+        window.galleryImages = [];
+      }
+    }
+
+    // Save gallery to localStorage
+    function saveGalleryToStorage() {
+      try {
+        localStorage.setItem(GALLERY_KEY, JSON.stringify(window.galleryImages));
+        console.log('✓ Gallery saved:', window.galleryImages.length, 'items');
+      } catch (err) {
+        console.error('Failed to save gallery:', err.message);
+        alert('⚠️ Storage full! Could not save images. Try clearing cache.');
+      }
+    }
+
+    // Render gallery images
+    function renderGallery() {
+      const floatContainer = document.querySelector('.gallery-float');
+      if (!floatContainer) return;
+      
+      floatContainer.innerHTML = '';
+      if (window.galleryImages.length === 0) {
+        floatContainer.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#999;">No gallery images yet</p>';
+        return;
+      }
+
+      window.galleryImages.forEach((imgData, idx) => {
+        const col = document.createElement('div');
+        col.className = 'gallery-col';
+        col.innerHTML = `
+          <div class="gallery-card" data-gallery-idx="${idx}">
+            <img src="${imgData}" alt="Gallery image" loading="lazy">
+          </div>
+        `;
+        floatContainer.appendChild(col);
+      });
+    }
+
+    // PDF UPLOAD FIX - Add accept attribute
+    function initPDFUpload() {
+      const pdfInput = document.querySelector('input[data-admin-pdf]');
+      if (pdfInput) {
+        // Fix: Add proper accept attribute for PDF files
+        pdfInput.setAttribute('accept', 'application/pdf,.pdf');
+        pdfInput.addEventListener('change', handlePDFUpload);
+      }
+    }
+
+    function handlePDFUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Validate it's actually a PDF
+      if (!file.type.includes('pdf') && !file.name.endsWith('.pdf')) {
+        alert('⚠️ Please upload a PDF file');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const pdfData = evt.target.result;
+          localStorage.setItem(PDF_KEY, pdfData);
+          console.log('✓ PDF uploaded and saved');
+          alert('✓ PDF uploaded successfully!');
+        } catch (err) {
+          console.error('PDF save failed:', err);
+          alert('⚠️ Failed to save PDF - storage full?');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // IMAGE UPLOAD FOR GALLERY
+    function handleGalleryImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Validate image
+      if (!file.type.startsWith('image/')) {
+        alert('⚠️ Please upload an image file');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const imgData = evt.target.result;
+          
+          // Prevent duplicates & limit storage (max 50MB for all images)
+          const estimatedSize = imgData.length;
+          const totalSize = window.galleryImages.reduce((sum, img) => sum + img.length, 0);
+          
+          if (totalSize + estimatedSize > 50 * 1024 * 1024) {
+            alert('⚠️ Gallery storage full! Delete some images first.');
+            return;
+          }
+
+          window.galleryImages.push(imgData);
+          saveGalleryToStorage();
+          renderGallery();
+          alert('✓ Image added to gallery!');
+        } catch (err) {
+          console.error('Image upload failed:', err);
+          alert('⚠️ Failed to upload image');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Delete gallery image
+    function deleteGalleryImage(idx) {
+      if (confirm('Delete this image?')) {
+        window.galleryImages.splice(idx, 1);
+        saveGalleryToStorage();
+        renderGallery();
+      }
+    }
+
+    // INITIALIZATION
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🎨 Initializing Mandirwale...');
+      
+      // Load gallery from storage
+      initializeGalleryFromStorage();
+      
+      // Setup PDF upload
+      initPDFUpload();
+      
+      // Setup gallery image upload
+      const galleryInput = document.querySelector('input[data-gallery-upload]');
+      if (galleryInput) {
+        galleryInput.setAttribute('accept', 'image/*');
+        galleryInput.addEventListener('change', handleGalleryImageUpload);
+      }
+      
+      console.log('✓ Ready!');
+    });
+
+    // Save gallery before page unload
+    window.addEventListener('beforeunload', () => {
+      if (window.galleryImages && window.galleryImages.length > 0) {
+        saveGalleryToStorage();
+      }
+    });
+  </script>
+</body>
+</html>
