@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Jainson Marble - Marble Temples & Murtis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #07162c;
@@ -14,21 +17,141 @@
       --paper: #fffaf0;
       --stone: #e8dece;
       --muted: #776b5f;
-      --line: rgba(7, 22, 44, .14);
-      --shadow: 0 22px 70px rgba(7, 22, 44, .18);
+      --line: rgba(7,22,44,.14);
+      --shadow: 0 22px 70px rgba(7,22,44,.18);
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans:  'Inter', system-ui, sans-serif;
     }
 
     * { box-sizing: border-box; }
+
+    /* Marble texture + rich background */
     body {
       margin: 0;
       color: var(--ink);
-      font-family: Georgia, "Times New Roman", serif;
-      background:
-        radial-gradient(circle at 25% 10%, rgba(215, 177, 100, .22), transparent 28%),
+      font-family: var(--font-sans);
+      background-color: var(--cream);
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.018 0.042' numOctaves='5' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.96 0 0 0 0 0.93 0 0 0 0 0.86 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 25% 10%, rgba(215,177,100,.18), transparent 28%),
         linear-gradient(180deg, #fffaf0 0%, #efe3cf 100%);
+      background-size: 600px 600px, cover, cover;
     }
     button, input, select, textarea { font: inherit; }
     button { cursor: pointer; }
+
+    /* Typography */
+    h1, h2, h3, h4,
+    .section-title, .dialog-title, .gallery-headline,
+    .spotlight-name, .process-step h3 {
+      font-family: var(--font-serif);
+      letter-spacing: .01em;
+    }
+    h1 { font-size: clamp(2.1rem,5vw,3.4rem); font-weight: 600; line-height: 1.1; }
+    h2 { font-size: clamp(1.4rem,3.5vw,2.1rem); font-weight: 600; line-height: 1.2; }
+    h3 { font-size: 1.2rem; font-weight: 600; }
+
+    /* Gold shimmer on brand title */
+    @keyframes shimmer {
+      0%   { background-position: -300% center; }
+      100% { background-position:  300% center; }
+    }
+    .brand-title {
+      font-family: var(--font-serif);
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 30%, #fff4c2 45%, var(--gold2) 55%, var(--gold) 100%);
+      background-size: 300% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 5s linear infinite;
+    }
+    .h1-gold {
+      background: linear-gradient(90deg, var(--gold2) 0%, #ffd97a 40%, var(--gold2) 60%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 6s linear infinite;
+    }
+
+    /* Scroll fade-rise */
+    .fade-rise {
+      opacity: 0; transform: translateY(26px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-rise.visible { opacity: 1; transform: none; }
+    .fade-rise.delay-1 { transition-delay: .12s; }
+    .fade-rise.delay-2 { transition-delay: .22s; }
+    .fade-rise.delay-3 { transition-delay: .32s; }
+
+    /* Featured card glow */
+    .card.is-featured {
+      box-shadow: 0 0 0 1px rgba(184,138,45,.35),
+                  0 8px 30px rgba(0,0,0,.12),
+                  0 0 55px rgba(215,177,100,.2);
+    }
+    .card.is-featured::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      background: radial-gradient(ellipse at 50% 0%, rgba(215,177,100,.13), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Cinematic spotlight card */
+    #featured-spotlight { display:none; margin: 0 0 2.5rem; }
+    .spotlight-card {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 360px; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 16px 60px rgba(0,0,0,.22);
+    }
+    .spotlight-img { width:100%; height:100%; object-fit:cover; display:block; }
+    .spotlight-copy {
+      padding: 2.5rem; display:flex; flex-direction:column; justify-content:center;
+      background: linear-gradient(135deg, var(--ink) 0%, #132035 100%);
+      border-left: 3px solid var(--gold);
+    }
+    .spotlight-label { font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold2); margin-bottom:.5rem; }
+    .spotlight-name  { font-family:var(--font-serif); font-size:clamp(1.4rem,2.5vw,2rem); color:#fff; margin:0 0 .4rem; font-weight:600; line-height:1.2; }
+    .spotlight-price { font-size:1.2rem; color:var(--gold2); margin-bottom:.9rem; font-weight:600; }
+    .spotlight-desc  { color:rgba(255,255,255,.5); font-size:.83rem; line-height:1.65; margin-bottom:1.4rem; }
+    @media(max-width:640px){ .spotlight-card{ grid-template-columns:1fr; } .spotlight-copy{ padding:1.4rem; } }
+
+    /* How it's made */
+    .process-section { padding:3.5rem 0 2rem; }
+    .process-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2rem;
+    }
+    .process-step {
+      text-align:center; padding:1.8rem 1.2rem;
+      background:rgba(255,255,255,.55); border:1px solid var(--line);
+      border-radius:12px; position:relative;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .process-step:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .process-num {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:28px; height:28px; border-radius:50%;
+      background:var(--gold); color:#fff; font-size:.72rem; font-weight:700;
+      margin-bottom:.9rem;
+    }
+    .process-icon { font-size:2.2rem; display:block; margin-bottom:.7rem; }
+    .process-step h3 { font-size:1.05rem; margin:0 0 .45rem; }
+    .process-step p  { color:var(--muted); font-size:.8rem; margin:0; line-height:1.6; }
+    @media(max-width:640px){ .process-grid{ grid-template-columns:1fr; gap:1rem; } }
+
+    /* WhatsApp pulse + sticky bar */
+    @keyframes wa-pulse {
+      0%,100%{ box-shadow:0 4px 20px rgba(37,211,102,.4),0 0 0 0 rgba(37,211,102,.35); }
+      60%    { box-shadow:0 4px 20px rgba(37,211,102,.4),0 0 0 10px rgba(37,211,102,0); }
+    }
+    [data-whatsapp-float]{ animation: wa-pulse 2.5s ease infinite !important; }
+    .wa-sticky {
+      display:none; position:fixed; bottom:0; left:0; right:0; z-index:200;
+      background:#25d366; color:#fff; text-align:center;
+      padding:.8rem; font-weight:600; font-size:.88rem; cursor:pointer;
+      box-shadow:0 -3px 16px rgba(0,0,0,.14);
+    }
+    @media(max-width:640px){ .wa-sticky{ display:block; } }
+
+    /* Diya canvas */
+    #diya-canvas{ position:absolute; inset:0; pointer-events:none; z-index:2; }
     .app { min-height: 100vh; display: flex; flex-direction: column; }
 
     /* ── TOPBAR ────────────────────────────────────────────────── */
@@ -948,7 +1071,8 @@
             <button class="btn" data-open-custom>Custom Order</button>
           </div>
         </div>
-        <div class="hero-media">
+        <div class="hero-media" style="position:relative">
+          <canvas id="diya-canvas"></canvas>
           <div id="hero-img-wrapper" style="width:100%;height:100%">
           <svg viewBox="0 0 480 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;background:#07162c">
             <defs>
@@ -1190,6 +1314,40 @@
       </section>
 
       <!-- FEATURED COLLECTION -->
+      <!-- HOW IT'S MADE -->
+      <section class="process-section container fade-rise" data-home-section>
+        <div style="text-align:center">
+          <div class="eyebrow">Our Process</div>
+          <h2 style="margin:.3rem 0 0">Crafted with Devotion</h2>
+        </div>
+        <div class="process-grid">
+          <div class="process-step fade-rise delay-1">
+            <span class="process-num">1</span>
+            <span class="process-icon">🪨</span>
+            <h3>Stone is Selected</h3>
+            <p>We source only premium Makrana white marble — the same stone used in the Taj Mahal — chosen for purity and grain.</p>
+          </div>
+          <div class="process-step fade-rise delay-2">
+            <span class="process-num">2</span>
+            <span class="process-icon">🪔</span>
+            <h3>Master Craftsmen Carve</h3>
+            <p>Artisans with 20+ years of experience hand-carve every detail. No two pieces are identical.</p>
+          </div>
+          <div class="process-step fade-rise delay-3">
+            <span class="process-num">3</span>
+            <span class="process-icon">🏠</span>
+            <h3>Delivered to Your Home</h3>
+            <p>Custom packaging, pan-India delivery, and white-glove installation support.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-home-section id="spotlight-section" style="padding-top:0;display:none">
+        <div class="container">
+          <div id="featured-spotlight"></div>
+        </div>
+      </section>
+
       <section class="section" id="products" data-home-section>
         <div class="section-head">
           <div>
@@ -1660,42 +1818,43 @@
 
     // ── LOAD STATE ─────────────────────────────────────────────
     async function loadState() {
-      // Always load localStorage first as the baseline
+      // Step 1 — always load from localStorage first (instant, offline-safe)
       const lp  = localStorage.getItem('products');
       const ls  = localStorage.getItem('settings');
       const lg  = localStorage.getItem('gallery');
       const lgs = localStorage.getItem('gallerySettings');
+      const localTs = parseInt(localStorage.getItem('stateTs') || '0');
+
       if (lp)  try { store.products        = JSON.parse(lp);  } catch (_) {}
       if (ls)  try { store.settings        = JSON.parse(ls);  } catch (_) {}
       if (lg)  try { store.gallery         = JSON.parse(lg);  } catch (_) {}
       if (lgs) try { store.gallerySettings = JSON.parse(lgs); } catch (_) {}
 
-      // Then try API — only overwrite if API has *more* data than local
+      // Step 2 — fetch from API, compare timestamps, only update if API is NEWER
       try {
         const res = await fetch('/api/state');
         if (res.ok) {
           const data = await res.json();
-          // Only update each field if API actually returned something
-          if (data.products?.length > 0) {
-            store.products = data.products;
-            localStorage.setItem('products', JSON.stringify(store.products));
+          const apiTs = parseInt(data.lastModified || data.ts || '0');
+
+          if (apiTs > localTs) {
+            // Server has newer data — use it and update local cache
+            if (data.products)        store.products        = data.products;
+            if (data.settings)        store.settings        = data.settings;
+            if (data.gallery)         store.gallery         = data.gallery;
+            if (data.gallerySettings) store.gallerySettings = data.gallerySettings;
+            localStorage.setItem('products',        JSON.stringify(store.products));
+            localStorage.setItem('settings',        JSON.stringify(store.settings));
+            localStorage.setItem('gallery',         JSON.stringify(store.gallery        || []));
+            localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings || {}));
+            localStorage.setItem('stateTs', String(apiTs));
           }
-          if (data.settings && Object.keys(data.settings).length > 0) {
-            store.settings = data.settings;
-            localStorage.setItem('settings', JSON.stringify(store.settings));
-          }
-          if (data.gallery?.length > 0) {
-            store.gallery = data.gallery;
-            localStorage.setItem('gallery', JSON.stringify(store.gallery));
-          }
-          if (data.gallerySettings && Object.keys(data.gallerySettings).length > 0) {
-            store.gallerySettings = data.gallerySettings;
-            localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings));
-          }
+          // If localTs >= apiTs: local data is same age or newer — keep it as-is
         }
-      } catch (e) {
-        // API unavailable — local data already loaded above, continue silently
+      } catch (_) {
+        // API unreachable — local data already loaded above
       }
+
       applySettingsToUI();
     }
 
@@ -1730,7 +1889,7 @@
       const page = products.slice(start, start + ITEMS_PER_PAGE);
 
       $(gridSelector).innerHTML = page.map(p => `
-        <div class="card" data-product-id="${p.id}">
+        <div class="card fade-rise${p.featured ? ' is-featured' : ''}" data-product-id="${p.id}">
           <div class="thumb">
             <img src="${p.image || ''}" alt="${p.name}" onerror="this.style.opacity='0'">
             ${p.featured ? '<span class="tag">⭐ Featured</span>' : ''}
@@ -1768,6 +1927,16 @@
           $(paginationSelector).appendChild(btn);
         }
       }
+
+      // Re-observe new cards for scroll animation
+      setTimeout(() => {
+        document.querySelectorAll('.fade-rise:not(.visible)').forEach(el => {
+          const io = new IntersectionObserver(e => {
+            if (e[0].isIntersecting) { e[0].target.classList.add('visible'); io.disconnect(); }
+          }, { threshold: 0.06 });
+          io.observe(el);
+        });
+      }, 30);
 
       $$('[data-view-product]').forEach(btn => {
         btn.onclick = () => showProductDetail(btn.dataset.viewProduct);
@@ -2044,29 +2213,41 @@
     // ── SAVE PRODUCTS ──────────────────────────────────────────
     function saveProducts() {
       localStorage.setItem('products', JSON.stringify(store.products));
+      localStorage.setItem('stateTs',  String(Date.now()));
       saveState();
     }
 
     // ── SAVE STATE TO R2 ───────────────────────────────────────
     async function saveState() {
-      if (!authToken) return; // not logged in — don't attempt
+      const ts = Date.now();
+      // Always save locally first — instant, never fails
+      localStorage.setItem('products',        JSON.stringify(store.products));
+      localStorage.setItem('settings',        JSON.stringify(store.settings));
+      localStorage.setItem('gallery',         JSON.stringify(store.gallery        || []));
+      localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings || {}));
+      localStorage.setItem('stateTs',         String(ts));
+
+      if (!authToken) return;
       try {
         const res = await fetch('/api/state', {
           method: 'POST',
           headers: authHeaders(),
-          body: JSON.stringify({ products: store.products, settings: store.settings })
+          body: JSON.stringify({
+            products:        store.products,
+            settings:        store.settings,
+            gallery:         store.gallery        || [],
+            gallerySettings: store.gallerySettings || {},
+            lastModified:    ts
+          })
         });
+        const badge = document.getElementById('admin-sync-badge');
+        if (badge) badge.textContent = res.ok ? '✅ Synced' : '⚠ Saved locally';
         if (res.status === 401) {
-          showToast('⚠ Session expired — please log in again');
-          authToken = '';
-          sessionStorage.removeItem('adminToken');
-          $('[data-login-step="2"]').classList.remove('active');
-          $('[data-login-step="1"]').classList.add('active');
-        } else if (!res.ok) {
-          showToast('⚠ Sync failed — changes saved locally');
+          authToken = ''; sessionStorage.removeItem('adminToken');
         }
-      } catch (e) {
-        // Offline — local cache already updated
+      } catch (_) {
+        const badge = document.getElementById('admin-sync-badge');
+        if (badge) badge.textContent = '⚠ Offline — saved locally';
       }
     }
 
@@ -3061,21 +3242,34 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       const cols    = Array.from({ length: numCols }, () => []);
       images.forEach((url, i) => cols[i % numCols].push({ url, i }));
 
-      document.getElementById('gallery-float').innerHTML = cols.map((col, ci) =>
+      const floatEl = document.getElementById('gallery-float');
+      floatEl.innerHTML = cols.map((col, ci) =>
         `<div class="gallery-col">
-          ${col.map(({ url, i }) => `
-            <div class="gallery-card"
-                 style="transform:rotate(${GAL_ROTS[(ci * 3 + i) % GAL_ROTS.length]}deg)"
-                 onclick="document.getElementById('zoom-overlay').classList.add('open');
-                          document.getElementById('zoom-img').src='${url.replace(/'/g,'%27')}';
-                          document.getElementById('zoom-img').style.transform='';
-                          document.body.style.overflow='hidden'">
-              <img src="${url}" loading="lazy"
+          ${col.map(({ i }) => `
+            <div class="gallery-card" data-gal-idx="${i}"
+                 style="transform:rotate(${GAL_ROTS[(ci * 3 + i) % GAL_ROTS.length]}deg)">
+              <img src="${images[i]}" loading="lazy"
                    style="height:${GAL_HEIGHTS[(ci + i) % GAL_HEIGHTS.length]}px"
                    onerror="this.closest('.gallery-card').style.display='none'">
             </div>`).join('')}
         </div>`
       ).join('');
+
+      // Single delegated click handler — avoids embedding URLs in onclick attributes
+      floatEl.onclick = e => {
+        const card = e.target.closest('[data-gal-idx]');
+        if (!card) return;
+        const url = images[parseInt(card.dataset.galIdx)];
+        if (!url) return;
+        const zOverlay = document.getElementById('zoom-overlay');
+        const zImg     = document.getElementById('zoom-img');
+        if (zOverlay && zImg) {
+          zImg.src = url;
+          zImg.style.transform = '';
+          zOverlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      };
 
       // ── Mobile: carousel
       initGalleryCarousel(images);
@@ -3128,25 +3322,125 @@ Rules: Only quote the above contact details. If something is "not set", say to W
     }
 
     // ── ADMIN GALLERY ─────────────────────────────────────────
+    // ── SCROLL FADE-RISE OBSERVER ──────────────────────────────
+    (function initFadeRise() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      function observeAll() {
+        document.querySelectorAll('.fade-rise:not(.visible)').forEach(el => io.observe(el));
+      }
+      observeAll();
+      setTimeout(observeAll, 600);
+      setTimeout(observeAll, 1400);
+    })();
+
+    // ── DIYA PARTICLES ─────────────────────────────────────────
+    (function initDiyas() {
+      const canvas = document.getElementById('diya-canvas');
+      const hero   = canvas?.parentElement;
+      if (!canvas || !hero) return;
+      const ctx    = canvas.getContext('2d');
+      const P      = Array.from({length: 28}, () => ({
+        x: Math.random(), y: Math.random(),
+        r: 1.2 + Math.random() * 2.2,
+        speed: 0.25 + Math.random() * 0.6,
+        op: 0.25 + Math.random() * 0.5,
+        w: Math.random() * Math.PI * 2,
+        ws: 0.012 + Math.random() * 0.018
+      }));
+      function resize() { canvas.width = hero.clientWidth; canvas.height = hero.clientHeight; }
+      resize(); new ResizeObserver(resize).observe(hero);
+      (function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        P.forEach(p => {
+          p.y -= p.speed / canvas.height; p.w += p.ws;
+          if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+          const x = (p.x + Math.sin(p.w) * 0.012) * canvas.width;
+          const y = p.y * canvas.height;
+          const g = ctx.createRadialGradient(x, y, 0, x, y, p.r * 2.5);
+          g.addColorStop(0, `rgba(255,210,80,${p.op})`);
+          g.addColorStop(1, 'rgba(215,177,100,0)');
+          ctx.beginPath(); ctx.arc(x, y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = g; ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      })();
+    })();
+
+    // ── FEATURED SPOTLIGHT CARD ────────────────────────────────
+    function renderSpotlight() {
+      const el  = document.getElementById('featured-spotlight');
+      const sec = document.getElementById('spotlight-section');
+      if (!el || !sec) return;
+      const p = store.products.find(x => x.featured && !x.sold);
+      if (!p) { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      const wa = store.settings.whatsapp || '918010631117';
+      el.innerHTML = `
+        <div class="spotlight-card fade-rise">
+          <img class="spotlight-img" src="${p.image||''}" alt="${p.name}"
+               onerror="this.style.background='var(--stone)'">
+          <div class="spotlight-copy">
+            <div class="spotlight-label">✦ Featured Piece</div>
+            <div class="spotlight-name">${p.name}</div>
+            <div class="spotlight-price">₹${p.price ? p.price.toLocaleString('en-IN') : 'On Request'}</div>
+            <div class="spotlight-desc">${p.description || 'Premium marble craftsmanship, made to order.'}</div>
+            <div style="display:flex;gap:.7rem;flex-wrap:wrap">
+              <button class="btn primary" onclick="openDetail('${p.id}')">View This Piece →</button>
+              <button class="btn" onclick="window.open('https://wa.me/${wa}?text='+encodeURIComponent('Interested in: ${p.name.replace(/'/g,"\\'")}'),'_blank')">WhatsApp Enquiry</button>
+            </div>
+          </div>
+        </div>`;
+      setTimeout(() => {
+        el.querySelectorAll('.fade-rise').forEach(el => {
+          const io2 = new IntersectionObserver(e => { if(e[0].isIntersecting){e[0].target.classList.add('visible');io2.disconnect();} });
+          io2.observe(el);
+        });
+      }, 50);
+    }
+
+    // ── WHATSAPP STICKY BAR ────────────────────────────────────
+    function initWaSticky() {
+      const bar = document.getElementById('wa-sticky');
+      if (!bar) return;
+      const wa = store.settings.whatsapp || '918010631117';
+      bar.textContent = '💬 Chat on WhatsApp — fastest response';
+      bar.onclick = () => window.open(`https://wa.me/${wa}?text=Hi! I want to enquire about your mandirs.`, '_blank');
+    }
+
     function renderGalleryAdmin() {
-      if (!document.getElementById('gal-admin-list')) return;
+      const listEl = document.getElementById('gal-admin-list');
+      if (!listEl) return;
       const images = store.gallery || [];
       const gs     = store.gallerySettings || {};
 
-      document.getElementById('gal-eyebrow').value  = gs.eyebrow  || '';
-      document.getElementById('gal-headline').value = gs.headline || '';
-      document.getElementById('gal-sub').value      = gs.sub      || '';
+      const ey = document.getElementById('gal-eyebrow');
+      const hl = document.getElementById('gal-headline');
+      const sb = document.getElementById('gal-sub');
+      if (ey) ey.value = gs.eyebrow  || '';
+      if (hl) hl.value = gs.headline || '';
+      if (sb) sb.value = gs.sub      || '';
 
-      document.getElementById('gal-admin-list').innerHTML = images.length
-        ? images.map((url, i) => `
-          <div class="gallery-admin-item">
-            <img class="gallery-admin-thumb" src="${url}" onerror="this.style.opacity='.3'">
-            <span class="gallery-admin-url" title="${url}">${url}</span>
-            <button class="btn small danger" onclick="galRemove(${i})" style="flex-shrink:0">✕</button>
-            ${i > 0                   ? `<button class="btn small" onclick="galMove(${i},-1)" style="flex-shrink:0">↑</button>` : ''}
-            ${i < images.length - 1  ? `<button class="btn small" onclick="galMove(${i}, 1)" style="flex-shrink:0">↓</button>` : ''}
-          </div>`).join('')
-        : '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem">No gallery photos yet.</p>';
+      if (!images.length) {
+        listEl.innerHTML = '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem">No gallery photos yet.</p>';
+        return;
+      }
+
+      listEl.innerHTML = images.map((url, i) => {
+        // Show "Uploaded photo" for base64, or truncated URL for external links
+        const isBase64  = url.startsWith('data:');
+        const labelText = isBase64 ? `📷 Uploaded photo ${i + 1}` : url.slice(0, 60) + (url.length > 60 ? '…' : '');
+        return `<div class="gallery-admin-item">
+          <img class="gallery-admin-thumb" src="${url}" onerror="this.style.opacity='.25'">
+          <span class="gallery-admin-url" style="font-style:${isBase64?'italic':'normal'}">${labelText}</span>
+          <button class="btn small danger" onclick="galRemove(${i})">✕</button>
+          ${i > 0               ? `<button class="btn small" onclick="galMove(${i},-1)">↑</button>` : ''}
+          ${i < images.length-1 ? `<button class="btn small" onclick="galMove(${i}, 1)">↓</button>` : ''}
+        </div>`;
+      }).join('');
     }
 
     window.galRemove = function(i) {
@@ -3165,30 +3459,32 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       url = url.trim();
       if (!url) return;
       if (!store.gallery) store.gallery = [];
-      if (store.gallery.includes(url)) { showToast('Already in gallery'); return; }
+      // Only check for duplicate external URLs, skip check for base64 (too large to compare)
+      if (!url.startsWith('data:') && store.gallery.includes(url)) {
+        showToast('Already in gallery'); return;
+      }
       store.gallery.push(url);
       renderGalleryAdmin();
       renderGallery();
     }
 
-    document.getElementById('gal-add-btn').addEventListener('click', () => {
+    document.getElementById('gal-add-btn')?.addEventListener('click', () => {
       const input = document.getElementById('gal-url-input');
-      galAddUrl(input.value);
-      input.value = '';
+      if (input) { galAddUrl(input.value); input.value = ''; }
     });
 
-    document.getElementById('gal-url-input').addEventListener('keypress', e => {
-      if (e.key === 'Enter') { document.getElementById('gal-add-btn').click(); }
+    document.getElementById('gal-url-input')?.addEventListener('keypress', e => {
+      if (e.key === 'Enter') document.getElementById('gal-add-btn')?.click();
     });
 
-    // Gallery image upload — compressed locally, no R2 needed
-    document.getElementById('gal-upload').addEventListener('change', async e => {
+    // Gallery image upload — compressed locally via Canvas, no R2 needed
+    document.getElementById('gal-upload')?.addEventListener('change', async e => {
       const files = [...e.target.files];
       if (!files.length) return;
       showToast(`Processing ${files.length} photo${files.length > 1 ? 's' : ''}…`);
+      if (!store.gallery) store.gallery = [];
       for (const file of files) {
         const dataUrl = await fileToBase64(file, 900, 0.78);
-        if (!store.gallery) store.gallery = [];
         store.gallery.push(dataUrl);
       }
       renderGalleryAdmin();
@@ -3197,11 +3493,11 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       e.target.value = '';
     });
 
-    document.getElementById('gal-save-btn').addEventListener('click', () => {
+    document.getElementById('gal-save-btn')?.addEventListener('click', () => {
       store.gallerySettings = {
-        eyebrow:  document.getElementById('gal-eyebrow').value,
-        headline: document.getElementById('gal-headline').value,
-        sub:      document.getElementById('gal-sub').value
+        eyebrow:  document.getElementById('gal-eyebrow')?.value  || '',
+        headline: document.getElementById('gal-headline')?.value || '',
+        sub:      document.getElementById('gal-sub')?.value      || ''
       };
       saveGallery();
       renderGallery();
@@ -3256,8 +3552,13 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       populateFilters();
       applyFilters();
       renderGallery();
+      renderSpotlight();
+      initWaSticky();
     })();
   </script>
+  <!-- WHATSAPP STICKY BAR (mobile) -->
+  <div class="wa-sticky" id="wa-sticky"></div>
+
   <!-- IMAGE ZOOM OVERLAY -->
   <div class="zoom-overlay" id="zoom-overlay">
     <button class="zoom-close-btn" id="zoom-close">✕</button>
