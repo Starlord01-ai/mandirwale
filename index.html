@@ -4,6 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Jainson Marble - Marble Temples & Murtis</title>
+  <meta name="description" content="Premium marble temples, mandirs and divine murtis hand-crafted by master artisans in Delhi. Custom Ganesh, Shiv Ji, marble mandirs for homes, offices and ashrams.">
+  <meta name="keywords" content="marble mandir, marble temple, marble murti, Ganesh idol, marble Ganesh, custom mandir, Jainson Marble, Delhi marble temple">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Jainson Marble – Marble Temples & Murtis">
+  <meta property="og:description" content="Premium marble temples and divine idols crafted by master artisans. Pan-India delivery.">
+  <meta property="og:url" content="https://mandirwale.pages.dev">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jainson Marble – Marble Temples & Murtis">
+  <meta name="twitter:description" content="Premium marble temples and divine idols. Custom designs, pan-India delivery.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Jainson Marble","description":"Premium marble temples, mandirs and murtis crafted by master artisans","url":"https://mandirwale.pages.dev","telephone":"+918010631117","address":{"@type":"PostalAddress","streetAddress":"B76, Mangolpur Kalan Marble Market","addressLocality":"Delhi","postalCode":"110083","addressCountry":"IN"},"priceRange":"₹₹₹","openingHours":"Mo-Sa 09:00-19:00"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -39,13 +49,23 @@
     }
     button, input, select, textarea { font: inherit; }
     button { cursor: pointer; }
-    .app { min-height: 100vh; display: flex; flex-direction: column; }
 
+    /* Typography */
+    h1, h2, h3, h4,
+    .section-title, .dialog-title, .gallery-headline,
+    .spotlight-name, .process-step h3 {
+      font-family: var(--font-serif);
+      letter-spacing: .01em;
+    }
+    h1 { font-size: clamp(2.1rem,5vw,3.4rem); font-weight: 600; line-height: 1.1; }
+    h2 { font-size: clamp(1.4rem,3.5vw,2.1rem); font-weight: 600; line-height: 1.2; }
+    h3 { font-size: 1.2rem; font-weight: 600; }
+
+    /* Gold shimmer on brand title */
     @keyframes shimmer {
       0%   { background-position: -300% center; }
       100% { background-position:  300% center; }
     }
-
     .brand-title {
       font-family: var(--font-serif);
       background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 30%, #fff4c2 45%, var(--gold2) 55%, var(--gold) 100%);
@@ -54,18 +74,184 @@
       background-clip: text;
       animation: shimmer 5s linear infinite;
     }
-
     .h1-gold {
       background: linear-gradient(90deg, var(--gold2) 0%, #ffd97a 40%, var(--gold2) 60%, var(--gold) 100%);
       background-size: 200% auto;
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: shimmer 6s linear infinite;
-      display: block;
-      font-size: .6em;
-      letter-spacing: .16em;
-      margin-top: .2rem;
     }
+
+    /* Scroll fade-rise */
+    .fade-rise {
+      opacity: 0; transform: translateY(26px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-rise.visible { opacity: 1; transform: none; }
+    .fade-rise.delay-1 { transition-delay: .12s; }
+    .fade-rise.delay-2 { transition-delay: .22s; }
+    .fade-rise.delay-3 { transition-delay: .32s; }
+
+    /* Featured card glow */
+    .card.is-featured {
+      box-shadow: 0 0 0 1px rgba(184,138,45,.35),
+                  0 8px 30px rgba(0,0,0,.12),
+                  0 0 55px rgba(215,177,100,.2);
+    }
+    .card.is-featured::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      background: radial-gradient(ellipse at 50% 0%, rgba(215,177,100,.13), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Cinematic spotlight card */
+    #featured-spotlight { display:none; margin: 0 0 2.5rem; }
+    .spotlight-card {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 360px; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 16px 60px rgba(0,0,0,.22);
+    }
+    .spotlight-img { width:100%; height:100%; object-fit:cover; display:block; }
+    .spotlight-copy {
+      padding: 2.5rem; display:flex; flex-direction:column; justify-content:center;
+      background: linear-gradient(135deg, var(--ink) 0%, #132035 100%);
+      border-left: 3px solid var(--gold);
+    }
+    .spotlight-label { font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold2); margin-bottom:.5rem; }
+    .spotlight-name  { font-family:var(--font-serif); font-size:clamp(1.4rem,2.5vw,2rem); color:#fff; margin:0 0 .4rem; font-weight:600; line-height:1.2; }
+    .spotlight-price { font-size:1.2rem; color:var(--gold2); margin-bottom:.9rem; font-weight:600; }
+    .spotlight-desc  { color:rgba(255,255,255,.5); font-size:.83rem; line-height:1.65; margin-bottom:1.4rem; }
+    @media(max-width:640px){ .spotlight-card{ grid-template-columns:1fr; } .spotlight-copy{ padding:1.4rem; } }
+
+    /* How it's made */
+    .process-section { padding:3.5rem 0 2rem; }
+    .process-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2rem;
+    }
+    .process-step {
+      text-align:center; padding:1.8rem 1.2rem;
+      background:rgba(255,255,255,.55); border:1px solid var(--line);
+      border-radius:12px; position:relative;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .process-step:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .process-num {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:28px; height:28px; border-radius:50%;
+      background:var(--gold); color:#fff; font-size:.72rem; font-weight:700;
+      margin-bottom:.9rem;
+    }
+    .process-icon { font-size:2.2rem; display:block; margin-bottom:.7rem; }
+    .process-step h3 { font-size:1.05rem; margin:0 0 .45rem; }
+    .process-step p  { color:var(--muted); font-size:.8rem; margin:0; line-height:1.6; }
+    @media(max-width:640px){ .process-grid{ grid-template-columns:1fr; gap:1rem; } }
+
+    /* WhatsApp pulse + sticky bar */
+    @keyframes wa-pulse {
+      0%,100%{ box-shadow:0 4px 20px rgba(37,211,102,.4),0 0 0 0 rgba(37,211,102,.35); }
+      60%    { box-shadow:0 4px 20px rgba(37,211,102,.4),0 0 0 10px rgba(37,211,102,0); }
+    }
+    [data-whatsapp-float]{ animation: wa-pulse 2.5s ease infinite !important; }
+    .wa-sticky {
+      display:none; position:fixed; bottom:0; left:0; right:0; z-index:200;
+      background:#25d366; color:#fff; text-align:center;
+      padding:.8rem; font-weight:600; font-size:.88rem; cursor:pointer;
+      box-shadow:0 -3px 16px rgba(0,0,0,.14);
+    }
+    @media(max-width:640px){ .wa-sticky{ display:block; } }
+
+    /* Diya canvas */
+    #diya-canvas{ position:absolute; inset:0; pointer-events:none; z-index:2; }
+
+    /* ── SKELETON LOADER ─────────────────────────────────────── */
+    @keyframes skeleton-shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skeleton-card {
+      border-radius: 10px; overflow: hidden;
+      background: var(--stone); border: 1px solid var(--line);
+    }
+    .skeleton-thumb {
+      height: 200px;
+      background: linear-gradient(90deg, var(--stone) 25%, #e0d5c4 50%, var(--stone) 75%);
+      background-size: 800px 100%;
+      animation: skeleton-shimmer 1.6s infinite;
+    }
+    .skeleton-body { padding: .9rem; }
+    .skeleton-line {
+      height: 12px; border-radius: 6px; margin-bottom: .55rem;
+      background: linear-gradient(90deg, #ddd0bc 25%, #ede4d4 50%, #ddd0bc 75%);
+      background-size: 800px 100%;
+      animation: skeleton-shimmer 1.6s infinite;
+    }
+    .skeleton-line.w-full  { width: 80%; }
+    .skeleton-line.w-half  { width: 50%; }
+    .skeleton-line.w-price { width: 35%; height: 16px; margin-top: .3rem; }
+
+    /* ── MOBILE BOTTOM NAV ───────────────────────────────────── */
+    .mobile-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
+      background: var(--ink);
+      border-top: 1px solid rgba(255,255,255,.08);
+      grid-template-columns: repeat(5, 1fr);
+      box-shadow: 0 -4px 20px rgba(0,0,0,.25);
+    }
+    @media (max-width: 680px) {
+      .mobile-nav { display: grid; }
+      .wa-sticky  { display: none !important; }
+      body { padding-bottom: 60px; }
+    }
+    .mobile-nav-btn {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: .5rem .2rem;
+      background: none; border: none; color: rgba(255,255,255,.5);
+      font-size: .6rem; gap: .18rem; transition: color .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-nav-btn .mn-icon { font-size: 1.2rem; line-height: 1; }
+    .mobile-nav-btn.active,
+    .mobile-nav-btn:hover   { color: var(--gold2); }
+    .mobile-nav-btn.wa-btn  { color: #4cda7a; }
+
+    /* ── PRODUCT DETAIL ENHANCEMENTS ─────────────────────────── */
+    .material-guide {
+      margin: 1rem 0; border: 1px solid var(--line); border-radius: 8px;
+      overflow: hidden;
+    }
+    .material-guide summary {
+      padding: .7rem .9rem; cursor: pointer; font-size: .82rem;
+      font-weight: 600; background: var(--stone); list-style: none;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .material-guide summary::after { content: '﹀'; font-size: .75rem; }
+    .material-guide[open] summary::after { content: '︿'; }
+    .material-compare {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: .6rem;
+      padding: .8rem;
+    }
+    .mat-item {
+      padding: .7rem; border-radius: 6px; border: 1px solid var(--line);
+      font-size: .75rem;
+    }
+    .mat-item h5 { font-family: var(--font-serif); font-size: .88rem; margin: 0 0 .3rem; }
+    .mat-item p  { color: var(--muted); margin: 0; line-height: 1.5; }
+    .mat-badge   { display: inline-block; font-size: .62rem; padding: .15rem .45rem; border-radius: 20px; margin-bottom: .4rem; font-weight: 700; }
+    @media (max-width: 500px) { .material-compare { grid-template-columns: 1fr; } }
+
+    .related-section { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+    .related-section h4 { font-family: var(--font-serif); margin-bottom: .8rem; }
+    .related-grid { display: flex; gap: .6rem; overflow-x: auto; padding-bottom: .4rem; }
+    .related-card {
+      flex: 0 0 110px; border-radius: 8px; overflow: hidden; cursor: pointer;
+      border: 1px solid var(--line); transition: transform .2s;
+    }
+    .related-card:hover { transform: translateY(-3px); }
+    .related-card img { width: 100%; height: 80px; object-fit: cover; display: block; background: var(--stone); }
+    .related-card-name { padding: .3rem .4rem; font-size: .68rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .related-card-price { padding: 0 .4rem .4rem; font-size: .68rem; color: var(--gold); font-weight: 700; }
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
 
     /* ── TOPBAR ────────────────────────────────────────────────── */
     .topbar {
@@ -152,7 +338,19 @@
       color: var(--paper);
       border-color: var(--ink);
     }
+    .btn.danger {
+      color: #8d1f14;
+      background: rgba(141, 31, 20, .07);
+      border-color: rgba(141, 31, 20, .25);
+    }
     .btn.small { padding: .35rem .5rem; font-size: .6rem; }
+    .btn.ai {
+      background: linear-gradient(135deg, #4a1d96, #7c3aed);
+      color: #fff;
+      border-color: transparent;
+    }
+    .btn.ai:hover { opacity: .88; }
+    .btn.ai:disabled { opacity: .45; cursor: wait; }
 
     /* ── HERO ──────────────────────────────────────────────────── */
     .hero {
@@ -192,6 +390,13 @@
       letter-spacing: .02em;
       color: var(--ink);
     }
+    .h1-gold {
+      color: var(--gold);
+      display: block;
+      font-size: .6em;
+      letter-spacing: .16em;
+      margin-top: .2rem;
+    }
     .hero-copy p {
       font-size: .95rem;
       color: var(--muted);
@@ -220,6 +425,482 @@
       object-fit: cover;
       display: block;
     }
+    .hero-badge {
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+      background: rgba(7, 22, 44, .92);
+      color: var(--paper);
+      border: 1px solid rgba(215, 177, 100, .75);
+      padding: .8rem .9rem;
+      border-radius: 6px;
+      max-width: 200px;
+      font-size: .78rem;
+      line-height: 1.4;
+    }
+
+    /* ── TRUST ─────────────────────────────────────────────────── */
+    .trust {
+      max-width: 1600px;
+      margin: 1rem auto 0;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: .8rem;
+      width: 100%;
+    }
+    .trust-card {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 6px;
+      padding: .8rem;
+      border: 1px solid rgba(215, 177, 100, .35);
+      min-height: auto;
+    }
+    .trust-card strong {
+      display: block;
+      color: var(--gold2);
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: .25rem;
+    }
+    .trust-card span {
+      color: rgba(255, 250, 240, .75);
+      font-size: .78rem;
+      line-height: 1.35;
+    }
+
+    /* ── SECTION ────────────────────────────────────────────────── */
+    .section {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 0;
+      width: 100%;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: .75rem;
+      flex-wrap: wrap;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .section-note { color: var(--muted); font-size: .88rem; }
+    .page-panel { display: none; padding-bottom: 2rem; }
+    .page-panel.active { display: block; }
+
+    /* ── STICKY FILTERS ────────────────────────────────────────── */
+    .sticky-filters {
+      position: sticky;
+      top: 64px;
+      z-index: 20;
+      background: rgba(255, 250, 240, .96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+      padding: .8rem 1rem;
+      display: none;
+    }
+    .sticky-filters.active { display: block; }
+    .sticky-filters-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto auto auto;
+      gap: .5rem;
+      align-items: center;
+    }
+    .sticky-filters .btn { padding: .4rem .6rem; font-size: .6rem; }
+    .sticky-filters .btn.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    /* ── FILTERS ────────────────────────────────────────────────── */
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .6rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+    .input, .select, .textarea {
+      width: 100%;
+      background: rgba(255, 250, 240, .8);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 4px;
+      padding: .6rem .7rem;
+      outline: none;
+      font-size: .9rem;
+    }
+    .textarea { min-height: 80px; resize: vertical; }
+
+    /* ── GRID ──────────────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: .8rem;
+    }
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(7, 22, 44, .08);
+      transition: transform .2s, border-color .2s;
+      cursor: pointer;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(184, 138, 45, .5); }
+    .thumb {
+      aspect-ratio: 4 / 5;
+      background: var(--stone);
+      position: relative;
+      overflow: hidden;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s;
+    }
+    .card:hover .thumb img { transform: scale(1.04); }
+    .tag {
+      position: absolute;
+      left: .5rem;
+      top: .5rem;
+      background: rgba(7, 22, 44, .9);
+      color: var(--gold2);
+      border-radius: 3px;
+      padding: .2rem .4rem;
+      font-size: .55rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .sold {
+      position: absolute;
+      right: .5rem;
+      top: .5rem;
+      background: rgba(141, 31, 20, .92);
+      color: white;
+      border-radius: 3px;
+      padding: .2rem .4rem;
+      font-size: .55rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .card-body { padding: .75rem; }
+    .kicker {
+      color: var(--gold);
+      font-weight: 800;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: .2rem;
+    }
+    .name {
+      font-weight: 800;
+      font-size: .95rem;
+      line-height: 1.3;
+      min-height: auto;
+      margin-bottom: .3rem;
+    }
+    .meta {
+      display: flex;
+      gap: .3rem;
+      flex-wrap: wrap;
+      margin: .4rem 0;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(7, 22, 44, .035);
+      color: var(--muted);
+      border-radius: 99px;
+      padding: .15rem .4rem;
+      font-size: .7rem;
+    }
+    .price {
+      font-weight: 900;
+      color: var(--ink2);
+      font-size: 1rem;
+      margin-bottom: .6rem;
+    }
+    .card-actions {
+      display: flex;
+      gap: .35rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── PAGINATION ────────────────────────────────────────────– */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    .pagination button {
+      padding: .5rem .8rem;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all .2s;
+    }
+    .pagination button.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    .pagination button:hover { border-color: rgba(184, 138, 45, .55); }
+
+    /* ── CUSTOM BAND ────────────────────────────────────────────– */
+    .custom-band {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: center;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 8px;
+      padding: 1.2rem;
+      border: 1px solid rgba(215, 177, 100, .45);
+    }
+    .custom-band h3 { margin: 0 0 .25rem; color: var(--gold2); font-size: 1.1rem; }
+    .custom-band p { margin: 0; color: rgba(255, 250, 240, .75); line-height: 1.5; font-size: .95rem; }
+
+    /* ── MODAL ─────────────────────────────────────────────────── */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(7, 22, 44, .72);
+      backdrop-filter: blur(8px);
+      overflow-y: auto;
+    }
+    .modal.open { display: flex; }
+    .dialog {
+      width: min(90vw, 700px);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--paper);
+      border-radius: 8px;
+      border: 1px solid rgba(184, 138, 45, .4);
+      box-shadow: var(--shadow);
+      margin: auto;
+    }
+    .dialog-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: .9rem 1rem;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: var(--paper);
+      z-index: 2;
+    }
+    .dialog-title {
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .dialog-body { padding: 1rem; }
+    .dialog-foot {
+      padding: .8rem 1rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: flex-end;
+      gap: .5rem;
+      flex-wrap: wrap;
+      background: var(--paper);
+      position: sticky;
+      bottom: 0;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .detail-img {
+      width: 100%;
+      border-radius: 6px;
+      background: var(--stone);
+      max-height: 60vh;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+    .detail-copy p { color: var(--muted); line-height: 1.65; font-size: .95rem; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .7rem;
+    }
+    .full { grid-column: 1 / -1; }
+    label {
+      display: grid;
+      gap: .2rem;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    /* ── CART ──────────────────────────────────────────────────── */
+    .cart-row {
+      display: grid;
+      grid-template-columns: 50px 1fr auto;
+      gap: .6rem;
+      align-items: start;
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .cart-row img {
+      width: 50px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: var(--stone);
+    }
+    .qty { display: flex; align-items: center; gap: .3rem; }
+
+    /* ── QR SECTION ────────────────────────────────────────────– */
+    .qr-section {
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .qr-section.show { display: block; }
+    .qr-section h4 { margin: 0 0 .5rem; color: var(--ink); font-size: .9rem; }
+    #payment-qr { display: flex; justify-content: center; margin: .8rem 0; }
+
+    /* ── CHAT ──────────────────────────────────────────────────── */
+    .chat-bubble {
+      position: fixed;
+      bottom: 1.4rem;
+      right: 1.4rem;
+      z-index: 90;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      border: none;
+      box-shadow: 0 6px 24px rgba(7,22,44,.28);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .2s;
+    }
+    .chat-bubble:hover { transform: scale(1.08); }
+    .chat-panel {
+      position: fixed;
+      bottom: 5rem;
+      right: 1.4rem;
+      z-index: 90;
+      width: min(360px, calc(100vw - 2rem));
+      height: 450px;
+      background: var(--paper);
+      border: 1px solid rgba(184,138,45,.4);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-panel.open { display: flex; }
+    .chat-head {
+      background: var(--ink);
+      color: var(--paper);
+      padding: .7rem .9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .chat-head strong { color: var(--gold2); font-size: .88rem; }
+    .chat-head span { color: rgba(255,250,240,.6); font-size: .72rem; }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: .75rem;
+      display: flex;
+      flex-direction: column;
+      gap: .55rem;
+    }
+    .chat-msg {
+      max-width: 85%;
+      padding: .55rem .75rem;
+      border-radius: 10px;
+      font-size: .82rem;
+      line-height: 1.4;
+    }
+    .chat-msg.user {
+      align-self: flex-end;
+      background: var(--ink);
+      color: var(--paper);
+      border-bottom-right-radius: 2px;
+    }
+    .chat-msg.bot {
+      align-self: flex-start;
+      background: var(--stone);
+      color: var(--ink);
+      border-bottom-left-radius: 2px;
+    }
+    .chat-msg.typing { opacity: .55; font-style: italic; }
+    .chat-foot {
+      padding: .6rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: .4rem;
+      flex-shrink: 0;
+    }
+    .chat-foot input {
+      flex: 1;
+      background: rgba(255,250,240,.8);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: .5rem .6rem;
+      font: inherit;
+      color: var(--ink);
+      outline: none;
+      font-size: .9rem;
+    }
+
+    /* ── TOAST ─────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.3rem;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid rgba(215, 177, 100, .45);
+      border-radius: 5px;
+      padding: .7rem .9rem;
+      display: none;
+      font-size: .88rem;
+    }
+    .toast.show { display: block; }
 
     /* ── FOOTER ────────────────────────────────────────────────– */
     .footer {
@@ -240,9 +921,193 @@
     .footer h3, .footer h4 { color: var(--gold2); margin: 0 0 .35rem; font-size: .95rem; }
     .footer p, .footer a { color: rgba(255, 250, 240, .72); line-height: 1.5; text-decoration: none; display: block; margin: .15rem 0; font-size: .88rem; }
 
+    /* ── ADMIN TABS ─────────────────────────────────────────────– */
+    .admin-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: .5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 1rem;
+    }
+    .admin-tabs button {
+      padding: .6rem .8rem;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 4px 4px 0 0;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: .75rem;
+      text-transform: uppercase;
+      transition: all .2s;
+    }
+    .admin-tabs button:hover { background: rgba(184, 138, 45, .1); }
+    .admin-tabs button.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    .admin-tab-content { display: none; }
+    .admin-tab-content.active { display: block; }
+
+    /* ── LOGIN STEPS ────────────────────────────────────────────── */
+    .login-step { display: none; }
+    .login-step.active { display: block; }
+
+    /* ── CUSTOMER GALLERY ───────────────────────────────────── */
+    .gallery-section { padding: 3.5rem 0 4rem; overflow: hidden; }
+    .gallery-eyebrow {
+      text-align: center; font-size: .7rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--gold); font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .gallery-headline {
+      text-align: center; font-size: clamp(1.4rem,3vw,2rem);
+      font-weight: 800; color: var(--ink); margin: 0 auto .3rem;
+    }
+    .gallery-sub {
+      text-align: center; color: var(--muted); font-size: .88rem;
+      margin: 0 auto 2.5rem; max-width: 380px;
+    }
+
+    /* Desktop: floating scattered columns */
+    .gallery-float {
+      display: flex; gap: .85rem; justify-content: center;
+      align-items: flex-start; padding: 0 1.5rem 2rem;
+    }
+    .gallery-col { display: flex; flex-direction: column; gap: .85rem; flex: 0 0 auto; width: 160px; }
+    .gallery-col:nth-child(2)  { transform: translateY(50px); }
+    .gallery-col:nth-child(3)  { transform: translateY(-15px); }
+    .gallery-col:nth-child(4)  { transform: translateY(70px); }
+    .gallery-col:nth-child(5)  { transform: translateY(20px); }
+    .gallery-col:nth-child(6)  { transform: translateY(-30px); }
+    .gallery-card {
+      border-radius: 12px; overflow: hidden; cursor: zoom-in;
+      box-shadow: 0 4px 18px rgba(0,0,0,.14);
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .gallery-card:hover {
+      transform: scale(1.06) rotate(0deg) !important;
+      box-shadow: 0 14px 40px rgba(0,0,0,.22); z-index: 10; position: relative;
+    }
+    .gallery-card img { width: 100%; display: block; object-fit: cover; }
+
+    /* Mobile: swipe carousel */
+    .gallery-swipe { display: none; padding: 0 1.2rem; }
+    .swipe-stage {
+      position: relative; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,.18);
+      touch-action: pan-y;
+    }
+    .swipe-stage img {
+      width: 100%; display: block; object-fit: cover;
+      aspect-ratio: 4/3; pointer-events: none;
+    }
+    .swipe-counter {
+      position: absolute; bottom: .6rem; right: .8rem;
+      background: rgba(0,0,0,.45); color: #fff;
+      font-size: .7rem; padding: .2rem .5rem; border-radius: 20px;
+    }
+    .swipe-dots { text-align: center; margin: .9rem 0 .5rem; }
+    .swipe-dot {
+      display: inline-block; height: 7px; border-radius: 4px;
+      background: var(--line); margin: 0 3px;
+      transition: width .25s ease, background .25s ease;
+      width: 7px;
+    }
+    .swipe-dot.active { width: 22px; background: var(--gold); }
+    .swipe-nav { display: flex; justify-content: center; gap: .6rem; }
+
+    @media (max-width: 700px) {
+      .gallery-float  { display: none; }
+      .gallery-swipe  { display: block; }
+    }
+    @media (min-width: 701px) {
+      .gallery-swipe  { display: none; }
+    }
+
+    /* Admin gallery list */
+    .gallery-admin-item {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .45rem 0; border-bottom: 1px solid var(--line);
+    }
+    .gallery-admin-thumb {
+      width: 52px; height: 42px; object-fit: cover;
+      border-radius: 6px; flex-shrink: 0; background: var(--stone);
+    }
+    .gallery-admin-url {
+      flex: 1; font-size: .73rem; color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+  
+    .zoom-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.93);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .zoom-overlay.open { display: flex; }
+    .zoom-close-btn {
+      position: absolute; top: 14px; right: 18px;
+      background: rgba(255,255,255,.12); border: none;
+      color: #fff; font-size: 1.3rem; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .zoom-close-btn:hover { background: rgba(255,255,255,.25); }
+    .zoom-hint {
+      position: absolute; bottom: 14px;
+      color: rgba(255,255,255,.45); font-size: .75rem; pointer-events: none;
+    }
+    .zoom-container {
+      width: 92vw; height: 88vh;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      cursor: zoom-in;
+    }
+    .zoom-container.zoomed  { cursor: grab; }
+    .zoom-container.dragging { cursor: grabbing; }
+    .zoom-img {
+      max-width: 92vw; max-height: 88vh;
+      object-fit: contain;
+      transform-origin: center center;
+      user-select: none;
+      border-radius: 4px;
+    }
+    .detail-img, .thumb img { cursor: zoom-in; }
+
+    /* ── ATTEMPTS BAR ───────────────────────────────────────────── */
+    .attempts-bar {
+      height: 4px;
+      background: rgba(141,31,20,.12);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: .5rem 0;
+    }
+    .attempts-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      border-radius: 2px;
+      transition: width .4s ease;
+    }
+
+    /* ── DESKTOP RESPONSIVE ────────────────────────────────────– */
     @media (min-width: 768px) {
       .hero { grid-template-columns: minmax(0, .92fr) minmax(300px, 1.08fr); }
       .hero-copy, .hero-media { min-height: 450px; }
+      .trust { grid-template-columns: repeat(4, 1fr); }
+      .sticky-filters-content { grid-template-columns: auto 1fr 1fr 1fr auto auto auto; }
+      .filters { grid-template-columns: minmax(150px, 1fr) repeat(2, minmax(120px, .8fr)) auto; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+      .card-body { padding: .85rem; }
+      .detail-grid, .product-page { grid-template-columns: minmax(300px, .9fr) 1fr; }
+      .custom-band { grid-template-columns: 1fr auto; }
+      .footer-inner { grid-template-columns: 1.2fr 1fr 1fr; }
+      .form-grid { grid-template-columns: 1fr 1fr; }
       .brand-sub { display: block; }
     }
 
@@ -251,6 +1116,31 @@
       h1 { font-size: clamp(3rem, 8vw, 5.9rem); }
     }
   </style>
+  <!-- CLOUDFLARE_CONFIG -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module" id="pdfjs-script"></script>
+  <script>
+    // PDF.js v4 loads as ESM module — expose to global scope for import-pdf handler
+    window.pdfjsLib = null;
+    import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs').then(m => {
+      window.pdfjsLib = m;
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
+    }).catch(() => {
+      // Fallback: older v3 from unpkg
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js';
+      s.onload = () => {
+        window.pdfjsLib = window['pdfjs-dist/build/pdf'];
+        if (window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+      };
+      document.head.appendChild(s);
+    });
+  </script>
 </head>
 <body>
   <div class="app">
@@ -276,6 +1166,16 @@
       </nav>
     </header>
 
+    <!-- STICKY FILTERS -->
+    <div class="sticky-filters" data-sticky-filters>
+      <div class="sticky-filters-content">
+        <span style="color:var(--muted);font-size:.8rem;font-weight:700">Filter:</span>
+        <button class="btn" data-sticky-filter-all>All</button>
+        <button class="btn" data-sticky-filter-mandirs>Mandirs</button>
+        <button class="btn" data-sticky-filter-idols>Idols</button>
+      </div>
+    </div>
+
     <main style="flex:1">
       <!-- HERO -->
       <section class="hero" data-home-section>
@@ -289,277 +1189,2703 @@
             <button class="btn" data-open-custom>Custom Order</button>
           </div>
         </div>
-        <div class="hero-media">
-          <img id="hero-image" src="https://via.placeholder.com/480x540?text=Jainson+Marble" alt="Jainson Marble">
+        <div class="hero-media" style="position:relative">
+          <canvas id="diya-canvas"></canvas>
+          <div id="hero-img-wrapper" style="width:100%;height:100%">
+          <svg viewBox="0 0 480 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;background:#07162c">
+            <defs>
+              <linearGradient id="marbleg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#f7f0e3"/>
+                <stop offset="60%" stop-color="#e8dece"/>
+                <stop offset="100%" stop-color="#d4c5ae"/>
+              </linearGradient>
+              <linearGradient id="goldg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d7b164"/>
+                <stop offset="100%" stop-color="#b88a2d"/>
+              </linearGradient>
+              <linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#07162c"/>
+                <stop offset="100%" stop-color="#0e2543"/>
+              </linearGradient>
+              <radialGradient id="glow" cx="50%" cy="30%" r="55%">
+                <stop offset="0%" stop-color="rgba(215,177,100,0.22)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+              <pattern id="floortile" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                <rect width="24" height="24" fill="#e8dece"/>
+                <rect width="12" height="12" fill="#d4c5ae" opacity="0.45"/>
+                <rect x="12" y="12" width="12" height="12" fill="#d4c5ae" opacity="0.45"/>
+              </pattern>
+            </defs>
+
+            <!-- Sky -->
+            <rect width="480" height="540" fill="url(#skyg)"/>
+            <rect width="480" height="540" fill="url(#glow)"/>
+
+            <!-- Stars -->
+            <circle cx="60" cy="40" r="1.2" fill="rgba(215,177,100,.6)"/>
+            <circle cx="120" cy="25" r="1" fill="rgba(215,177,100,.5)"/>
+            <circle cx="380" cy="35" r="1.4" fill="rgba(215,177,100,.7)"/>
+            <circle cx="430" cy="60" r="1" fill="rgba(215,177,100,.4)"/>
+            <circle cx="30" cy="80" r="0.9" fill="rgba(255,250,240,.5)"/>
+            <circle cx="460" cy="90" r="1.1" fill="rgba(255,250,240,.4)"/>
+            <circle cx="200" cy="18" r="0.8" fill="rgba(215,177,100,.5)"/>
+            <circle cx="330" cy="55" r="0.9" fill="rgba(255,250,240,.35)"/>
+
+            <!-- Floor platform -->
+            <rect x="40" y="480" width="400" height="60" fill="url(#floortile)" rx="2"/>
+            <rect x="40" y="478" width="400" height="5" fill="url(#goldg)" rx="1"/>
+
+            <!-- Base steps -->
+            <rect x="70" y="456" width="340" height="26" fill="url(#marbleg)" rx="3"/>
+            <rect x="70" y="454" width="340" height="4" fill="url(#goldg)" rx="1"/>
+            <rect x="90" y="434" width="300" height="24" fill="url(#marbleg)" rx="3"/>
+            <rect x="90" y="432" width="300" height="4" fill="url(#goldg)" rx="1"/>
+
+            <!-- Main temple body -->
+            <rect x="110" y="280" width="260" height="158" fill="url(#marbleg)" rx="4"/>
+            <!-- Panel details on body -->
+            <rect x="124" y="295" width="70" height="100" fill="rgba(215,177,100,.12)" rx="3" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <rect x="205" y="295" width="70" height="100" fill="rgba(215,177,100,.12)" rx="3" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <rect x="286" y="295" width="70" height="100" fill="rgba(215,177,100,.12)" rx="3" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <!-- Arch on panels -->
+            <path d="M124,305 Q159,285 194,305" stroke="rgba(184,138,45,.5)" stroke-width="1.5" fill="none"/>
+            <path d="M205,305 Q240,285 275,305" stroke="rgba(184,138,45,.5)" stroke-width="1.5" fill="none"/>
+            <path d="M286,305 Q321,285 356,305" stroke="rgba(184,138,45,.5)" stroke-width="1.5" fill="none"/>
+
+            <!-- Columns -->
+            <rect x="118" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="118" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="118" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="156" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="156" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="156" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="224" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="224" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="224" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="306" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="306" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="306" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <rect x="344" y="280" width="18" height="160" fill="url(#marbleg)" rx="4"/>
+            <rect x="344" y="278" width="18" height="6" fill="url(#goldg)" rx="2"/>
+            <rect x="344" y="436" width="18" height="8" fill="url(#goldg)" rx="2"/>
+
+            <!-- Entablature / cornice -->
+            <rect x="108" y="268" width="264" height="16" fill="url(#marbleg)" rx="2"/>
+            <rect x="108" y="265" width="264" height="5" fill="url(#goldg)" rx="1"/>
+            <!-- Frieze pattern -->
+            <rect x="112" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="124" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="136" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="148" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="160" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="172" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="184" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="196" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="208" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="220" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="232" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="244" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="256" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="268" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="280" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="292" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="304" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="316" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="328" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="340" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="352" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+            <rect x="364" y="270" width="8" height="10" fill="rgba(184,138,45,.3)" rx="1"/>
+
+            <!-- Shikhara / tower tiers -->
+            <!-- Tier 1 -->
+            <path d="M150,268 L240,178 L330,268 Z" fill="url(#marbleg)"/>
+            <path d="M150,266 L240,175 L330,266" stroke="url(#goldg)" stroke-width="2.5" fill="none"/>
+            <!-- Tier 1 side ridges -->
+            <line x1="195" y1="268" x2="240" y2="178" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <line x1="285" y1="268" x2="240" y2="178" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <!-- Horizontal bands on tier 1 -->
+            <line x1="164" y1="248" x2="316" y2="248" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+            <line x1="178" y1="228" x2="302" y2="228" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+            <line x1="192" y1="208" x2="288" y2="208" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+            <line x1="208" y1="192" x2="272" y2="192" stroke="rgba(184,138,45,.35)" stroke-width="1"/>
+
+            <!-- Tier 2 -->
+            <path d="M180,178 L240,108 L300,178 Z" fill="url(#marbleg)"/>
+            <path d="M180,176 L240,105 L300,176" stroke="url(#goldg)" stroke-width="2" fill="none"/>
+            <line x1="210" y1="178" x2="240" y2="108" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <line x1="270" y1="178" x2="240" y2="108" stroke="rgba(184,138,45,.4)" stroke-width="1"/>
+            <line x1="192" y1="158" x2="288" y2="158" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <line x1="204" y1="138" x2="276" y2="138" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+            <line x1="218" y1="120" x2="262" y2="120" stroke="rgba(184,138,45,.3)" stroke-width="1"/>
+
+            <!-- Tier 3 -->
+            <path d="M205,108 L240,58 L275,108 Z" fill="url(#marbleg)"/>
+            <path d="M205,106 L240,55 L275,106" stroke="url(#goldg)" stroke-width="1.5" fill="none"/>
+            <line x1="222" y1="108" x2="240" y2="58" stroke="rgba(184,138,45,.4)" stroke-width="0.8"/>
+            <line x1="258" y1="108" x2="240" y2="58" stroke="rgba(184,138,45,.4)" stroke-width="0.8"/>
+
+            <!-- Kalash (finial) -->
+            <ellipse cx="240" cy="52" rx="10" ry="14" fill="url(#goldg)"/>
+            <ellipse cx="240" cy="38" rx="6" ry="8" fill="url(#goldg)"/>
+            <circle cx="240" cy="28" r="5" fill="#d7b164"/>
+            <circle cx="240" cy="22" r="3.5" fill="#b88a2d"/>
+            <circle cx="240" cy="17" r="2.5" fill="#d7b164"/>
+            <!-- Flag on top -->
+            <line x1="240" y1="17" x2="240" y2="4" stroke="#b88a2d" stroke-width="1.5"/>
+            <path d="M240,4 L252,8 L240,12 Z" fill="#d7b164"/>
+
+            <!-- Side smaller towers (gopura) -->
+            <path d="M80,338 L130,270 L180,338 Z" fill="url(#marbleg)" opacity="0.85"/>
+            <path d="M80,336 L130,268 L180,336" stroke="url(#goldg)" stroke-width="1.5" fill="none"/>
+            <rect x="96" y="338" width="68" height="96" fill="url(#marbleg)" rx="2"/>
+            <rect x="96" y="336" width="68" height="5" fill="url(#goldg)" rx="1"/>
+            <!-- Left tower kalash -->
+            <ellipse cx="130" cy="265" rx="7" ry="9" fill="url(#goldg)"/>
+            <circle cx="130" cy="254" r="4" fill="#d7b164"/>
+            <circle cx="130" cy="248" r="2.5" fill="#b88a2d"/>
+            <line x1="130" y1="246" x2="130" y2="237" stroke="#b88a2d" stroke-width="1.2"/>
+            <path d="M130,237 L139,240 L130,244 Z" fill="#d7b164"/>
+
+            <path d="M300,338 L350,270 L400,338 Z" fill="url(#marbleg)" opacity="0.85"/>
+            <path d="M300,336 L350,268 L400,336" stroke="url(#goldg)" stroke-width="1.5" fill="none"/>
+            <rect x="316" y="338" width="68" height="96" fill="url(#marbleg)" rx="2"/>
+            <rect x="316" y="336" width="68" height="5" fill="url(#goldg)" rx="1"/>
+            <!-- Right tower kalash -->
+            <ellipse cx="350" cy="265" rx="7" ry="9" fill="url(#goldg)"/>
+            <circle cx="350" cy="254" r="4" fill="#d7b164"/>
+            <circle cx="350" cy="248" r="2.5" fill="#b88a2d"/>
+            <line x1="350" y1="246" x2="350" y2="237" stroke="#b88a2d" stroke-width="1.2"/>
+            <path d="M350,237 L359,240 L350,244 Z" fill="#d7b164"/>
+
+            <!-- Central door arch -->
+            <rect x="204" y="360" width="72" height="78" fill="#0e2543" rx="2"/>
+            <path d="M204,390 Q240,350 276,390" fill="#07162c" stroke="url(#goldg)" stroke-width="2"/>
+            <!-- Door frame -->
+            <rect x="202" y="358" width="76" height="82" fill="none" stroke="url(#goldg)" stroke-width="2" rx="2"/>
+            <!-- Door glow / diya light -->
+            <radialGradient id="diyaglow" cx="50%" cy="85%" r="50%">
+              <stop offset="0%" stop-color="rgba(215,177,100,0.55)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <rect x="204" y="360" width="72" height="78" fill="url(#diyaglow)" rx="2"/>
+
+            <!-- Decorative Om symbol above door -->
+            <text x="240" y="356" text-anchor="middle" font-size="18" fill="rgba(215,177,100,.8)" font-family="serif">ॐ</text>
+
+            <!-- Diya lamps at base -->
+            <ellipse cx="195" cy="440" rx="8" ry="4" fill="#d7b164"/>
+            <circle cx="195" cy="436" r="2.5" fill="#b88a2d"/>
+            <ellipse cx="195" cy="433" rx="2" ry="3" fill="rgba(255,180,50,0.7)"/>
+
+            <ellipse cx="285" cy="440" rx="8" ry="4" fill="#d7b164"/>
+            <circle cx="285" cy="436" r="2.5" fill="#b88a2d"/>
+            <ellipse cx="285" cy="433" rx="2" ry="3" fill="rgba(255,180,50,0.7)"/>
+
+            <!-- Lotus flowers at corners -->
+            <g transform="translate(68,460)" opacity="0.7">
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(-30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#f7f0e3" transform="rotate(90)"/>
+              <circle cx="0" cy="0" r="3.5" fill="#d7b164"/>
+            </g>
+            <g transform="translate(412,460)" opacity="0.7">
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(-30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#e8dece" transform="rotate(30)"/>
+              <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#f7f0e3" transform="rotate(90)"/>
+              <circle cx="0" cy="0" r="3.5" fill="#d7b164"/>
+            </g>
+
+            <!-- Reflected glow on floor -->
+            <radialGradient id="floorlight" cx="50%" cy="0%" r="60%">
+              <stop offset="0%" stop-color="rgba(215,177,100,0.18)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <rect x="40" y="478" width="400" height="62" fill="url(#floorlight)"/>
+          </svg>
+          </div><!-- /hero-img-wrapper -->
+          <div class="hero-badge">Lighting that brings divinity to life. Crafted in purity, inspired by devotion.</div>
         </div>
       </section>
+
+      <!-- TRUST -->
+      <section class="trust" data-home-section>
+        <div class="trust-card"><strong>Premium Quality</strong><span>Fine marble and Corian finish.</span></div>
+        <div class="trust-card"><strong>Skilled Craftsmanship</strong><span>Hand-carved intricate details.</span></div>
+        <div class="trust-card"><strong>Custom Designs</strong><span>Made to your specifications.</span></div>
+        <div class="trust-card"><strong>Long Lasting</strong><span>Built for generations.</span></div>
+      </section>
+
+      <!-- CUSTOM CTA -->
+      <section class="section" data-home-section>
+        <div class="custom-band">
+          <div>
+            <h3>Have a specific design in mind?</h3>
+            <p>Send deity, size, material details. We'll prepare a personalized option.</p>
+          </div>
+          <button class="btn primary" data-open-custom>Request Custom</button>
+        </div>
+      </section>
+
+      <!-- FEATURED COLLECTION -->
+      <!-- HOW IT'S MADE -->
+      <section class="process-section container" data-home-section>
+        <div style="text-align:center">
+          <div class="eyebrow">Our Process</div>
+          <h2 style="margin:.3rem 0 0">Crafted with Devotion</h2>
+        </div>
+        <div class="process-grid">
+          <div class="process-step fade-rise delay-1">
+            <span class="process-num">1</span>
+            <span class="process-icon">🪨</span>
+            <h3>Stone is Selected</h3>
+            <p>We source only premium Makrana white marble — the same stone used in the Taj Mahal — chosen for purity and grain.</p>
+          </div>
+          <div class="process-step fade-rise delay-2">
+            <span class="process-num">2</span>
+            <span class="process-icon">🪔</span>
+            <h3>Master Craftsmen Carve</h3>
+            <p>Artisans with 20+ years of experience hand-carve every detail. No two pieces are identical.</p>
+          </div>
+          <div class="process-step fade-rise delay-3">
+            <span class="process-num">3</span>
+            <span class="process-icon">🏠</span>
+            <h3>Delivered to Your Home</h3>
+            <p>Custom packaging, pan-India delivery, and white-glove installation support.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-home-section id="spotlight-section" style="padding-top:0;display:none">
+        <div class="container">
+          <div id="featured-spotlight"></div>
+        </div>
+      </section>
+
+      <section class="section" id="products" data-home-section>
+        <div class="section-head">
+          <div>
+            <div class="section-title">Featured Collection</div>
+            <div class="section-note">Marble temples, mandirs, and devotional statues.</div>
+          </div>
+          <div class="section-note"><span data-count>0</span> items</div>
+        </div>
+        <div class="filters">
+          <input class="input" data-search placeholder="Search temple, murti, deity...">
+          <select class="select" data-category></select>
+          <select class="select" data-material></select>
+          <select class="select" data-sort>
+            <option value="featured">Featured first</option>
+            <option value="low">Price low to high</option>
+            <option value="high">Price high to low</option>
+            <option value="new">Newest first</option>
+          </select>
+          <button class="btn" data-reset>Reset</button>
+        </div>
+        <div class="grid" data-grid></div>
+        <div class="pagination" data-pagination></div>
+      </section>
+
+      </section>
+
+      <!-- CUSTOMER GALLERY SECTION -->
+      <section class="gallery-section" id="gallery-section" data-home-section style="display:none">
+        <div class="gallery-eyebrow" data-gallery-eyebrow>Our Work</div>
+        <h2 class="gallery-headline" data-gallery-headline>Handcrafted for Our Customers</h2>
+        <p class="gallery-sub" data-gallery-sub>Real homes. Real devotion. Every piece a unique creation.</p>
+        <!-- Desktop floating columns -->
+        <div class="gallery-float" id="gallery-float"></div>
+        <!-- Mobile swipe carousel -->
+        <div class="gallery-swipe" id="gallery-swipe">
+          <div class="swipe-stage" id="swipe-stage">
+            <img id="swipe-img" src="" alt="Gallery">
+            <div class="swipe-counter" id="swipe-counter">1 / 1</div>
+          </div>
+          <div class="swipe-dots" id="swipe-dots"></div>
+          <div class="swipe-nav" style="margin-top:.5rem">
+            <button class="btn small" id="swipe-prev">← Prev</button>
+            <button class="btn small" id="swipe-next">Next →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLLECTION PAGE -->
+      <section class="section page-panel" data-collection-page>
+        <div class="crumbs" style="color:var(--muted);font-size:.78rem;margin-bottom:.75rem">Home / <span data-collection-crumb>Collection</span></div>
+        <div class="category-hero">
+          <div>
+            <div class="eyebrow" data-collection-eyebrow>Collection</div>
+            <h2 data-collection-title>Mandirs</h2>
+            <div class="section-note" data-collection-note>Preview designs, then click for full details.</div>
+          </div>
+          <div class="section-note"><span data-collection-count>0</span> items</div>
+        </div>
+        <div class="filters">
+          <input class="input" data-search-collection placeholder="Search collection...">
+          <select class="select" data-material-collection></select>
+          <button class="btn" data-reset-collection>Reset</button>
+        </div>
+        <div class="grid" data-collection-grid></div>
+        <div class="pagination" data-collection-pagination></div>
+      </section>
+
+      <!-- PRODUCT DETAIL -->
+      <section class="section page-panel" data-product-page></section>
     </main>
+
+    <!-- CHAT -->
+    <a id="wa-float-btn" data-whatsapp-float
+       style="position:fixed;bottom:5.5rem;right:1.2rem;z-index:190;
+              width:52px;height:52px;border-radius:50%;
+              background:#25d366;color:#fff;
+              display:flex;align-items:center;justify-content:center;
+              font-size:1.5rem;text-decoration:none;
+              box-shadow:0 4px 16px rgba(37,211,102,.5)"
+       title="Chat on WhatsApp">💬</a>
+    <button class="chat-bubble" data-chat-toggle title="Ask about products">💬</button>
+    <div class="chat-panel" data-chat-panel>
+      <div class="chat-head">
+        <div>
+          <strong>Ask Jainson Marble</strong><br>
+          <span>Ask about products, pricing, availability</span>
+        </div>
+        <button class="btn small" data-chat-close style="background:transparent;color:rgba(255,250,240,.6);border-color:transparent;padding:.2rem .4rem">✕</button>
+      </div>
+      <div class="chat-messages" data-chat-messages></div>
+      <div class="chat-foot">
+        <input placeholder="Ask anything..." data-chat-input>
+        <button class="btn primary small" data-chat-send style="padding:.4rem .6rem">Send</button>
+      </div>
+    </div>
 
     <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-inner">
-        <h3>Jainson Marble</h3>
-        <p>Premium marble temples & murtis for spiritual spaces</p>
+        <div>
+          <h3 data-footer-name>Jainson Marble</h3>
+          <p data-footer-copy>Dealers in marble temples and marble statues. Divine designs, timeless devotion.</p>
+        </div>
+        <div>
+          <h4>Visit</h4>
+          <p data-footer-address-1>B76, Mangolpur Kalan Marble Market</p>
+          <p data-footer-address-2>Delhi - 110083</p>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="tel:8010631117" data-footer-phone-1>8010631117</a>
+          <a href="tel:9891468290" data-footer-phone-2>9891468290</a>
+        </div>
       </div>
     </footer>
   </div>
 
-  <script>
-    /**
-     * CLOUDFLARE R2 STORAGE INTEGRATION
-     * Store catalog images in R2 bucket instead of localStorage
-     * Accessible from all devices
-     */
+  <!-- MODALS -->
 
-    // ==========================================
-    // R2 CONFIGURATION
-    // ==========================================
-    const R2_CONFIG = {
-      // TODO: Configure these with your Cloudflare R2 credentials
-      bucketName: 'mandirwale-catalog', // Your R2 bucket name
-      accountId: '', // Your Cloudflare Account ID
-      accessKeyId: '', // Your R2 API Token (Access Key ID)
-      secretAccessKey: '', // Your R2 API Token (Secret Access Key)
-      endpoint: '', // Your R2 endpoint (e.g., https://xxxxx.r2.cloudflarestorage.com)
+  <!-- Detail Modal -->
+  <div class="modal" data-detail-modal>
+    <div class="dialog">
+      <div class="dialog-head">
+        <div class="dialog-title" data-detail-title>Product</div>
+        <button class="btn small" data-close-detail>Close</button>
+      </div>
+      <div class="dialog-body" data-detail-body></div>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="modal" data-cart-modal>
+    <div class="dialog">
+      <div class="dialog-head">
+        <div class="dialog-title">Cart & Order</div>
+        <button class="btn small" data-close-cart>Close</button>
+      </div>
+      <div class="dialog-body">
+        <div data-cart-items></div>
+        <div class="price" data-cart-total>Total: Rs. 0</div>
+        
+        <!-- QR PAYMENT -->
+        <div class="qr-section" data-qr-section>
+          <h4>💳 Payment QR Code</h4>
+          <p style="color:var(--muted);font-size:.82rem;margin:0 0 .6rem">Scan to pay via UPI:</p>
+          <div id="payment-qr"></div>
+        </div>
+
+        <div class="form-grid">
+          <label>Name <input class="input" data-order-name></label>
+          <label>Phone <input class="input" data-order-phone></label>
+          <label>City <input class="input" data-order-city></label>
+          <label class="full">Notes <textarea class="textarea" data-order-notes></textarea></label>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn" data-clear-cart>Clear Cart</button>
+        <button class="btn primary" data-send-order>Send Order on WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Requirement Modal -->
+  <div class="modal" data-custom-modal>
+    <div class="dialog">
+      <div class="dialog-head">
+        <div class="dialog-title">Custom Requirement</div>
+        <button class="btn small" data-close-custom>Close</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <label>Deity / Purpose <input class="input" data-custom-deity></label>
+          <label>Material <input class="input" data-custom-material placeholder="Marble, Corian..."></label>
+          <label>Size <input class="input" data-custom-size placeholder="Width x height"></label>
+          <label>Finish <input class="input" data-custom-finish placeholder="White, gold, lighting..."></label>
+          <label>Name <input class="input" data-custom-name></label>
+          <label>Phone <input class="input" data-custom-phone></label>
+          <label class="full">Notes <textarea class="textarea" data-custom-notes></textarea></label>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn primary" data-send-custom>Send on WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="modal" data-admin-modal>
+    <div class="dialog">
+      <div class="dialog-head">
+        <div class="dialog-title">Admin Dashboard</div>
+        <button class="btn small" data-close-admin>Close</button>
+      </div>
+      <div class="dialog-body">
+        <div data-login-box class="login-box">
+          <!-- LOGIN STEP 1 -->
+          <div class="login-step active" data-login-step="1">
+            <label style="margin-bottom:.6rem;display:block">
+              Admin Password
+              <input class="input" type="password" data-admin-password placeholder="Enter password" style="margin-top:.3rem" autocomplete="current-password">
+            </label>
+            <div data-totp-row style="display:none;margin-bottom:.5rem">
+              <label style="display:block">
+                Authenticator Code
+                <input class="input" type="text" data-admin-totp placeholder="6-digit code" maxlength="6" style="margin-top:.3rem;letter-spacing:.2em;font-size:1.1rem" inputmode="numeric">
+              </label>
+            </div>
+            <div class="attempts-bar"><div class="attempts-fill" data-attempts-fill style="width:100%"></div></div>
+            <div class="section-note" data-login-error style="color:#8d1f14;min-height:1.2em;margin:.3rem 0;font-size:.8rem"></div>
+            <br>
+            <button class="btn primary" data-admin-login>Continue →</button>
+          </div>
+
+          <!-- ADMIN PANEL -->
+          <div class="login-step" data-login-step="2" style="max-height:70vh;overflow-y:auto">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;flex-wrap:wrap;gap:.4rem">
+              <h3 style="margin:0">Admin Panel</h3>
+              <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+                <span id="admin-sync-badge" style="font-size:.72rem;color:var(--muted)"></span>
+                <button class="btn danger small" data-admin-logout>Logout</button>
+              </div>
+            </div>
+
+            <!-- ADMIN TABS -->
+            <div class="admin-tabs">
+              <button class="admin-tab-btn active" data-tab="products">Products</button>
+              <button class="admin-tab-btn" data-tab="settings">Settings</button>
+              <button class="admin-tab-btn" data-tab="gallery">Gallery</button>
+              <button class="admin-tab-btn" data-tab="imports">Import/Export</button>
+            </div>
+
+            <!-- TAB: PRODUCTS -->
+            <div class="admin-tab-content active" data-tab-content="products">
+              <div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--line)">
+                <h4 style="margin:.5rem 0">Add Product</h4>
+                <div class="form-grid">
+                  <label>Product Name <input class="input" data-add-name placeholder="e.g., White Marble Ganesh"></label>
+                  <label>Category <select class="select" data-add-category><option>Mandir</option><option>Idol</option><option>Accessory</option></select></label>
+                  <label>Material <input class="input" data-add-material placeholder="e.g., Marble, Corian"></label>
+                  <label>Size <input class="input" data-add-size placeholder="e.g., 12x18 inches"></label>
+                  <label>Price (₹) <input class="input" type="number" data-add-price placeholder="5000"></label>
+                  <label class="full">
+                    Image
+                    <div style="display:flex;gap:.4rem;margin-top:.3rem;align-items:center">
+                      <input class="input" data-add-image placeholder="https://... or upload →" style="flex:1">
+                      <label class="btn small" style="cursor:pointer;white-space:nowrap;margin:0">
+                        📷 Upload
+                        <input type="file" accept="image/*" data-add-image-file style="display:none">
+                      </label>
+                    </div>
+                    <div data-upload-progress style="display:none;font-size:.74rem;color:var(--muted);margin-top:.2rem">Uploading…</div>
+                  </label>
+                  <label class="full">Description <textarea class="textarea" data-add-description placeholder="Product description..."></textarea></label>
+                </div>
+                <div style="display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap">
+                  <button class="btn ai" data-ai-describe>✨ AI Fill from Image</button>
+                  <button class="btn ai" data-ai-write-desc>✨ AI Write Description</button>
+                </div>
+                <br><br>
+                <button class="btn primary" data-add-product>Add Product</button>
+              </div>
+
+              <h4 style="margin:.5rem 0">Products List</h4>
+              <div style="max-height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:.7rem">
+                <div data-products-list></div>
+              </div>
+            </div>
+
+            <!-- TAB: SETTINGS -->
+            <div class="admin-tab-content" data-tab-content="settings">
+              <h4 style="margin:.5rem 0">Website Settings</h4>
+              <div class="form-grid">
+                <label>Shop Name <input class="input" data-settings-shop-name placeholder="Jainson Marble"></label>
+                <label>Shop Tagline <input class="input" data-settings-shop-sub placeholder="Marble Temples & Murtis"></label>
+                <label>Address Line 1 <input class="input" data-settings-address-1 placeholder="B76, Mangolpur Kalan Marble Market"></label>
+                <label>Address Line 2 <input class="input" data-settings-address-2 placeholder="Delhi - 110083"></label>
+                <label>Phone 1 <input class="input" data-settings-phone-1 placeholder="8010631117"></label>
+                <label>Phone 2 <input class="input" data-settings-phone-2 placeholder="9891468290"></label>
+                <label>WhatsApp Number <input class="input" data-settings-whatsapp placeholder="918010631117"></label>
+                <label>UPI VPA (for QR) <input class="input" data-settings-upi placeholder="9891468290@paytm"></label>
+              </div>
+
+              <h4 style="margin:1.2rem 0 .6rem;padding-top:.8rem;border-top:1px solid var(--line)">🖼 Hero Section</h4>
+              <div class="form-grid">
+                <label class="full">
+                  Hero Photo
+                  <div style="display:flex;gap:.4rem;margin-top:.3rem;flex-wrap:wrap">
+                    <input class="input" data-settings-hero-image placeholder="Or paste image URL..." style="flex:1;min-width:160px">
+                    <label class="btn small primary" style="cursor:pointer;white-space:nowrap;margin:0">
+                      📷 Upload Photo
+                      <input type="file" accept="image/*" id="hero-img-upload" style="display:none">
+                    </label>
+                    <button type="button" class="btn small" id="hero-img-clear">✕ Clear</button>
+                  </div>
+                  <div id="hero-upload-preview" style="display:none;margin-top:.5rem;border-radius:8px;overflow:hidden;height:90px;background:var(--stone)">
+                    <img id="hero-upload-preview-img" style="width:100%;height:100%;object-fit:cover;display:block">
+                  </div>
+                </label>
+                <label>Hero Title Word <input class="input" data-settings-hero-title placeholder="Jainson"></label>
+                <label>Hero Gold Accent Word <input class="input" data-settings-hero-accent placeholder="Marble"></label>
+                <label class="full">Hero Subtitle <textarea class="textarea" data-settings-hero-text placeholder="Premium marble temples..."></textarea></label>
+              </div>
+
+              <h4 style="margin:1.2rem 0 .6rem;padding-top:.8rem;border-top:1px solid var(--line)">⚙ Other</h4>
+              <div class="form-grid">
+                <label class="full">Footer Copy <textarea class="textarea" data-settings-footer-copy placeholder="Dealers in marble temples..."></textarea></label>
+                <label class="full" style="border:1px solid rgba(184,138,45,.35);border-radius:6px;padding:.7rem;background:rgba(215,177,100,.06)">
+                  🤖 Groq API Key <span style="font-weight:400;color:var(--muted)">(enables AI chat — get free key at console.groq.com)</span>
+                  <input class="input" type="password" data-settings-groq-key placeholder="gsk_..." style="margin-top:.3rem;font-family:monospace">
+                  <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem">Stored locally in your browser. Set via Cloudflare env var GROQ_KEY for server-side security.</span>
+                </label>
+              </div>
+              <br>
+              <button class="btn primary" data-save-settings>Save Settings</button>
+            </div>
+
+            <!-- TAB: GALLERY -->
+            <div class="admin-tab-content" data-tab-content="gallery">
+              <h4 style="margin:.5rem 0 .3rem">Customer Gallery</h4>
+              <p style="font-size:.77rem;color:var(--muted);margin:0 0 1rem">Real photos of mandirs made for customers. Shown as a floating gallery on your homepage.</p>
+
+              <div class="form-grid" style="margin-bottom:.9rem">
+                <label>Section Eyebrow <input class="input" id="gal-eyebrow" placeholder="Our Work"></label>
+                <label>Section Headline <input class="input" id="gal-headline" placeholder="Handcrafted for Our Customers"></label>
+                <label class="full">Sub-text <input class="input" id="gal-sub" placeholder="Real homes. Real devotion."></label>
+              </div>
+
+              <div style="display:flex;gap:.4rem;margin-bottom:.85rem;flex-wrap:wrap">
+                <input class="input" id="gal-url-input" placeholder="Paste image URL here..." style="flex:1;min-width:180px">
+                <label class="btn small primary" style="cursor:pointer;white-space:nowrap;margin:0">
+                  📷 Upload Photo
+                  <input type="file" accept="image/*" id="gal-upload" style="display:none" multiple>
+                </label>
+                <button class="btn small primary" id="gal-add-btn">+ Add URL</button>
+              </div>
+
+              <div id="gal-admin-list" style="max-height:320px;overflow-y:auto"></div>
+
+              <br>
+              <button class="btn primary" id="gal-save-btn">💾 Save Gallery</button>
+            </div>
+
+            <!-- TAB: IMPORT/EXPORT -->
+            <div class="admin-tab-content" data-tab-content="imports">
+              <h4 style="margin:.5rem 0 1rem">Export Data</h4>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem">
+                <button class="btn" data-export-json>⬇ JSON</button>
+                <button class="btn" data-export-csv>⬇ CSV</button>
+                <button class="btn" data-export-zip>⬇ ZIP + Images</button>
+                <button class="btn" data-export-pdf>⬇ PDF Catalog</button>
+              </div>
+
+              <h4 style="margin:.5rem 0 .6rem">Import Data</h4>
+              <p style="font-size:.78rem;color:var(--muted);margin:0 0 .9rem">
+                CSV / Excel columns expected: <code>Name, Category, Material, Size, Price, Image URL, Description</code>
+              </p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+
+                <!-- JSON -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📄 JSON</div>
+                  <input type="file" accept=".json" data-import-json style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-json-btn style="width:100%">Import JSON</button>
+                </div>
+
+                <!-- CSV -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📊 CSV</div>
+                  <input type="file" accept=".csv,.txt" data-import-csv style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-csv-btn style="width:100%">Import CSV</button>
+                </div>
+
+                <!-- Excel -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📗 Excel (.xlsx / .xls)</div>
+                  <input type="file" accept=".xlsx,.xls" data-import-excel style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-excel-btn style="width:100%">Import Excel</button>
+                </div>
+
+                <!-- PDF -->
+                <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📕 PDF Catalog</div>
+                  <input type="file" accept=".pdf" data-import-pdf style="width:100%;font-size:.73rem;margin-bottom:.45rem">
+                  <button class="btn small primary" data-import-pdf-btn style="width:100%">Extract &amp; Import</button>
+                </div>
+
+              </div>
+
+              <!-- Import Preview -->
+              <div data-import-preview style="display:none;margin-top:1.1rem;border:1px solid var(--line);border-radius:8px;padding:.8rem">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+                  <strong style="font-size:.82rem" data-import-preview-title>Preview (0 rows)</strong>
+                  <div style="display:flex;gap:.4rem">
+                    <button class="btn small primary" data-import-confirm>✅ Confirm Import</button>
+                    <button class="btn small" data-import-cancel>Cancel</button>
+                  </div>
+                </div>
+                <div style="max-height:220px;overflow-y:auto;font-size:.74rem">
+                  <table style="width:100%;border-collapse:collapse" data-import-table>
+                    <thead>
+                      <tr style="background:var(--stone);position:sticky;top:0">
+                        <th style="padding:.3rem .5rem;text-align:left">Name</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Category</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Material</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Price</th>
+                        <th style="padding:.3rem .5rem;text-align:left">Size</th>
+                      </tr>
+                    </thead>
+                    <tbody data-import-tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" data-toast></div>
+
+  <script>
+    const $$ = document.querySelectorAll.bind(document);
+    const $ = document.querySelector.bind(document);
+
+    const store = { products: [], cart: [], settings: {}, gallery: [], gallerySettings: {} };
+    const ITEMS_PER_PAGE = 20;
+    let currentPage = 1;
+    let collectionPage = 1;
+    let filteredProducts = [];
+    let currentCollection = null;
+
+    // ── FILE → COMPRESSED BASE64 (no R2 needed) ───────────────
+    // Resizes + compresses any uploaded image client-side via Canvas.
+    // The resulting data URL is stored directly in localStorage/R2.
+    async function fileToBase64(file, maxWidth = 900, quality = 0.78) {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = evt => {
+          const img = new Image();
+          img.onload = () => {
+            const ratio  = Math.min(1, maxWidth / img.width);
+            const canvas = document.createElement('canvas');
+            canvas.width  = Math.round(img.width  * ratio);
+            canvas.height = Math.round(img.height * ratio);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ── AUTH TOKEN ─────────────────────────────────────────────
+    let authToken = sessionStorage.getItem('adminToken') || '';
+
+    function authHeaders() {
+      return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` };
+    }
+
+    // Expire session if token is the dev placeholder from an old login
+    async function ensureTokenValid() {
+      if (!authToken || authToken === 'dev-unsigned') return true; // dev mode
+      // Check expiry from JWT payload
+      try {
+        const payload = JSON.parse(atob(authToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+        if (payload.exp && payload.exp < Date.now()) {
+          authToken = '';
+          sessionStorage.removeItem('adminToken');
+          return false;
+        }
+      } catch (e) {}
+      return true;
+    }
+
+    // ── LOAD STATE ─────────────────────────────────────────────
+    async function loadState() {
+      // Step 1 — always load from localStorage first (instant, offline-safe)
+      const lp  = localStorage.getItem('products');
+      const ls  = localStorage.getItem('settings');
+      const lg  = localStorage.getItem('gallery');
+      const lgs = localStorage.getItem('gallerySettings');
+      const localTs = parseInt(localStorage.getItem('stateTs') || '0');
+
+      if (lp)  try { store.products        = JSON.parse(lp);  } catch (_) {}
+      if (ls)  try { store.settings        = JSON.parse(ls);  } catch (_) {}
+      if (lg)  try { store.gallery         = JSON.parse(lg);  } catch (_) {}
+      if (lgs) try { store.gallerySettings = JSON.parse(lgs); } catch (_) {}
+
+      // Step 2 — fetch from API, compare timestamps, only update if API is NEWER
+      try {
+        const res = await fetch('/api/state');
+        if (res.ok) {
+          const data = await res.json();
+          const apiTs = parseInt(data.lastModified || data.ts || '0');
+
+          if (apiTs > localTs) {
+            // Server has newer data — use it and update local cache
+            if (data.products)        store.products        = data.products;
+            if (data.settings)        store.settings        = data.settings;
+            if (data.gallery)         store.gallery         = data.gallery;
+            if (data.gallerySettings) store.gallerySettings = data.gallerySettings;
+            localStorage.setItem('products',        JSON.stringify(store.products));
+            localStorage.setItem('settings',        JSON.stringify(store.settings));
+            localStorage.setItem('gallery',         JSON.stringify(store.gallery        || []));
+            localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings || {}));
+            localStorage.setItem('stateTs', String(apiTs));
+          }
+          // If localTs >= apiTs: local data is same age or newer — keep it as-is
+        }
+      } catch (_) {
+        // API unreachable — local data already loaded above
+      }
+
+      applySettingsToUI();
+    }
+
+    function applySettingsToUI() {
+      const s = store.settings;
+      if (s.shopName)   $('[data-shop-name]').textContent  = s.shopName;
+      if (s.shopSub)    $('[data-brand-sub]').textContent  = s.shopSub;
+      if (s.address1)   $('[data-footer-address-1]').textContent = s.address1;
+      if (s.address2)   $('[data-footer-address-2]').textContent = s.address2;
+      if (s.phone1)   { $('[data-footer-phone-1]').href = `tel:${s.phone1}`; $('[data-footer-phone-1]').textContent = s.phone1; }
+      if (s.phone2)   { $('[data-footer-phone-2]').href = `tel:${s.phone2}`; $('[data-footer-phone-2]').textContent = s.phone2; }
+      if (s.footerCopy) $('[data-footer-copy]').textContent = s.footerCopy;
+      if (s.heroTitle)  $('[data-hero-title]').textContent  = s.heroTitle;
+      if (s.heroAccent) $('[data-hero-accent]').textContent = s.heroAccent;
+      if (s.heroText)   $('[data-hero-text]').textContent   = s.heroText;
+
+      // Hero image: swap SVG for real photo if URL is set
+      const heroMedia = document.getElementById('hero-img-wrapper');
+      if (heroMedia) {
+        if (s.heroImage) {
+          heroMedia.innerHTML = `<img src="${s.heroImage}" alt="${s.shopName || 'Jainson Marble'}"
+            style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"
+            onerror="this.style.display='none'">`;
+        }
+        // If heroImage is cleared, SVG is already in DOM — no action needed
+      }
+    }
+
+    // ── RENDER GRID ────────────────────────────────────────────
+    function renderGrid(products, gridSelector, paginationSelector) {
+      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const page = products.slice(start, start + ITEMS_PER_PAGE);
+
+      $(gridSelector).innerHTML = page.map(p => `
+        <div class="card fade-rise${p.featured ? ' is-featured' : ''}" data-product-id="${p.id}">
+          <div class="thumb">
+            <img src="${p.image || ''}" alt="${p.name}" onerror="this.style.opacity='0'">
+            ${p.featured ? '<span class="tag">⭐ Featured</span>' : ''}
+            ${p.sold ? '<span class="sold">SOLD</span>' : ''}
+          </div>
+          <div class="card-body">
+            <div class="kicker">${p.category}</div>
+            <div class="name">${p.name}</div>
+            <div class="meta">
+              <span class="chip">${p.material}</span>
+              <span class="chip">${p.size}</span>
+            </div>
+            <div class="price">${p.price ? '₹' + p.price.toLocaleString('en-IN') : 'Price on Request'}</div>
+            <div class="card-actions">
+              <button class="btn small" data-view-product="${p.id}">View</button>
+              <button class="btn small primary" data-add-to-cart="${p.id}">Add Cart</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Pagination
+      const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+      $(paginationSelector).innerHTML = '';
+      if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i;
+          btn.className = i === currentPage ? 'active' : '';
+          btn.onclick = () => {
+            currentPage = i;
+            renderGrid(products, gridSelector, paginationSelector);
+            window.scrollTo(0, 300);
+          };
+          $(paginationSelector).appendChild(btn);
+        }
+      }
+
+      // Re-observe new cards for scroll animation
+      setTimeout(() => {
+        document.querySelectorAll('.fade-rise:not(.visible)').forEach(el => {
+          const io = new IntersectionObserver(e => {
+            if (e[0].isIntersecting) { e[0].target.classList.add('visible'); io.disconnect(); }
+          }, { threshold: 0.06 });
+          io.observe(el);
+        });
+      }, 30);
+
+      $$('[data-view-product]').forEach(btn => {
+        btn.onclick = () => showProductDetail(btn.dataset.viewProduct);
+      });
+      $$('[data-add-to-cart]').forEach(btn => {
+        btn.onclick = () => addToCart(btn.dataset.addToCart);
+      });
+    }
+
+    // ── SHOW PRODUCT DETAIL ────────────────────────────────────
+    function showProductDetail(productId) {
+      const product = store.products.find(p => p.id === productId);
+      if (!product) return;
+
+      const related = store.products
+        .filter(p => p.id !== productId && p.category === product.category && !p.sold)
+        .slice(0, 5);
+
+      const wa = store.settings.whatsapp || '918010631117';
+      const priceStr = product.price ? '₹' + product.price.toLocaleString('en-IN') : 'Price on Request';
+
+      $('[data-detail-title]').textContent = product.name;
+      $('[data-detail-body]').innerHTML = `
+        <div class="detail-grid">
+          <div class="product-photo">
+            <img src="${product.image || ''}" alt="${product.name}" class="detail-img" onerror="this.style.opacity='0'">
+          </div>
+          <div class="detail-copy">
+            <h2>${product.name}</h2>
+            <div class="meta">
+              ${product.category ? `<span class="chip">${product.category}</span>` : ''}
+              ${product.material ? `<span class="chip">${product.material}</span>` : ''}
+              ${product.size     ? `<span class="chip">${product.size}</span>`     : ''}
+              ${product.featured ? `<span class="chip" style="background:var(--gold);color:#fff">⭐ Featured</span>` : ''}
+            </div>
+            <div class="price" style="font-size:1.4rem;margin:.6rem 0">${priceStr}</div>
+            <p style="color:var(--muted);line-height:1.7;margin:0 0 1rem">${product.description || 'Premium marble craftsmanship, made to order. Contact us for details.'}</p>
+
+            <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem">
+              <button class="btn primary" data-cart-from-detail="${product.id}">🛒 Add to Cart</button>
+              <button class="btn" style="background:#25d366;color:#fff;border-color:#25d366" data-wa-detail="${product.id}">💬 WhatsApp Enquiry</button>
+              <button class="btn" data-share-product="${product.id}">↗ Share</button>
+            </div>
+
+            <!-- Material Guide -->
+            <details class="material-guide">
+              <summary>📖 Material Guide — which marble is right for you?</summary>
+              <div class="material-compare">
+                <div class="mat-item" style="border-color:rgba(184,138,45,.4);background:rgba(215,177,100,.06)">
+                  <span class="mat-badge" style="background:var(--gold);color:#fff">Premium</span>
+                  <h5>Makrana White Marble</h5>
+                  <p>The same stone used in the Taj Mahal. Finest grain, pure white, exceptionally durable. Best for large mandirs and premium idols.</p>
+                </div>
+                <div class="mat-item">
+                  <span class="mat-badge" style="background:var(--stone);color:var(--ink)">Standard</span>
+                  <h5>White Marble</h5>
+                  <p>High-quality marble with natural grain variations. Excellent finish at great value. Ideal for most mandirs and idols.</p>
+                </div>
+                <div class="mat-item">
+                  <span class="mat-badge" style="background:#e0f0ff;color:#1a5c8f">Modern</span>
+                  <h5>Corian</h5>
+                  <p>Engineered solid surface — uniform, seamless look. Easy to maintain, non-porous, ideal for contemporary mandirs.</p>
+                </div>
+              </div>
+            </details>
+
+            ${related.length ? `
+            <div class="related-section">
+              <h4>You might also like</h4>
+              <div class="related-grid">
+                ${related.map(r => `
+                  <div class="related-card" onclick="showProductDetail('${r.id}')">
+                    <img src="${r.image||''}" alt="${r.name}" onerror="this.style.background='var(--stone)'">
+                    <div class="related-card-name">${r.name}</div>
+                    <div class="related-card-price">${r.price ? '₹'+r.price.toLocaleString('en-IN') : 'On Request'}</div>
+                  </div>`).join('')}
+              </div>
+            </div>` : ''}
+          </div>
+        </div>
+      `;
+
+      $(`[data-cart-from-detail="${product.id}"]`).onclick = () => {
+        addToCart(product.id); showToast('Added to cart!');
+      };
+      $(`[data-wa-detail="${product.id}"]`).onclick = () => {
+        const msg = `Hi! I am interested in: ${product.name}${product.price ? ' (₹'+product.price.toLocaleString('en-IN')+')' : ''}.`;
+        window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+      };
+      const shareBtn = $(`[data-share-product="${product.id}"]`);
+      if (shareBtn) {
+        shareBtn.onclick = async () => {
+          const url = `${location.origin}${location.pathname}#product/${product.id}`;
+          if (navigator.share) {
+            try { await navigator.share({ title: product.name, text: `Check out ${product.name} on Jainson Marble`, url }); } catch (_) {}
+          } else {
+            await navigator.clipboard.writeText(url).catch(() => {});
+            showToast('🔗 Link copied!');
+          }
+        };
+      }
+
+      $('[data-detail-modal]').dataset.currentProduct = product.id;
+      $('[data-detail-modal]').classList.add('open');
+    }
+
+    // ── ADD TO CART ────────────────────────────────────────────
+    function addToCart(productId) {
+      const product = store.products.find(p => p.id === productId);
+      if (!product) return;
+
+      const existing = store.cart.find(c => c.id === productId);
+      if (existing) {
+        existing.qty++;
+      } else {
+        store.cart.push({...product, qty: 1});
+      }
+      updateCartUI();
+      showToast('Added to cart!');
+    }
+
+    // ── UPDATE CART UI ─────────────────────────────────────────
+    function updateCartUI() {
+      $('[data-cart-count]').textContent = store.cart.length;
+      const cartItems = $('[data-cart-items]');
+      if (store.cart.length === 0) {
+        cartItems.innerHTML = '<p style="color:var(--muted);text-align:center;padding:1rem">Your cart is empty</p>';
+        $('[data-qr-section]').classList.remove('show');
+      } else {
+        cartItems.innerHTML = store.cart.map(item => `
+          <div class="cart-row">
+            <img src="${item.image}" alt="${item.name}">
+            <div>
+              <strong style="font-size:.9rem">${item.name}</strong><br>
+              <span style="color:var(--muted);font-size:.8rem">Rs. ${item.price} × ${item.qty}</span>
+            </div>
+            <div class="qty">
+              <button class="btn small" data-qty-decrease="${item.id}">−</button>
+              <span style="font-weight:700;min-width:1.5rem;text-align:center">${item.qty}</span>
+              <button class="btn small" data-qty-increase="${item.id}">+</button>
+            </div>
+            <button class="btn danger small" data-remove-cart="${item.id}">×</button>
+          </div>
+        `).join('');
+
+        $$('[data-qty-increase]').forEach(btn => {
+          btn.onclick = () => {
+            const item = store.cart.find(c => c.id === btn.dataset.qtyIncrease);
+            if (item) item.qty++;
+            updateCartUI();
+          };
+        });
+        $$('[data-qty-decrease]').forEach(btn => {
+          btn.onclick = () => {
+            const item = store.cart.find(c => c.id === btn.dataset.qtyDecrease);
+            if (item && item.qty > 1) item.qty--;
+            updateCartUI();
+          };
+        });
+        $$('[data-remove-cart]').forEach(btn => {
+          btn.onclick = () => {
+            store.cart = store.cart.filter(c => c.id !== btn.dataset.removeCart);
+            updateCartUI();
+          };
+        });
+
+        $('[data-qr-section]').classList.add('show');
+        generatePaymentQR();
+      }
+
+      const total = store.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      $('[data-cart-total]').textContent = `Total: Rs. ${total}`;
+    }
+
+    // ── GENERATE PAYMENT QR ────────────────────────────────────
+    function generatePaymentQR() {
+      const total = store.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const upiVpa = store.settings.upi || '9891468290@paytm';
+      const upiUrl = `upi://pay?pa=${upiVpa}&pn=JainsonMarble&am=${total}&tn=Order${Date.now()}`;
+
+      const qrContainer = $('#payment-qr');
+      qrContainer.innerHTML = '';
+      new QRCode(qrContainer, {
+        text: upiUrl,
+        width: 200,
+        height: 200,
+        colorDark: '#07162c',
+        colorLight: '#fffaf0'
+      });
+    }
+
+    // ── POPULATE FILTERS ───────────────────────────────────────
+    function populateFilters() {
+      // Categories are fixed — never pull from product data to avoid dirty values
+      $('[data-category]').innerHTML =
+        '<option value="">All Categories</option>' +
+        ['Mandir', 'Idol', 'Accessory'].map(c => `<option value="${c}">${c}</option>`).join('');
+
+      // Materials come from actual products (could be marble, corian, etc.)
+      const materials = [...new Set(store.products.map(p => p.material).filter(Boolean))].sort();
+      const matHtml = '<option value="">All Materials</option>' +
+        materials.map(m => `<option value="${m}">${m}</option>`).join('');
+
+      $('[data-material]').innerHTML = matHtml;
+      $('[data-material-collection]').innerHTML = matHtml;
+    }
+
+    // ── SHOW COLLECTION ────────────────────────────────────────
+    function showCollection(type) {
+      currentCollection = type;
+      collectionPage = 1;
+
+      $$('[data-home-section]').forEach(el => el.style.display = 'none');
+      $('[data-collection-page]').classList.add('active');
+
+      // Normalise: nav passes 'Mandirs'/'Idols', filter by singular 'Mandir'/'Idol'
+      const isMandirs = type.toLowerCase().includes('mandir');
+      const singularCat = isMandirs ? 'Mandir' : 'Idol';
+      const displayTitle = isMandirs ? 'Mandirs' : 'Idols';
+
+      $('[data-collection-title]').textContent = displayTitle;
+      $('[data-collection-crumb]').textContent = displayTitle;
+
+      const filtered = store.products.filter(p =>
+        p.category === singularCat || p.category === displayTitle
+      );
+      $('[data-collection-count]').textContent = filtered.length;
+
+      currentPage = 1;
+      renderGrid(filtered, '[data-collection-grid]', '[data-collection-pagination]');
+    }
+
+    // ── SHOW HOME ──────────────────────────────────────────────
+    function showHome() {
+      $('[data-collection-page]').classList.remove('active');
+      $('[data-product-page]')?.classList.remove('active');
+      $$('[data-home-section]').forEach(el => el.style.display = 'block');
+      currentPage = 1;
+      applyFilters();
+      renderGallery();
+      renderSpotlight();
+      // Re-trigger scroll observer for elements that weren't visible before
+      setTimeout(() => {
+        document.querySelectorAll('.fade-rise:not(.visible)').forEach(el => {
+          const io = new IntersectionObserver(e => {
+            if (e[0].isIntersecting) { e[0].target.classList.add('visible'); io.disconnect(); }
+          }, { threshold: 0 });
+          io.observe(el);
+        });
+      }, 50);
+    }
+
+    // ── SHOW TOAST ─────────────────────────────────────────────
+    function showToast(msg) {
+      const toast = $('[data-toast]');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // ── MODAL TOGGLES ──────────────────────────────────────────
+    function toggleModal(selector, show) {
+      const modal = $(selector);
+      if (show) modal.classList.add('open');
+      else modal.classList.remove('open');
+    }
+
+    // ── EXPORT/IMPORT ──────────────────────────────────────────
+    function exportJSON() {
+      const data = JSON.stringify({products: store.products, settings: store.settings, exportedAt: new Date().toISOString()}, null, 2);
+      const blob = new Blob([data], {type: 'application/json'});
+      downloadFile(blob, `jainson-marble-${Date.now()}.json`);
+      showToast('JSON exported!');
+    }
+
+    function exportCSV() {
+      let csv = 'Name,Category,Material,Size,Price,Image URL,Description\n';
+      store.products.forEach(p => {
+        csv += `"${p.name}","${p.category}","${p.material}","${p.size}",${p.price},"${p.image}","${(p.description || '').replace(/"/g, '""')}"\n`;
+      });
+      const blob = new Blob([csv], {type: 'text/csv'});
+      downloadFile(blob, `jainson-marble-${Date.now()}.csv`);
+      showToast('CSV exported!');
+    }
+
+    async function exportZIP() {
+      showToast('Preparing ZIP...');
+      const zip = new JSZip();
+
+      zip.file('products.json', JSON.stringify({products: store.products, settings: store.settings}, null, 2));
+
+      let csv = 'Name,Category,Material,Size,Price,Image URL,Description\n';
+      store.products.forEach(p => {
+        csv += `"${p.name}","${p.category}","${p.material}","${p.size}",${p.price},"${p.image}","${(p.description || '').replace(/"/g, '""')}"\n`;
+      });
+      zip.file('products.csv', csv);
+
+      for (const product of store.products) {
+        try {
+          const response = await fetch(product.image);
+          if (response.ok) {
+            const blob = await response.blob();
+            const ext = product.image.split('.').pop().split('?')[0] || 'jpg';
+            zip.folder('images').file(`${product.id}.${ext}`, blob);
+          }
+        } catch (e) {}
+      }
+
+      const zipBlob = await zip.generateAsync({type: 'blob'});
+      downloadFile(zipBlob, `jainson-marble-${Date.now()}.zip`);
+      showToast('ZIP exported!');
+    }
+
+    function exportPDF() {
+      showToast('Generating PDF...');
+      const element = document.createElement('div');
+      element.innerHTML = `
+        <h1>${store.settings.shopName || 'Jainson Marble'}</h1>
+        <p>${store.settings.footerCopy || 'Divine designs, timeless devotion.'}</p>
+        <table border="1" cellpadding="10" style="width:100%">
+          <tr><th>Product</th><th>Category</th><th>Material</th><th>Price</th></tr>
+          ${store.products.map(p => `<tr><td>${p.name}</td><td>${p.category}</td><td>${p.material}</td><td>Rs. ${p.price}</td></tr>`).join('')}
+        </table>
+      `;
+      html2pdf().set({margin: 10, filename: 'jainson-marble-catalog.pdf'}).save(element).then(() => {
+        showToast('PDF exported!');
+      });
+    }
+
+    function downloadFile(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ── SAVE PRODUCTS ──────────────────────────────────────────
+    function saveProducts() {
+      localStorage.setItem('products', JSON.stringify(store.products));
+      localStorage.setItem('stateTs',  String(Date.now()));
+      saveState();
+    }
+
+    // ── SAVE STATE TO R2 ───────────────────────────────────────
+    async function saveState() {
+      const ts = Date.now();
+      // Always save full state locally first (base64 images OK in localStorage)
+      localStorage.setItem('products',        JSON.stringify(store.products));
+      localStorage.setItem('settings',        JSON.stringify(store.settings));
+      localStorage.setItem('gallery',         JSON.stringify(store.gallery        || []));
+      localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings || {}));
+      localStorage.setItem('stateTs',         String(ts));
+
+      if (!authToken) return;
+
+      // Strip base64 gallery images before sending to R2 — they're too large for the request body
+      // Base64 images stay in localStorage only; only external URLs go to R2
+      const galleryForServer = (store.gallery || []).filter(url => !url.startsWith('data:'));
+
+      try {
+        const res = await fetch('/api/state', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            products:        store.products,
+            settings:        store.settings,
+            gallery:         galleryForServer,
+            gallerySettings: store.gallerySettings || {},
+            lastModified:    ts
+          })
+        });
+        const badge = document.getElementById('admin-sync-badge');
+        if (res.ok) {
+          if (badge) badge.textContent = '✅ Synced';
+        } else {
+          if (badge) badge.textContent = '⚠ Saved locally';
+          if (res.status === 401) { authToken = ''; sessionStorage.removeItem('adminToken'); }
+        }
+      } catch (_) {
+        const badge = document.getElementById('admin-sync-badge');
+        if (badge) badge.textContent = '⚠ Offline — saved locally';
+      }
+    }
+
+    // ── APPLY FILTERS (home) ───────────────────────────────────
+    function applyFilters() {
+      const search   = $('[data-search]').value.toLowerCase();
+      const category = $('[data-category]').value;
+      const material = $('[data-material]').value;
+      const sort     = $('[data-sort]').value;
+
+      let results = store.products;
+
+      if (search)   results = results.filter(p =>
+        p.name.toLowerCase().includes(search) ||
+        p.description?.toLowerCase().includes(search) ||
+        p.category.toLowerCase().includes(search));
+      if (category) results = results.filter(p => p.category === category);
+      if (material) results = results.filter(p => p.material === material);
+
+      if (sort === 'featured') results = results.slice().sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+      if (sort === 'low')      results = results.slice().sort((a, b) => a.price - b.price);
+      if (sort === 'high')     results = results.slice().sort((a, b) => b.price - a.price);
+      if (sort === 'new')      results = results.slice().sort((a, b) => b.id.localeCompare(a.id));
+
+      filteredProducts = results;
+      currentPage = 1;
+      $('[data-count]').textContent = results.length;
+      renderGrid(results, '[data-grid]', '[data-pagination]');
+    }
+
+    // ── APPLY COLLECTION FILTERS ───────────────────────────────
+    function applyCollectionFilters() {
+      if (!currentCollection) return;
+      const search   = $('[data-search-collection]').value.toLowerCase();
+      const material = $('[data-material-collection]').value;
+      const isMandirs   = currentCollection.toLowerCase().includes('mandir');
+      const singularCat = isMandirs ? 'Mandir' : 'Idol';
+      const displayTitle = isMandirs ? 'Mandirs' : 'Idols';
+
+      let results = store.products.filter(p =>
+        p.category === singularCat || p.category === displayTitle);
+      if (search)   results = results.filter(p =>
+        p.name.toLowerCase().includes(search) ||
+        p.description?.toLowerCase().includes(search));
+      if (material) results = results.filter(p => p.material === material);
+
+      $('[data-collection-count]').textContent = results.length;
+      currentPage = 1;
+      renderGrid(results, '[data-collection-grid]', '[data-collection-pagination]');
+    }
+
+    // ── ADMIN TABS ─────────────────────────────────────────────
+    $$('.admin-tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        $$('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+        $$('[data-tab-content]').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        $(`[data-tab-content="${btn.dataset.tab}"]`).classList.add('active');
+        if (btn.dataset.tab === 'gallery') renderGalleryAdmin();
+      };
+    });
+
+    // ── SETTINGS ────────────────────────────────────────────────
+    function loadSettings() {
+      const s = store.settings;
+      $('[data-settings-shop-name]').value      = s.shopName    || '';
+      $('[data-settings-shop-sub]').value       = s.shopSub     || '';
+      $('[data-settings-address-1]').value      = s.address1    || '';
+      $('[data-settings-address-2]').value      = s.address2    || '';
+      $('[data-settings-phone-1]').value        = s.phone1      || '';
+      $('[data-settings-phone-2]').value        = s.phone2      || '';
+      $('[data-settings-whatsapp]').value       = s.whatsapp    || '';
+      $('[data-settings-upi]').value            = s.upi         || '';
+      $('[data-settings-hero-image]').value     = s.heroImage   || '';
+      if (s.heroImage) {
+        const prev = document.getElementById('hero-upload-preview');
+        const prevImg = document.getElementById('hero-upload-preview-img');
+        if (prev && prevImg) { prevImg.src = s.heroImage; prev.style.display = 'block'; }
+      }
+      $('[data-settings-hero-title]').value     = s.heroTitle   || '';
+      $('[data-settings-hero-accent]').value    = s.heroAccent  || '';
+      $('[data-settings-hero-text]').value      = s.heroText    || '';
+      $('[data-settings-footer-copy]').value    = s.footerCopy  || '';
+      $('[data-settings-groq-key]').value       = s.groqKey     || '';
+    }
+
+    $('[data-save-settings]').onclick = () => {
+      store.settings = {
+        shopName:   $('[data-settings-shop-name]').value,
+        shopSub:    $('[data-settings-shop-sub]').value,
+        address1:   $('[data-settings-address-1]').value,
+        address2:   $('[data-settings-address-2]').value,
+        phone1:     $('[data-settings-phone-1]').value,
+        phone2:     $('[data-settings-phone-2]').value,
+        whatsapp:   $('[data-settings-whatsapp]').value,
+        upi:        $('[data-settings-upi]').value,
+        heroImage:  $('[data-settings-hero-image]').value.trim(),
+        heroTitle:  $('[data-settings-hero-title]').value,
+        heroAccent: $('[data-settings-hero-accent]').value,
+        heroText:   $('[data-settings-hero-text]').value,
+        footerCopy: $('[data-settings-footer-copy]').value,
+        groqKey:    $('[data-settings-groq-key]').value.trim()
+      };
+      localStorage.setItem('settings', JSON.stringify(store.settings));
+      saveState();
+      applySettingsToUI();
+      showToast('✅ Settings saved and synced!');
     };
 
-    // Fallback metadata stored in localStorage (lightweight)
-    const GALLERY_METADATA_KEY = 'mandirwale_gallery_metadata';
-    const PDF_METADATA_KEY = 'mandirwale_pdf_metadata';
+    // ── EVENT LISTENERS ────────────────────────────────────────
+    
+    // Navigation
+    $('[data-go-home]').addEventListener('click', showHome);
+    $$('[data-route]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const route = btn.dataset.route;
+        if (route === 'home') showHome();
+        if (route === 'mandirs') showCollection('Mandirs');
+        if (route === 'idols') showCollection('Idols');
+      });
+    });
 
-    /**
-     * Upload image to R2 via backend API
-     * @param {File} file - Image file to upload
-     * @returns {Promise<string>} - R2 image URL
-     */
-    async function uploadImageToR2(file) {
-      if (!R2_CONFIG.endpoint || !R2_CONFIG.accessKeyId) {
-        console.error('❌ R2 config missing. Configure R2_CONFIG object.');
-        throw new Error('R2 storage not configured');
+    // Sticky filters
+    window.addEventListener('scroll', () => {
+      const stickyFilters = $('[data-sticky-filters]');
+      if (window.scrollY > 300) {
+        stickyFilters.classList.add('active');
+      } else {
+        stickyFilters.classList.remove('active');
       }
+    });
 
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        // Upload to your backend endpoint (which handles R2 upload)
-        const response = await fetch('/api/upload-to-r2', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-Upload-Type': 'image'
-          }
-        });
+    $('[data-sticky-filter-all]').addEventListener('click', showHome);
+    $('[data-sticky-filter-mandirs]').addEventListener('click', () => showCollection('Mandirs'));
+    $('[data-sticky-filter-idols]').addEventListener('click', () => showCollection('Idols'));
 
-        if (!response.ok) {
-          throw new Error(`Upload failed: ${response.statusText}`);
-        }
+    // Filters
+    $('[data-search]').addEventListener('input', applyFilters);
+    $('[data-category]').addEventListener('change', applyFilters);
+    $('[data-material]').addEventListener('change', applyFilters);
+    $('[data-sort]').addEventListener('change', applyFilters);
+    $('[data-reset]').addEventListener('click', () => {
+      $('[data-search]').value = '';
+      $('[data-category]').value = '';
+      $('[data-material]').value = '';
+      $('[data-sort]').value = 'featured';
+      applyFilters();
+    });
 
-        const { imageUrl } = await response.json();
-        console.log('✓ Image uploaded to R2:', imageUrl);
-        return imageUrl;
-      } catch (err) {
-        console.error('R2 upload error:', err);
-        throw err;
-      }
-    }
+    // Collection filters
+    $('[data-search-collection]').addEventListener('input', applyCollectionFilters);
+    $('[data-material-collection]').addEventListener('change', applyCollectionFilters);
+    $('[data-reset-collection]').addEventListener('click', () => {
+      $('[data-search-collection]').value = '';
+      $('[data-material-collection]').value = '';
+      applyCollectionFilters();
+    });
 
-    /**
-     * Upload PDF to R2 via backend API
-     * @param {File} file - PDF file to upload
-     * @returns {Promise<string>} - R2 PDF URL
-     */
-    async function uploadPDFToR2(file) {
-      if (!R2_CONFIG.endpoint || !R2_CONFIG.accessKeyId) {
-        console.error('❌ R2 config missing');
-        throw new Error('R2 storage not configured');
-      }
+    // Cart
+    $('[data-open-cart]').addEventListener('click', () => {
+      updateCartUI();
+      toggleModal('[data-cart-modal]', true);
+    });
+    $('[data-close-cart]').addEventListener('click', () => toggleModal('[data-cart-modal]', false));
+    $('[data-clear-cart]').addEventListener('click', () => {
+      store.cart = [];
+      updateCartUI();
+      showToast('Cart cleared');
+    });
+    $('[data-send-order]').addEventListener('click', () => {
+      const name = $('[data-order-name]').value;
+      const phone = $('[data-order-phone]').value;
+      const city = $('[data-order-city]').value;
+      const notes = $('[data-order-notes]').value;
 
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const response = await fetch('/api/upload-to-r2', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-Upload-Type': 'pdf'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error(`PDF upload failed: ${response.statusText}`);
-        }
-
-        const { pdfUrl } = await response.json();
-        console.log('✓ PDF uploaded to R2:', pdfUrl);
-        return pdfUrl;
-      } catch (err) {
-        console.error('R2 PDF upload error:', err);
-        throw err;
-      }
-    }
-
-    /**
-     * Load gallery metadata from localStorage
-     * (actual images are fetched from R2)
-     */
-    function loadGalleryMetadata() {
-      const metadata = localStorage.getItem(GALLERY_METADATA_KEY);
-      return metadata ? JSON.parse(metadata) : [];
-    }
-
-    /**
-     * Save gallery metadata to localStorage
-     */
-    function saveGalleryMetadata(metadata) {
-      try {
-        localStorage.setItem(GALLERY_METADATA_KEY, JSON.stringify(metadata));
-        console.log('✓ Gallery metadata saved');
-      } catch (err) {
-        console.error('Failed to save metadata:', err);
-      }
-    }
-
-    /**
-     * Handle gallery image upload
-     */
-    async function handleGalleryImageUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      if (!file.type.startsWith('image/')) {
-        alert('⚠️ Please upload an image file');
+      if (!name || !phone) {
+        showToast('Please fill name and phone');
         return;
       }
 
-      try {
-        const btn = e.target.parentElement?.querySelector('.btn');
-        if (btn) btn.disabled = true;
+      const total = store.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const items = store.cart.map(item => `${item.name} x${item.qty} - Rs. ${item.price * item.qty}`).join('\n');
+      const message = `Hi! I'd like to order:\n\n${items}\n\nTotal: Rs. ${total}\n\nName: ${name}\nCity: ${city}\nNotes: ${notes}`;
+      const whatsappNum = store.settings.whatsapp || '918010631117';
+      const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+      showToast('Opening WhatsApp...');
+    });
 
-        // Upload to R2
-        const imageUrl = await uploadImageToR2(file);
+    // Custom order
+    $$('[data-open-custom]').forEach(btn =>
+      btn.addEventListener('click', () => toggleModal('[data-custom-modal]', true))
+    );
+    $('[data-close-custom]').addEventListener('click', () => toggleModal('[data-custom-modal]', false));
+    $('[data-send-custom]').addEventListener('click', () => {
+      const deity = $('[data-custom-deity]').value;
+      const material = $('[data-custom-material]').value;
+      const size = $('[data-custom-size]').value;
+      const finish = $('[data-custom-finish]').value;
+      const name = $('[data-custom-name]').value;
+      const phone = $('[data-custom-phone]').value;
+      const notes = $('[data-custom-notes]').value;
 
-        // Save metadata locally
-        const metadata = loadGalleryMetadata();
-        metadata.push({
-          url: imageUrl,
-          name: file.name,
-          uploadedAt: new Date().toISOString(),
-          size: file.size
-        });
-        saveGalleryMetadata(metadata);
-
-        alert('✓ Image uploaded successfully to R2!');
-        console.log('Gallery images now synced across all devices');
-      } catch (err) {
-        alert('⚠️ Upload failed: ' + err.message);
-      } finally {
-        if (e.target.parentElement?.querySelector('.btn')) {
-          e.target.parentElement.querySelector('.btn').disabled = false;
-        }
-      }
-    }
-
-    /**
-     * Handle PDF upload
-     */
-    async function handlePDFUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      if (!file.type.includes('pdf') && !file.name.endsWith('.pdf')) {
-        alert('⚠️ Please upload a PDF file');
+      if (!deity || !name || !phone) {
+        showToast('Please fill deity, name, and phone');
         return;
       }
 
+      const message = `Hi! I have a custom requirement:\n\nDeity/Purpose: ${deity}\nMaterial: ${material}\nSize: ${size}\nFinish: ${finish}\n\nName: ${name}\nPhone: ${phone}\nAdditional Notes: ${notes}`;
+      const whatsappNum = store.settings.whatsapp || '918010631117';
+      const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+      showToast('Opening WhatsApp...');
+    });
+
+    // Admin auth — all checks happen server-side
+    $('[data-admin-login]').addEventListener('click', async () => {
+      const password = $('[data-admin-password]').value;
+      const totpVal  = $('[data-admin-totp]') ? $('[data-admin-totp]').value : '';
+      const btn      = $('[data-admin-login]');
+      btn.disabled   = true;
+      btn.textContent = 'Checking…';
+
       try {
-        const btn = e.target.parentElement?.querySelector('.btn');
-        if (btn) btn.disabled = true;
-
-        // Upload to R2
-        const pdfUrl = await uploadPDFToR2(file);
-
-        // Save metadata
-        const metadata = {
-          url: pdfUrl,
-          name: file.name,
-          uploadedAt: new Date().toISOString(),
-          size: file.size
-        };
-        localStorage.setItem(PDF_METADATA_KEY, JSON.stringify(metadata));
-
-        alert('✓ PDF uploaded successfully to R2!');
-      } catch (err) {
-        alert('⚠️ PDF upload failed: ' + err.message);
-      } finally {
-        if (e.target.parentElement?.querySelector('.btn')) {
-          e.target.parentElement.querySelector('.btn').disabled = false;
-        }
-      }
-    }
-
-    /**
-     * Load and display gallery from R2
-     */
-    async function loadAndDisplayGallery() {
-      const metadata = loadGalleryMetadata();
-      console.log('📸 Loading gallery:', metadata.length, 'images from R2');
-      
-      // Images are already in metadata with R2 URLs
-      // They're accessible from any device now
-      return metadata;
-    }
-
-    /**
-     * Delete image from gallery
-     */
-    async function deleteGalleryImage(imageUrl) {
-      try {
-        // Call backend to delete from R2
-        const response = await fetch('/api/delete-from-r2', {
-          method: 'DELETE',
+        const res  = await fetch('/api/admin/login', {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password, totp: totpVal })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          authToken = data.token || 'dev-unsigned';
+          sessionStorage.setItem('adminToken', authToken);
+          $('[data-attempts-fill]').style.width = '100%';
+          $('[data-login-step="1"]').classList.remove('active');
+          $('[data-login-step="2"]').classList.add('active');
+          renderAdminDashboard();
+          loadSettings();
+          // Auto-sync: push localStorage products to server in case R2 was empty
+          if (store.products.length > 0) {
+            setTimeout(async () => {
+              try {
+                const r = await fetch('/api/state', {
+                  method: 'POST', headers: authHeaders(),
+                  body: JSON.stringify({ products: store.products, settings: store.settings, gallery: store.gallery, gallerySettings: store.gallerySettings })
+                });
+                const syncBadge = document.getElementById('admin-sync-badge');
+                if (syncBadge) syncBadge.textContent = r.ok ? '✅ Synced to server' : '⚠ Local only';
+              } catch (_) {
+                const syncBadge = document.getElementById('admin-sync-badge');
+                if (syncBadge) syncBadge.textContent = '⚠ Offline — local only';
+              }
+            }, 600);
+          }
+        } else if (data.requireTotp) {
+          $('[data-totp-row]').style.display = 'block';
+          $('[data-login-error]').textContent = 'Enter the 6-digit code from your authenticator app.';
+          $('[data-admin-totp]').focus();
+        } else {
+          $('[data-login-error]').textContent = data.error || 'Login failed.';
+          // Drain the attempts bar visually (server already tracks real rate-limiting)
+          const fill = $('[data-attempts-fill]');
+          const cur  = parseFloat(fill.style.width) || 100;
+          fill.style.width = Math.max(0, cur - 20) + '%';
+        }
+      } catch (e) {
+        $('[data-login-error]').textContent = 'Could not reach server. Check connection.';
+      }
+
+      btn.disabled    = false;
+      btn.textContent = 'Continue →';
+    });
+
+    $('[data-admin-logout]').addEventListener('click', () => {
+      authToken = '';
+      sessionStorage.removeItem('adminToken');
+      $('[data-login-step="2"]').classList.remove('active');
+      $('[data-login-step="1"]').classList.add('active');
+      $('[data-admin-password]').value = '';
+      $('[data-admin-totp]') && ($('[data-admin-totp]').value = '');
+      $('[data-totp-row]').style.display = 'none';
+      $('[data-login-error]').textContent = '';
+      $('[data-attempts-fill]').style.width = '100%';
+      toggleModal('[data-admin-modal]', false);
+    });
+
+    $('[data-open-admin]').addEventListener('click', () => {
+      // Always start at login screen when opening
+      $('[data-login-step="2"]').classList.remove('active');
+      $('[data-login-step="1"]').classList.add('active');
+      $('[data-admin-password]').value = '';
+      $('[data-login-error]').textContent = '';
+      toggleModal('[data-admin-modal]', true);
+      // Focus the password field
+      setTimeout(() => $('[data-admin-password]').focus(), 120);
+    });
+
+    // Enter key on password field
+    $('[data-admin-password]').addEventListener('keypress', e => {
+      if (e.key === 'Enter') $('[data-admin-login]').click();
+    });
+    $('[data-close-admin]').addEventListener('click', () => {
+      $('[data-login-step="2"]').classList.remove('active');
+      $('[data-login-step="1"]').classList.add('active');
+      $('[data-admin-password]').value = '';
+      $('[data-login-error]').textContent = '';
+      toggleModal('[data-admin-modal]', false);
+    });
+
+    // Add product
+    $('[data-add-product]').addEventListener('click', () => {
+      const name = $('[data-add-name]').value;
+      const category = $('[data-add-category]').value;
+      const material = $('[data-add-material]').value;
+      const size = $('[data-add-size]').value;
+      const price = $('[data-add-price]').value;
+      const image = $('[data-add-image]').value;
+      const description = $('[data-add-description]').value;
+
+      if (!name) {
+        showToast('Product name is required');
+        return;
+      }
+
+      const product = {
+        id: Date.now().toString(),
+        name, category, material, size,
+        price: parseInt(price),
+        image, description,
+        featured: false, sold: false
+      };
+
+      store.products.push(product);
+      saveProducts();
+
+      $('[data-add-name]').value = '';
+      $('[data-add-material]').value = '';
+      $('[data-add-size]').value = '';
+      $('[data-add-price]').value = '';
+      $('[data-add-image]').value = '';
+      $('[data-add-description]').value = '';
+
+      populateFilters();
+      renderAdminDashboard();
+      showToast('✅ Product added!');
+    });
+
+    // Export
+    $('[data-export-json]').addEventListener('click', exportJSON);
+    $('[data-export-csv]').addEventListener('click', exportCSV);
+    $('[data-export-zip]').addEventListener('click', exportZIP);
+    $('[data-export-pdf]').addEventListener('click', exportPDF);
+
+    // ── IMPORT HELPERS ─────────────────────────────────────────
+    let pendingImport = [];
+
+    function rowsToProducts(rows) {
+      // rows: array of objects with any-case keys
+      return rows.map((row, i) => {
+        const get = (...keys) => {
+          for (const k of keys) {
+            const found = Object.keys(row).find(rk => rk.toLowerCase().trim() === k.toLowerCase());
+            if (found && row[found] !== undefined && row[found] !== '') return String(row[found]).trim();
+          }
+          return '';
+        };
+        const cat = get('category', 'type');
+        const validCats = ['Mandir', 'Idol', 'Accessory'];
+        const normCat = validCats.find(c => c.toLowerCase() === cat.toLowerCase()) || 'Mandir';
+        return {
+          id: Date.now().toString() + i,
+          name: get('name', 'product', 'title') || 'Unnamed Product',
+          category: normCat,
+          material: get('material', 'stone'),
+          size: get('size', 'dimension', 'dimensions'),
+          price: parseInt(get('price', 'cost', 'amount')) || 0,
+          image: get('image url', 'image', 'imageurl', 'img', 'photo'),
+          description: get('description', 'desc', 'details'),
+          featured: false,
+          sold: false
+        };
+      }).filter(p => p.name && p.name !== 'Unnamed Product');
+    }
+
+    function showImportPreview(products, label) {
+      pendingImport = products;
+      const preview = $('[data-import-preview]');
+      $('[data-import-preview-title]').textContent = `Preview — ${products.length} row${products.length !== 1 ? 's' : ''} from ${label}`;
+      $('[data-import-tbody]').innerHTML = products.map(p => `
+        <tr style="border-bottom:1px solid var(--line)">
+          <td style="padding:.3rem .5rem">${p.name}</td>
+          <td style="padding:.3rem .5rem">${p.category}</td>
+          <td style="padding:.3rem .5rem">${p.material || '—'}</td>
+          <td style="padding:.3rem .5rem">₹${p.price || '—'}</td>
+          <td style="padding:.3rem .5rem">${p.size || '—'}</td>
+        </tr>`).join('');
+      preview.style.display = products.length ? 'block' : 'none';
+      if (!products.length) showToast('No parseable rows found in file');
+    }
+
+    function parseCSVText(text) {
+      const lines = text.trim().split('\n').filter(l => l.trim());
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+      return lines.slice(1).map(line => {
+        const vals = [];
+        let inQ = false, cur = '';
+        for (let c of line) {
+          if (c === '"') { inQ = !inQ; }
+          else if (c === ',' && !inQ) { vals.push(cur); cur = ''; }
+          else cur += c;
+        }
+        vals.push(cur);
+        const obj = {};
+        headers.forEach((h, i) => { obj[h] = (vals[i] || '').replace(/^"|"$/g, '').trim(); });
+        return obj;
+      });
+    }
+
+    // JSON import
+    $('[data-import-json-btn]').addEventListener('click', () => {
+      const f = $('input[data-import-json]').files[0];
+      if (!f) { showToast('Select a JSON file first'); return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.products) {
+            showImportPreview(data.products, 'JSON');
+            // stash settings too if present
+            if (data.settings) pendingImport._settings = data.settings;
+          } else if (Array.isArray(data)) {
+            showImportPreview(rowsToProducts(data), 'JSON');
+          } else {
+            showToast('JSON must have a "products" array');
+          }
+        } catch { showToast('Invalid JSON file'); }
+      };
+      reader.readAsText(f);
+    });
+
+    // CSV import
+    $('[data-import-csv-btn]').addEventListener('click', () => {
+      const f = $('input[data-import-csv]').files[0];
+      if (!f) { showToast('Select a CSV file first'); return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        const rows = parseCSVText(e.target.result);
+        showImportPreview(rowsToProducts(rows), 'CSV');
+      };
+      reader.readAsText(f);
+    });
+
+    // Excel import
+    $('[data-import-excel-btn]').addEventListener('click', () => {
+      const f = $('input[data-import-excel]').files[0];
+      if (!f) { showToast('Select an Excel file first'); return; }
+      if (typeof XLSX === 'undefined') { showToast('SheetJS not loaded — check internet connection'); return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+          showImportPreview(rowsToProducts(rows), 'Excel');
+        } catch { showToast('Could not read Excel file'); }
+      };
+      reader.readAsArrayBuffer(f);
+    });
+
+    // PDF import — extract text then try to detect tabular rows
+    $('[data-import-pdf-btn]').addEventListener('click', async () => {
+      const f = $('input[data-import-pdf]').files[0];
+      if (!f) { showToast('Select a PDF file first'); return; }
+      if (!window.pdfjsLib) { showToast('PDF.js still loading — wait a moment and try again'); return; }
+      showToast('Reading PDF…');
+      try {
+        const buf = await f.arrayBuffer();
+        const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+        let lines = [];
+        for (let p = 1; p <= pdf.numPages; p++) {
+          const page = await pdf.getPage(p);
+          const tc = await page.getTextContent();
+          // Group items into rows by Y position
+          const byY = {};
+          tc.items.forEach(item => {
+            const y = Math.round(item.transform[5]);
+            if (!byY[y]) byY[y] = [];
+            byY[y].push(item.str);
+          });
+          Object.keys(byY).sort((a,b) => b-a).forEach(y => {
+            lines.push(byY[y].join('\t'));
+          });
+        }
+        // Try to detect header row (contains "name" or "product")
+        const headerIdx = lines.findIndex(l => /name|product/i.test(l));
+        let products = [];
+        if (headerIdx >= 0) {
+          const headers = lines[headerIdx].split('\t');
+          const dataLines = lines.slice(headerIdx + 1).filter(l => l.trim() && !/^page|total/i.test(l));
+          const rows = dataLines.map(l => {
+            const vals = l.split('\t');
+            const obj = {};
+            headers.forEach((h, i) => { obj[h.trim()] = (vals[i] || '').trim(); });
+            return obj;
+          });
+          products = rowsToProducts(rows);
+        }
+        // Fallback: look for lines with price patterns (Rs./₹ followed by digits)
+        if (!products.length) {
+          const priceLines = lines.filter(l => /(?:rs\.?|₹)\s*\d{3,}/i.test(l));
+          products = priceLines.map((l, i) => {
+            const priceMatch = l.match(/(?:rs\.?|₹)\s*(\d+)/i);
+            const clean = l.replace(/(?:rs\.?|₹)\s*\d+/gi, '').replace(/\t/g, ' ').trim();
+            return {
+              id: Date.now().toString() + i,
+              name: clean || `PDF Product ${i+1}`,
+              category: 'Mandir',
+              material: '',
+              size: '',
+              price: priceMatch ? parseInt(priceMatch[1]) : 0,
+              image: '',
+              description: '',
+              featured: false,
+              sold: false
+            };
+          }).filter(p => p.name);
+        }
+        showImportPreview(products, 'PDF');
+        if (products.length === 0) showToast('Could not auto-detect rows — try CSV/Excel instead');
+      } catch (err) {
+        showToast('PDF read error: ' + err.message);
+      }
+    });
+
+    // Confirm import
+    $('[data-import-confirm]').addEventListener('click', () => {
+      if (!pendingImport.length) return;
+      // Merge: avoid duplicate IDs
+      const existingIds = new Set(store.products.map(p => p.id));
+      const fresh = pendingImport.filter(p => !existingIds.has(p.id));
+      store.products.push(...fresh);
+      localStorage.setItem('products', JSON.stringify(store.products));
+      if (pendingImport._settings) {
+        store.settings = pendingImport._settings;
+        localStorage.setItem('settings', JSON.stringify(store.settings));
+        applySettingsToUI();
+        loadSettings();
+      }
+      populateFilters();
+      applyFilters();
+      renderAdminDashboard();
+      $('[data-import-preview]').style.display = 'none';
+      pendingImport = [];
+      showToast(`✅ Imported ${fresh.length} product${fresh.length !== 1 ? 's' : ''}!`);
+    });
+
+    // Cancel import
+    $('[data-import-cancel]').addEventListener('click', () => {
+      pendingImport = [];
+      $('[data-import-preview]').style.display = 'none';
+    });
+
+    // Detail modal
+    $('[data-close-detail]').addEventListener('click', () => toggleModal('[data-detail-modal]', false));
+
+    // ── IMAGE UPLOAD ───────────────────────────────────────────
+    $('[data-add-image-file]').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!authToken) { showToast('Log in to upload images'); return; }
+      $('[data-upload-progress]').style.display = 'block';
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${authToken}` },
+          body: fd
+        });
+        if (res.ok) {
+          const data = await res.json();
+          $('[data-add-image]').value = data.url;
+          showToast('✅ Image uploaded!');
+        } else {
+          showToast('Upload failed — ' + res.status);
+        }
+      } catch (e) { showToast('Upload error'); }
+      $('[data-upload-progress]').style.display = 'none';
+    });
+
+    // ── AI FILL FROM IMAGE ─────────────────────────────────────
+    $('[data-ai-describe]').addEventListener('click', async () => {
+      const imageUrl = $('[data-add-image]').value.trim();
+      if (!imageUrl) { showToast('Add an image URL or upload an image first'); return; }
+      showToast('🤖 Analysing image…');
+      try {
+        const res = await fetch('/api/ai/describe', {
+          method: 'POST',
+          headers: authHeaders(),
           body: JSON.stringify({ imageUrl })
         });
+        if (res.ok) {
+          const d = await res.json();
+          if (d.name)     $('[data-add-name]').value        = d.name;
+          if (d.material) $('[data-add-material]').value    = d.material;
+          if (d.desc)     $('[data-add-description]').value = d.desc;
+          showToast('✅ AI filled in the details!');
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast('AI describe failed: ' + (err.error || res.status));
+        }
+      } catch (e) { showToast('AI error: ' + e.message); }
+    });
 
-        if (!response.ok) throw new Error('Delete failed');
+    // ── AI WRITE DESCRIPTION ───────────────────────────────────
+    $('[data-ai-write-desc]').addEventListener('click', async () => {
+      const name     = $('[data-add-name]').value.trim();
+      const category = $('[data-add-category]').value;
+      const material = $('[data-add-material]').value.trim();
+      const size     = $('[data-add-size]').value.trim();
+      if (!name) { showToast('Enter a product name first'); return; }
+      showToast('🤖 Writing description…');
+      try {
+        const res = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ task: 'describe', name, category, material, size })
+        });
+        if (res.ok) {
+          const d = await res.json();
+          if (d.text) { $('[data-add-description]').value = d.text; showToast('✅ Description written!'); }
+        } else { showToast('AI failed'); }
+      } catch (e) { showToast('AI error'); }
+    });
 
-        // Update metadata
-        const metadata = loadGalleryMetadata();
-        const filtered = metadata.filter(m => m.url !== imageUrl);
-        saveGalleryMetadata(filtered);
+    // ── GROQ CHAT (via server — key never exposed to browser) ──
+    const chatHistory = [];
 
-        console.log('✓ Image deleted from R2');
-        loadAndDisplayGallery();
-      } catch (err) {
-        console.error('Delete error:', err);
-        alert('⚠️ Failed to delete image');
+    async function askGroq(userMessage) {
+      const s = store.settings;
+      const catalogue = store.products.slice(0, 20)
+        .map(p => `${p.name} | ${p.category} | ${p.material || '—'} | ${p.size || '—'} | ₹${p.price}`)
+        .join('\n');
+
+      // Ground message: inject real shop data as the very first history item.
+      // This stops the AI inventing phone numbers, addresses, or prices.
+      const grounding = {
+        role: 'user',
+        content: `[INTERNAL CONTEXT — use only the details below, never invent any]:
+Shop: ${s.shopName || 'Jainson Marble'}
+Phone: ${[s.phone1, s.phone2].filter(Boolean).join(' / ') || 'not set'}
+WhatsApp: ${s.whatsapp || 'not set'}
+Address: ${[s.address1, s.address2].filter(Boolean).join(', ') || 'not set'}
+Rules: Only quote the above contact details. If something is "not set", say to WhatsApp us. Never invent or guess any number, address, or price not in the product list.`
+      };
+
+      try {
+        const res = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: userMessage,
+            history: [grounding, ...chatHistory.slice(-8)],
+            catalogue,
+            shopName: s.shopName || 'Jainson Marble'
+          })
+        });
+        if (!res.ok) {
+          if (res.status === 500) {
+            const e = await res.json().catch(() => ({}));
+            if (e.error?.includes('GROQ_API_KEY')) return 'AI chat is not configured yet. Please WhatsApp us directly! 🙏';
+          }
+          return 'Unable to respond right now. Please WhatsApp us! 🙏';
+        }
+        const data = await res.json();
+        return data.text || 'Sorry, no response.';
+      } catch (e) {
+        return 'Connection issue. Please WhatsApp us! 🙏';
       }
     }
+    function appendChatMsg(text, role) {
+      const messages = $('[data-chat-messages]');
+      const div = document.createElement('div');
+      div.className = `chat-msg ${role}`;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
 
-    /**
-     * INITIALIZATION
-     */
-    document.addEventListener('DOMContentLoaded', async () => {
-      console.log('🎨 Mandirwale - R2 Storage Enabled');
+    let chatWelcomed = false;
+    $('[data-chat-toggle]').addEventListener('click', () => {
+      $('[data-chat-panel]').classList.toggle('open');
+      if (!chatWelcomed && $('[data-chat-panel]').classList.contains('open')) {
+        chatWelcomed = true;
+        setTimeout(() => appendChatMsg(
+          'Jai Shri Ram! 🙏 Welcome to Jainson Marble. Ask me about mandirs, idols, pricing, materials, or custom designs — I\'m here to help!',
+          'bot'
+        ), 300);
+      }
+    });
+    $('[data-chat-close]').addEventListener('click', () => {
+      $('[data-chat-panel]').classList.remove('open');
+    });
 
-      // Check if R2 is configured
-      if (!R2_CONFIG.endpoint) {
-        console.warn('⚠️ R2 not fully configured yet');
-        console.log('📋 To enable cross-device sync, update R2_CONFIG with:');
-        console.log('   - bucketName: Your R2 bucket name');
-        console.log('   - endpoint: Your R2 endpoint URL');
-        console.log('   - accessKeyId & secretAccessKey: R2 API tokens');
-      } else {
-        console.log('✓ R2 configured:', R2_CONFIG.bucketName);
+    async function sendChatMessage() {
+      const input = $('[data-chat-input]');
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = '';
+      appendChatMsg(msg, 'user');
+      chatHistory.push({ role: 'user', content: msg });
+
+      // Typing indicator
+      const messages = $('[data-chat-messages]');
+      const typing = document.createElement('div');
+      typing.className = 'chat-msg bot';
+      typing.innerHTML = '<em style="color:var(--muted);font-size:.8rem">typing…</em>';
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+
+      const reply = await askGroq(msg);
+      messages.removeChild(typing);
+      appendChatMsg(reply, 'bot');
+      chatHistory.push({ role: 'assistant', content: reply });
+    }
+
+    $('[data-chat-send]').addEventListener('click', sendChatMessage);
+    $('[data-chat-input]').addEventListener('keypress', e => {
+      if (e.key === 'Enter') sendChatMessage();
+    });
+
+    // ── FILTER COUNTS on sticky bar ────────────────────────────
+    function updateFilterCounts() {
+      const all     = store.products.length;
+      const mandirs = store.products.filter(p => p.category === 'Mandir').length;
+      const idols   = store.products.filter(p => p.category === 'Idol').length;
+      const btnAll  = $('[data-sticky-filter-all]');
+      const btnM    = $('[data-sticky-filter-mandirs]');
+      const btnI    = $('[data-sticky-filter-idols]');
+      if (btnAll) btnAll.textContent = `All (${all})`;
+      if (btnM)   btnM.textContent   = `Mandirs (${mandirs})`;
+      if (btnI)   btnI.textContent   = `Idols (${idols})`;
+      // Update nav buttons too
+      $$('[data-route="mandirs"]').forEach(b => { if (!b.closest('.mobile-nav')) b.textContent = `Mandirs (${mandirs})`; });
+      $$('[data-route="idols"]').forEach(b =>   { if (!b.closest('.mobile-nav')) b.textContent = `Idols (${idols})`; });
+    }
+
+    // ── MOBILE BOTTOM NAV ──────────────────────────────────────
+    function initMobileNav() {
+      const wa = store.settings.whatsapp || '918010631117';
+      const mn = document.getElementById('mn-wa');
+      if (mn) mn.onclick = () => window.open(`https://wa.me/${wa}?text=Hi! I want to enquire about your mandirs.`, '_blank');
+
+      // Active state tracking
+      const btns = { home: document.getElementById('mn-home'), mandirs: document.getElementById('mn-mandirs'), idols: document.getElementById('mn-idols') };
+      function setActive(name) {
+        Object.values(btns).forEach(b => b?.classList.remove('active'));
+        btns[name]?.classList.add('active');
+      }
+      if (btns.home)    btns.home.onclick    = () => { setActive('home');    };
+      if (btns.mandirs) btns.mandirs.onclick  = () => { setActive('mandirs'); };
+      if (btns.idols)   btns.idols.onclick    = () => { setActive('idols');   };
+    }
+
+    // ── RENDER ADMIN DASHBOARD (with bulk delete + duplicate) ──
+    function renderAdminDashboard() {
+      const list = $('[data-products-list]');
+      if (!store.products.length) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:1rem">No products yet. Add one above!</p>';
+        return;
       }
 
-      // Load gallery from R2
-      await loadAndDisplayGallery();
+      list.innerHTML = `
+        <div style="display:flex;align-items:center;gap:.5rem;padding:.5rem 0;border-bottom:1px solid var(--line);margin-bottom:.3rem;flex-wrap:wrap">
+          <label style="font-size:.76rem;display:flex;align-items:center;gap:.3rem;cursor:pointer">
+            <input type="checkbox" id="admin-select-all"> Select all
+          </label>
+          <button class="btn small danger" id="admin-bulk-delete" style="display:none">🗑 Delete selected</button>
+          <span style="color:var(--muted);font-size:.72rem;margin-left:auto">${store.products.length} product${store.products.length !== 1 ? 's' : ''}</span>
+        </div>
+        ${store.products.map(p => `
+        <div style="padding:.65rem;border-bottom:1px solid var(--line)" data-ap="${p.id}">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;flex-wrap:wrap">
+            <label style="display:flex;align-items:center;gap:.5rem;min-width:0;flex:1;cursor:pointer">
+              <input type="checkbox" class="admin-product-cb" data-id="${p.id}">
+              <div style="min-width:0">
+                <strong style="font-size:.85rem">${p.name}</strong>
+                <span style="color:var(--muted);font-size:.75rem"> · ${p.category} · ${p.price ? '₹'+p.price.toLocaleString('en-IN') : 'On Request'}</span>
+                ${p.featured ? '<span style="color:var(--gold);font-size:.7rem;margin-left:.3rem">⭐</span>' : ''}
+                ${p.sold ? '<span style="background:#8d1f14;color:#fff;font-size:.6rem;padding:.1rem .3rem;border-radius:3px;margin-left:.3rem">SOLD</span>' : ''}
+                <br><span style="color:var(--muted);font-size:.74rem">${p.material || '—'} · ${p.size || '—'}</span>
+              </div>
+            </label>
+            <div style="display:flex;gap:.22rem;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0">
+              <button class="btn small" data-af="${p.id}">${p.featured ? '★' : '☆'}</button>
+              <button class="btn small" data-as="${p.id}">${p.sold ? '✓ Avail' : '✗ Sold'}</button>
+              <button class="btn small" data-dup="${p.id}">⧉ Dup</button>
+              <button class="btn small primary" data-ae="${p.id}">Edit</button>
+              <button class="btn small danger" data-ad="${p.id}">✕</button>
+            </div>
+          </div>
+          <div id="ef-${p.id}" style="display:none;margin-top:.6rem;background:var(--stone);border-radius:6px;padding:.7rem">
+            <div class="form-grid" style="font-size:.8rem">
+              <label>Name <input class="input" id="en-${p.id}" value="${p.name.replace(/"/g,'&quot;')}"></label>
+              <label>Category
+                <select class="select" id="ec-${p.id}">
+                  <option${p.category==='Mandir'?' selected':''}>Mandir</option>
+                  <option${p.category==='Idol'?' selected':''}>Idol</option>
+                  <option${p.category==='Accessory'?' selected':''}>Accessory</option>
+                </select>
+              </label>
+              <label>Material <input class="input" id="em-${p.id}" value="${(p.material||'').replace(/"/g,'&quot;')}"></label>
+              <label>Size <input class="input" id="ez-${p.id}" value="${(p.size||'').replace(/"/g,'&quot;')}"></label>
+              <label>Price ₹ <input class="input" type="number" id="ep-${p.id}" value="${p.price}"></label>
+              <label class="full">Image URL <input class="input" id="ei-${p.id}" value="${(p.image||'').startsWith('data:') ? '[uploaded photo]' : (p.image||'').replace(/"/g,'&quot;')}"></label>
+              <label class="full">Description <textarea class="textarea" id="ed-${p.id}" style="min-height:60px">${p.description||''}</textarea></label>
+            </div>
+            <div style="display:flex;gap:.4rem;margin-top:.5rem">
+              <button class="btn small primary" data-sv="${p.id}">💾 Save</button>
+              <button class="btn small" data-cx="${p.id}">Cancel</button>
+            </div>
+          </div>
+        </div>`).join('')}`;
 
-      console.log('✓ Ready!');
+      // Select all / bulk delete
+      document.getElementById('admin-select-all').onchange = function() {
+        $$('.admin-product-cb').forEach(cb => cb.checked = this.checked);
+        document.getElementById('admin-bulk-delete').style.display = this.checked ? 'inline-flex' : 'none';
+      };
+      $$('.admin-product-cb').forEach(cb => {
+        cb.onchange = () => {
+          const any = !!$$('.admin-product-cb:checked').length;
+          document.getElementById('admin-bulk-delete').style.display = any ? 'inline-flex' : 'none';
+        };
+      });
+      document.getElementById('admin-bulk-delete').onclick = () => {
+        const ids = new Set([...$$('.admin-product-cb:checked')].map(c => c.dataset.id));
+        if (!ids.size) return;
+        if (!confirm(`Delete ${ids.size} product${ids.size > 1 ? 's' : ''}?`)) return;
+        store.products = store.products.filter(p => !ids.has(p.id));
+        saveProducts(); populateFilters(); renderAdminDashboard(); applyFilters(); updateFilterCounts();
+        showToast(`🗑 ${ids.size} product${ids.size > 1 ? 's' : ''} deleted`);
+      };
+
+      // Duplicate
+      list.querySelectorAll('[data-dup]').forEach(btn => {
+        btn.onclick = () => {
+          const p = store.products.find(x => x.id === btn.dataset.dup);
+          if (!p) return;
+          const copy = { ...p, id: Date.now().toString(), name: p.name + ' (Copy)', featured: false, sold: false };
+          store.products.push(copy);
+          saveProducts(); populateFilters(); renderAdminDashboard(); applyFilters(); updateFilterCounts();
+          showToast('Product duplicated!');
+        };
+      });
+      // Toggle featured
+      list.querySelectorAll('[data-af]').forEach(btn => {
+        btn.onclick = () => {
+          const p = store.products.find(x => x.id === btn.dataset.af);
+          if (p) { p.featured = !p.featured; saveProducts(); renderAdminDashboard(); applyFilters(); renderSpotlight(); }
+        };
+      });
+      // Toggle sold
+      list.querySelectorAll('[data-as]').forEach(btn => {
+        btn.onclick = () => {
+          const p = store.products.find(x => x.id === btn.dataset.as);
+          if (p) { p.sold = !p.sold; saveProducts(); renderAdminDashboard(); applyFilters(); }
+        };
+      });
+      // Toggle edit form
+      list.querySelectorAll('[data-ae]').forEach(btn => {
+        btn.onclick = () => {
+          const ef = document.getElementById(`ef-${btn.dataset.ae}`);
+          ef.style.display = ef.style.display === 'none' ? 'block' : 'none';
+        };
+      });
+      // Save edit
+      list.querySelectorAll('[data-sv]').forEach(btn => {
+        btn.onclick = () => {
+          const id = btn.dataset.sv;
+          const p  = store.products.find(x => x.id === id);
+          if (!p) return;
+          p.name        = document.getElementById(`en-${id}`).value;
+          p.category    = document.getElementById(`ec-${id}`).value;
+          p.material    = document.getElementById(`em-${id}`).value;
+          p.size        = document.getElementById(`ez-${id}`).value;
+          p.price       = parseInt(document.getElementById(`ep-${id}`).value) || p.price;
+          const imgVal  = document.getElementById(`ei-${id}`).value;
+          if (imgVal !== '[uploaded photo]') p.image = imgVal;
+          p.description = document.getElementById(`ed-${id}`).value;
+          saveProducts(); populateFilters(); renderAdminDashboard(); applyFilters(); updateFilterCounts();
+          showToast('✅ Product updated!');
+        };
+      });
+      // Cancel edit
+      list.querySelectorAll('[data-cx]').forEach(btn => {
+        btn.onclick = () => { document.getElementById(`ef-${btn.dataset.cx}`).style.display = 'none'; };
+      });
+      // Delete
+      list.querySelectorAll('[data-ad]').forEach(btn => {
+        btn.onclick = () => {
+          if (confirm(`Delete "${store.products.find(x => x.id === btn.dataset.ad)?.name}"?`)) {
+            store.products = store.products.filter(x => x.id !== btn.dataset.ad);
+            saveProducts(); populateFilters(); renderAdminDashboard(); applyFilters(); updateFilterCounts();
+            showToast('Product deleted');
+          }
+        };
+      });
+    }
+
+    // ── IMAGE ZOOM ENGINE ──────────────────────────────────────
+    (function () {
+      const overlay   = document.getElementById('zoom-overlay');
+      const container = document.getElementById('zoom-container');
+      const img       = document.getElementById('zoom-img');
+      const closeBtn  = document.getElementById('zoom-close');
+
+      let scale = 1, panX = 0, panY = 0;
+      let dragging = false, lastX = 0, lastY = 0, lastDist = 0;
+      const MIN = 1, MAX = 6;
+
+      function applyTransform(smooth) {
+        img.style.transition = smooth ? 'transform .18s ease' : 'none';
+        img.style.transform  = `translate(${panX}px,${panY}px) scale(${scale})`;
+        container.classList.toggle('zoomed', scale > 1);
+      }
+
+      function clamp() {
+        if (scale <= 1) { panX = panY = 0; return; }
+        const cw = container.clientWidth  * (scale - 1) / 2;
+        const ch = container.clientHeight * (scale - 1) / 2;
+        panX = Math.max(-cw, Math.min(cw, panX));
+        panY = Math.max(-ch, Math.min(ch, panY));
+      }
+
+      function reset(smooth) {
+        scale = 1; panX = 0; panY = 0;
+        applyTransform(smooth);
+      }
+
+      function openZoom(src, alt) {
+        img.src = src; img.alt = alt || '';
+        reset(false);
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeZoom() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      // Open on any product image click
+      document.addEventListener('click', e => {
+        const t = e.target;
+        if (t.matches('.detail-img, .thumb img, .full-product-img, .zoom-img-trigger')) {
+          if (t.src && !t.src.endsWith('/')) openZoom(t.src, t.alt);
+        }
+      });
+
+      closeBtn.addEventListener('click', closeZoom);
+      overlay.addEventListener('click', e => { if (e.target === overlay) closeZoom(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+
+      // Double-click / double-tap: zoom to 2.5× or reset
+      container.addEventListener('dblclick', e => {
+        if (scale > 1) { reset(true); return; }
+        scale = 2.5;
+        const r  = container.getBoundingClientRect();
+        panX = (r.width  / 2 - (e.clientX - r.left)) * (scale - 1) / scale;
+        panY = (r.height / 2 - (e.clientY - r.top))  * (scale - 1) / scale;
+        clamp();
+        applyTransform(true);
+      });
+
+      // Mouse wheel zoom
+      container.addEventListener('wheel', e => {
+        e.preventDefault();
+        const factor   = e.deltaY < 0 ? 1.15 : 0.87;
+        const newScale = Math.max(MIN, Math.min(MAX, scale * factor));
+        const r        = container.getBoundingClientRect();
+        const mx       = e.clientX - r.left - r.width  / 2;
+        const my       = e.clientY - r.top  - r.height / 2;
+        panX = mx - (mx - panX) * (newScale / scale);
+        panY = my - (my - panY) * (newScale / scale);
+        scale = newScale;
+        clamp();
+        applyTransform(false);
+      }, { passive: false });
+
+      // Mouse drag
+      container.addEventListener('mousedown', e => {
+        if (scale <= 1) return;
+        dragging = true; lastX = e.clientX; lastY = e.clientY;
+        container.classList.add('dragging');
+      });
+      document.addEventListener('mousemove', e => {
+        if (!dragging) return;
+        panX += e.clientX - lastX; panY += e.clientY - lastY;
+        lastX = e.clientX; lastY = e.clientY;
+        clamp(); applyTransform(false);
+      });
+      document.addEventListener('mouseup', () => {
+        dragging = false; container.classList.remove('dragging');
+      });
+
+      // Touch: pinch-to-zoom + drag
+      container.addEventListener('touchstart', e => {
+        if (e.touches.length === 2) {
+          lastDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY);
+        } else if (e.touches.length === 1 && scale > 1) {
+          dragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      container.addEventListener('touchmove', e => {
+        e.preventDefault();
+        if (e.touches.length === 2) {
+          const d = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY);
+          if (lastDist) {
+            scale = Math.max(MIN, Math.min(MAX, scale * (d / lastDist)));
+            clamp(); applyTransform(false);
+          }
+          lastDist = d;
+        } else if (e.touches.length === 1 && dragging) {
+          panX += e.touches[0].clientX - lastX;
+          panY += e.touches[0].clientY - lastY;
+          lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+          clamp(); applyTransform(false);
+        }
+      }, { passive: false });
+
+      container.addEventListener('touchend', () => { dragging = false; lastDist = 0; });
+    })();
+
+    // ── CUSTOMER GALLERY ──────────────────────────────────────
+    // Heights cycle to create visual variety in columns
+    const GAL_HEIGHTS = [180, 220, 160, 240, 200, 170, 210];
+    // Rotations per card slot (deterministic, not random, so consistent across renders)
+    const GAL_ROTS    = [-2.5, 1.8, -1.2, 2.8, -0.8, 1.4, -2.1, 0.9, -1.6, 2.3];
+
+    function renderGallery() {
+      const images = store.gallery || [];
+      const gs     = store.gallerySettings || {};
+      const sec    = document.getElementById('gallery-section');
+      if (!sec) return;
+
+      if (!images.length) { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+
+      // Headline/sub
+      const eyeEl = $('[data-gallery-eyebrow]');
+      const hEl   = $('[data-gallery-headline]');
+      const sEl   = $('[data-gallery-sub]');
+      if (eyeEl && gs.eyebrow) eyeEl.textContent = gs.eyebrow;
+      if (hEl   && gs.headline) hEl.textContent  = gs.headline;
+      if (sEl   && gs.sub)      sEl.textContent  = gs.sub;
+
+      // ── Desktop: distribute into up to 6 columns
+      const numCols = Math.min(6, Math.max(2, Math.ceil(images.length / 2)));
+      const cols    = Array.from({ length: numCols }, () => []);
+      images.forEach((url, i) => cols[i % numCols].push({ url, i }));
+
+      const floatEl = document.getElementById('gallery-float');
+      floatEl.innerHTML = cols.map((col, ci) =>
+        `<div class="gallery-col">
+          ${col.map(({ i }) => `
+            <div class="gallery-card" data-gal-idx="${i}"
+                 style="transform:rotate(${GAL_ROTS[(ci * 3 + i) % GAL_ROTS.length]}deg)">
+              <img src="${images[i]}" loading="lazy"
+                   style="height:${GAL_HEIGHTS[(ci + i) % GAL_HEIGHTS.length]}px"
+                   onerror="this.closest('.gallery-card').style.display='none'">
+            </div>`).join('')}
+        </div>`
+      ).join('');
+
+      // Single delegated click handler — avoids embedding URLs in onclick attributes
+      floatEl.onclick = e => {
+        const card = e.target.closest('[data-gal-idx]');
+        if (!card) return;
+        const url = images[parseInt(card.dataset.galIdx)];
+        if (!url) return;
+        const zOverlay = document.getElementById('zoom-overlay');
+        const zImg     = document.getElementById('zoom-img');
+        if (zOverlay && zImg) {
+          zImg.src = url;
+          zImg.style.transform = '';
+          zOverlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+
+      // ── Mobile: carousel
+      initGalleryCarousel(images);
+    }
+
+    // Mobile swipe carousel — reinitialise each time gallery renders
+    function initGalleryCarousel(images) {
+      let idx = 0;
+      const stage   = document.getElementById('swipe-stage');
+      const imgEl   = document.getElementById('swipe-img');
+      const counter = document.getElementById('swipe-counter');
+      const dotsEl  = document.getElementById('swipe-dots');
+
+      function paint() {
+        imgEl.src           = images[idx] || '';
+        counter.textContent = `${idx + 1} / ${images.length}`;
+        dotsEl.innerHTML    = images.map((_, i) =>
+          `<span class="swipe-dot${i === idx ? ' active' : ''}"></span>`).join('');
+      }
+
+      function go(dir) {
+        idx = (idx + dir + images.length) % images.length;
+        paint();
+      }
+
+      // Replace prev/next buttons (clone to remove old listeners)
+      ['swipe-prev','swipe-next'].forEach(id => {
+        const old = document.getElementById(id);
+        const nw  = old.cloneNode(true);
+        old.parentNode.replaceChild(nw, old);
+      });
+      document.getElementById('swipe-prev').onclick = () => go(-1);
+      document.getElementById('swipe-next').onclick = () => go(1);
+
+      // Touch swipe
+      let tx = 0;
+      stage.ontouchstart = e => { tx = e.touches[0].clientX; };
+      stage.ontouchend   = e => {
+        const d = tx - e.changedTouches[0].clientX;
+        if (Math.abs(d) > 45) go(d > 0 ? 1 : -1);
+      };
+
+      // Dot click
+      dotsEl.onclick = e => {
+        const dot = e.target.closest('.swipe-dot');
+        if (dot) { idx = [...dotsEl.children].indexOf(dot); paint(); }
+      };
+
+      paint();
+    }
+
+    // ── ADMIN GALLERY ─────────────────────────────────────────
+    // ── SCROLL FADE-RISE OBSERVER ──────────────────────────────
+    (function initFadeRise() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      function observeAll() {
+        document.querySelectorAll('.fade-rise:not(.visible)').forEach(el => io.observe(el));
+      }
+      observeAll();
+      setTimeout(observeAll, 600);
+      setTimeout(observeAll, 1400);
+    })();
+
+    // ── DIYA PARTICLES ─────────────────────────────────────────
+    (function initDiyas() {
+      const canvas = document.getElementById('diya-canvas');
+      const hero   = canvas?.parentElement;
+      if (!canvas || !hero) return;
+      const ctx    = canvas.getContext('2d');
+      const P      = Array.from({length: 28}, () => ({
+        x: Math.random(), y: Math.random(),
+        r: 1.2 + Math.random() * 2.2,
+        speed: 0.25 + Math.random() * 0.6,
+        op: 0.25 + Math.random() * 0.5,
+        w: Math.random() * Math.PI * 2,
+        ws: 0.012 + Math.random() * 0.018
+      }));
+      function resize() { canvas.width = hero.clientWidth; canvas.height = hero.clientHeight; }
+      resize(); new ResizeObserver(resize).observe(hero);
+      (function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        P.forEach(p => {
+          p.y -= p.speed / canvas.height; p.w += p.ws;
+          if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+          const x = (p.x + Math.sin(p.w) * 0.012) * canvas.width;
+          const y = p.y * canvas.height;
+          const g = ctx.createRadialGradient(x, y, 0, x, y, p.r * 2.5);
+          g.addColorStop(0, `rgba(255,210,80,${p.op})`);
+          g.addColorStop(1, 'rgba(215,177,100,0)');
+          ctx.beginPath(); ctx.arc(x, y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = g; ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      })();
+    })();
+
+    // ── FEATURED SPOTLIGHT CARD ────────────────────────────────
+    function renderSpotlight() {
+      const el  = document.getElementById('featured-spotlight');
+      const sec = document.getElementById('spotlight-section');
+      if (!el || !sec) return;
+      const p = store.products.find(x => x.featured && !x.sold);
+      if (!p) { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      const wa = store.settings.whatsapp || '918010631117';
+      el.innerHTML = `
+        <div class="spotlight-card fade-rise">
+          <img class="spotlight-img" src="${p.image||''}" alt="${p.name}"
+               onerror="this.style.background='var(--stone)'">
+          <div class="spotlight-copy">
+            <div class="spotlight-label">✦ Featured Piece</div>
+            <div class="spotlight-name">${p.name}</div>
+            <div class="spotlight-price">₹${p.price ? p.price.toLocaleString('en-IN') : 'On Request'}</div>
+            <div class="spotlight-desc">${p.description || 'Premium marble craftsmanship, made to order.'}</div>
+            <div style="display:flex;gap:.7rem;flex-wrap:wrap">
+              <button class="btn primary" onclick="openDetail('${p.id}')">View This Piece →</button>
+              <button class="btn" onclick="window.open('https://wa.me/${wa}?text='+encodeURIComponent('Interested in: ${p.name.replace(/'/g,"\\'")}'),'_blank')">WhatsApp Enquiry</button>
+            </div>
+          </div>
+        </div>`;
+      setTimeout(() => {
+        el.querySelectorAll('.fade-rise').forEach(el => {
+          const io2 = new IntersectionObserver(e => { if(e[0].isIntersecting){e[0].target.classList.add('visible');io2.disconnect();} });
+          io2.observe(el);
+        });
+      }, 50);
+    }
+
+    // ── WHATSAPP STICKY BAR ────────────────────────────────────
+    function initWaSticky() {
+      const wa  = store.settings.whatsapp || '918010631117';
+      const url = `https://wa.me/${wa}?text=${encodeURIComponent('Hi! I want to enquire about your mandirs.')}`;
+      // Float button
+      const floatBtn = document.getElementById('wa-float-btn');
+      if (floatBtn) floatBtn.href = url;
+      // Sticky bar (desktop visible on scroll)
+      const bar = document.getElementById('wa-sticky');
+      if (bar) {
+        bar.textContent = '💬  Chat on WhatsApp — fastest response';
+        bar.onclick = () => window.open(url, '_blank');
+      }
+      // Mobile nav WA button
+      const mn = document.getElementById('mn-wa');
+      if (mn) mn.onclick = () => window.open(url, '_blank');
+    }
+
+    function renderGalleryAdmin() {
+      const listEl = document.getElementById('gal-admin-list');
+      if (!listEl) return;
+      const images = store.gallery || [];
+      const gs     = store.gallerySettings || {};
+
+      const ey = document.getElementById('gal-eyebrow');
+      const hl = document.getElementById('gal-headline');
+      const sb = document.getElementById('gal-sub');
+      if (ey) ey.value = gs.eyebrow  || '';
+      if (hl) hl.value = gs.headline || '';
+      if (sb) sb.value = gs.sub      || '';
+
+      if (!images.length) {
+        listEl.innerHTML = '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem">No gallery photos yet.</p>';
+        return;
+      }
+
+      listEl.innerHTML = images.map((url, i) => {
+        // Show "Uploaded photo" for base64, or truncated URL for external links
+        const isBase64  = url.startsWith('data:');
+        const labelText = isBase64 ? `📷 Uploaded photo ${i + 1}` : url.slice(0, 60) + (url.length > 60 ? '…' : '');
+        return `<div class="gallery-admin-item">
+          <img class="gallery-admin-thumb" src="${url}" onerror="this.style.opacity='.25'">
+          <span class="gallery-admin-url" style="font-style:${isBase64?'italic':'normal'}">${labelText}</span>
+          <button class="btn small danger" onclick="galRemove(${i})">✕</button>
+          ${i > 0               ? `<button class="btn small" onclick="galMove(${i},-1)">↑</button>` : ''}
+          ${i < images.length-1 ? `<button class="btn small" onclick="galMove(${i}, 1)">↓</button>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    window.galRemove = function(i) {
+      store.gallery.splice(i, 1);
+      renderGalleryAdmin();
+      renderGallery();
+    };
+    window.galMove = function(i, dir) {
+      const arr = store.gallery;
+      const tmp = arr[i]; arr[i] = arr[i + dir]; arr[i + dir] = tmp;
+      renderGalleryAdmin();
+      renderGallery();
+    };
+
+    function galAddUrl(url) {
+      url = url.trim();
+      if (!url) return;
+      if (!store.gallery) store.gallery = [];
+      // Only check for duplicate external URLs, skip check for base64 (too large to compare)
+      if (!url.startsWith('data:') && store.gallery.includes(url)) {
+        showToast('Already in gallery'); return;
+      }
+      store.gallery.push(url);
+      renderGalleryAdmin();
+      renderGallery();
+    }
+
+    document.getElementById('gal-add-btn')?.addEventListener('click', () => {
+      const input = document.getElementById('gal-url-input');
+      if (input) { galAddUrl(input.value); input.value = ''; }
     });
+
+    document.getElementById('gal-url-input')?.addEventListener('keypress', e => {
+      if (e.key === 'Enter') document.getElementById('gal-add-btn')?.click();
+    });
+
+    // Gallery image upload — compressed locally via Canvas, no R2 needed
+    document.getElementById('gal-upload')?.addEventListener('change', async e => {
+      const files = [...e.target.files];
+      if (!files.length) return;
+      showToast(`Processing ${files.length} photo${files.length > 1 ? 's' : ''}…`);
+      if (!store.gallery) store.gallery = [];
+      for (const file of files) {
+        const dataUrl = await fileToBase64(file, 900, 0.78);
+        store.gallery.push(dataUrl);
+      }
+      renderGalleryAdmin();
+      renderGallery();
+      showToast(`✅ ${files.length} photo${files.length > 1 ? 's' : ''} added — click Save Gallery!`);
+      e.target.value = '';
+    });
+
+    document.getElementById('gal-save-btn')?.addEventListener('click', () => {
+      store.gallerySettings = {
+        eyebrow:  document.getElementById('gal-eyebrow')?.value  || '',
+        headline: document.getElementById('gal-headline')?.value || '',
+        sub:      document.getElementById('gal-sub')?.value      || ''
+      };
+      saveGallery();
+      renderGallery();
+      showToast('✅ Gallery saved!');
+    });
+
+    // ── HERO PHOTO UPLOAD ─────────────────────────────────────
+    document.getElementById('hero-img-upload')?.addEventListener('change', async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      showToast('Processing photo…');
+      const dataUrl = await fileToBase64(file, 1280, 0.85);
+      $('[data-settings-hero-image]').value = dataUrl;
+      const preview    = document.getElementById('hero-upload-preview');
+      const previewImg = document.getElementById('hero-upload-preview-img');
+      if (preview && previewImg) {
+        previewImg.src     = dataUrl;
+        preview.style.display = 'block';
+      }
+      showToast('✅ Photo ready — click Save Settings to apply it');
+      e.target.value = '';
+    });
+
+    document.getElementById('hero-img-clear')?.addEventListener('click', () => {
+      $('[data-settings-hero-image]').value = '';
+      const preview = document.getElementById('hero-upload-preview');
+      if (preview) preview.style.display = 'none';
+      showToast('Hero photo cleared — save settings to restore SVG illustration');
+    });
+
+    async function saveGallery() {
+      localStorage.setItem('gallery',         JSON.stringify(store.gallery || []));
+      localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings || {}));
+      if (!authToken) return;
+      try {
+        await fetch('/api/state', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            products:        store.products,
+            settings:        store.settings,
+            gallery:         store.gallery,
+            gallerySettings: store.gallerySettings
+          })
+        });
+      } catch (_) {}
+    }
+
+    // ── INIT ────────────────────────────────────────────────────
+    (async () => {
+      // Show skeleton immediately while products load
+      const grid = $('[data-grid]');
+      if (grid) {
+        grid.innerHTML = Array(8).fill(`
+          <div class="skeleton-card">
+            <div class="skeleton-thumb"></div>
+            <div class="skeleton-body">
+              <div class="skeleton-line w-full"></div>
+              <div class="skeleton-line w-half"></div>
+              <div class="skeleton-line w-price"></div>
+            </div>
+          </div>`).join('');
+      }
+
+      await loadState();
+      populateFilters();
+      applyFilters();
+      renderGallery();
+      renderSpotlight();
+      initWaSticky();
+      updateFilterCounts();
+      initMobileNav();
+    })();
   </script>
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <button class="mobile-nav-btn active" id="mn-home" data-route="home">
+      <span class="mn-icon">🏠</span>Home
+    </button>
+    <button class="mobile-nav-btn" id="mn-mandirs" data-route="mandirs">
+      <span class="mn-icon">🛕</span>Mandirs
+    </button>
+    <button class="mobile-nav-btn" id="mn-idols" data-route="idols">
+      <span class="mn-icon">🪔</span>Idols
+    </button>
+    <button class="mobile-nav-btn wa-btn" id="mn-wa">
+      <span class="mn-icon">💬</span>WhatsApp
+    </button>
+    <button class="mobile-nav-btn" data-open-cart>
+      <span class="mn-icon">🛒</span>Cart
+    </button>
+  </nav>
+
+  <!-- WHATSAPP STICKY BAR (mobile) -->
+  <div class="wa-sticky" id="wa-sticky"></div>
+
+  <!-- IMAGE ZOOM OVERLAY -->
+  <div class="zoom-overlay" id="zoom-overlay">
+    <button class="zoom-close-btn" id="zoom-close">✕</button>
+    <div class="zoom-container" id="zoom-container">
+      <img class="zoom-img" id="zoom-img" src="" alt="">
+    </div>
+    <div class="zoom-hint">Scroll / pinch to zoom &nbsp;·&nbsp; Drag to pan &nbsp;·&nbsp; Double-tap to reset</div>
+  </div>
+
 </body>
 </html>
