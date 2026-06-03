@@ -1439,19 +1439,19 @@
           <h2 style="margin:.3rem 0 0">Crafted with Devotion</h2>
         </div>
         <div class="process-grid">
-          <div class="process-step fade-rise delay-1">
+          <div class="process-step">
             <span class="process-num">1</span>
             <span class="process-icon">🪨</span>
             <h3>Stone is Selected</h3>
             <p>We source only premium Makrana white marble — the same stone used in the Taj Mahal — chosen for purity and grain.</p>
           </div>
-          <div class="process-step fade-rise delay-2">
+          <div class="process-step">
             <span class="process-num">2</span>
             <span class="process-icon">🪔</span>
             <h3>Master Craftsmen Carve</h3>
             <p>Artisans with 20+ years of experience hand-carve every detail. No two pieces are identical.</p>
           </div>
-          <div class="process-step fade-rise delay-3">
+          <div class="process-step">
             <span class="process-num">3</span>
             <span class="process-icon">🏠</span>
             <h3>Delivered to Your Home</h3>
@@ -1493,7 +1493,7 @@
       </section>
 
       <!-- CUSTOMER GALLERY SECTION -->
-      <section class="gallery-section" id="gallery-section" data-home-section style="display:none">
+      <section class="gallery-section" id="gallery-section" data-home-section>
         <div class="gallery-eyebrow" data-gallery-eyebrow>Our Work</div>
         <h2 class="gallery-headline" data-gallery-headline>Handcrafted for Our Customers</h2>
         <p class="gallery-sub" data-gallery-sub>Real homes. Real devotion. Every piece a unique creation.</p>
@@ -3501,16 +3501,19 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       const sec    = document.getElementById('gallery-section');
       if (!sec) return;
 
-      if (!images.length) { sec.style.display = 'none'; return; }
-      sec.style.display = '';
-
-      // Headline/sub
       const eyeEl = $('[data-gallery-eyebrow]');
       const hEl   = $('[data-gallery-headline]');
       const sEl   = $('[data-gallery-sub]');
-      if (eyeEl && gs.eyebrow) eyeEl.textContent = gs.eyebrow;
-      if (hEl   && gs.headline) hEl.textContent  = gs.headline;
-      if (sEl   && gs.sub)      sEl.textContent  = gs.sub;
+      if (eyeEl && gs.eyebrow)  eyeEl.textContent = gs.eyebrow;
+      if (hEl   && gs.headline) hEl.textContent   = gs.headline;
+      if (sEl   && gs.sub)      sEl.textContent   = gs.sub;
+
+      if (!images.length) {
+        document.getElementById('gallery-float').innerHTML =
+          '<p style="text-align:center;color:var(--muted);padding:1.5rem;width:100%">No photos yet — add them via Admin → Gallery tab.</p>';
+        document.getElementById('gallery-swipe').style.display = 'none';
+        return;
+      }
 
       // ── Desktop: distribute into up to 6 columns
       const numCols = Math.min(6, Math.max(2, Math.ceil(images.length / 2)));
@@ -3603,13 +3606,18 @@ Rules: Only quote the above contact details. If something is "not set", say to W
         entries.forEach(e => {
           if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
         });
-      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      }, { threshold: 0, rootMargin: '0px' });
+
       function observeAll() {
         document.querySelectorAll('.fade-rise:not(.visible)').forEach(el => io.observe(el));
       }
       observeAll();
       setTimeout(observeAll, 600);
-      setTimeout(observeAll, 1400);
+
+      // Hard fallback — if observer doesn't fire (preview/local context), show everything after 1.5s
+      setTimeout(() => {
+        document.querySelectorAll('.fade-rise').forEach(el => el.classList.add('visible'));
+      }, 1500);
     })();
 
     // ── DIYA PARTICLES ─────────────────────────────────────────
