@@ -1711,10 +1711,7 @@
                     Image
                     <div style="display:flex;gap:.4rem;margin-top:.3rem;align-items:center">
                       <input class="input" data-add-image placeholder="https://... or upload →" style="flex:1">
-                      <label class="btn small" style="cursor:pointer;white-space:nowrap;margin:0">
-                        📷 Upload
-                        <input type="file" accept="image/*" data-add-image-file style="display:none">
-                      </label>
+                      <button type="button" class="btn small" id="btn-add-img-upload">📷 Upload</button>
                     </div>
                     <div data-upload-progress style="display:none;font-size:.74rem;color:var(--muted);margin-top:.2rem">Uploading…</div>
                   </label>
@@ -1754,10 +1751,7 @@
                   Hero Photo
                   <div style="display:flex;gap:.4rem;margin-top:.3rem;flex-wrap:wrap">
                     <input class="input" data-settings-hero-image placeholder="Or paste image URL..." style="flex:1;min-width:160px">
-                    <label class="btn small primary" style="cursor:pointer;white-space:nowrap;margin:0">
-                      📷 Upload Photo
-                      <input type="file" accept="image/*" id="hero-img-upload" style="display:none">
-                    </label>
+                    <button type="button" class="btn small primary" id="hero-img-upload-btn">📷 Upload Photo</button>
                     <button type="button" class="btn small" id="hero-img-clear">✕ Clear</button>
                   </div>
                   <div id="hero-upload-preview" style="display:none;margin-top:.5rem;border-radius:8px;overflow:hidden;height:90px;background:var(--stone)">
@@ -1795,10 +1789,7 @@
 
               <div style="display:flex;gap:.4rem;margin-bottom:.85rem;flex-wrap:wrap">
                 <input class="input" id="gal-url-input" placeholder="Paste image URL here..." style="flex:1;min-width:180px">
-                <label class="btn small primary" style="cursor:pointer;white-space:nowrap;margin:0">
-                  📷 Upload Photo
-                  <input type="file" accept="image/*" id="gal-upload" style="display:none" multiple>
-                </label>
+                <button class="btn small primary" id="gal-upload-btn" type="button">📷 Upload Photos</button>
                 <button class="btn small primary" id="gal-add-btn">+ Add URL</button>
               </div>
 
@@ -1823,35 +1814,22 @@
                 CSV / Excel columns expected: <code>Name, Category, Material, Size, Price, Image URL, Description</code>
               </p>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
-
-                <!-- JSON -->
                 <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
-                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📄 JSON</div>
-                  <input type="file" accept=".json" data-import-json style="width:100%;font-size:.73rem;margin-bottom:.45rem">
-                  <button class="btn small primary" data-import-json-btn style="width:100%">Import JSON</button>
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.7rem">📄 JSON</div>
+                  <button class="btn small primary" style="width:100%" id="btn-import-json">Select JSON file</button>
                 </div>
-
-                <!-- CSV -->
                 <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
-                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📊 CSV</div>
-                  <input type="file" accept=".csv,.txt" data-import-csv style="width:100%;font-size:.73rem;margin-bottom:.45rem">
-                  <button class="btn small primary" data-import-csv-btn style="width:100%">Import CSV</button>
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.7rem">📊 CSV</div>
+                  <button class="btn small primary" style="width:100%" id="btn-import-csv">Select CSV file</button>
                 </div>
-
-                <!-- Excel -->
                 <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
-                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📗 Excel (.xlsx / .xls)</div>
-                  <input type="file" accept=".xlsx,.xls" data-import-excel style="width:100%;font-size:.73rem;margin-bottom:.45rem">
-                  <button class="btn small primary" data-import-excel-btn style="width:100%">Import Excel</button>
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.7rem">📗 Excel (.xlsx / .xls)</div>
+                  <button class="btn small primary" style="width:100%" id="btn-import-excel">Select Excel file</button>
                 </div>
-
-                <!-- PDF -->
                 <div style="border:1px solid var(--line);border-radius:8px;padding:.8rem">
-                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.5rem">📕 PDF Catalog</div>
-                  <input type="file" accept=".pdf" data-import-pdf style="width:100%;font-size:.73rem;margin-bottom:.45rem">
-                  <button class="btn small primary" data-import-pdf-btn style="width:100%">Extract &amp; Import</button>
+                  <div style="font-weight:700;font-size:.78rem;margin-bottom:.7rem">📕 PDF Catalog</div>
+                  <button class="btn small primary" style="width:100%" id="btn-import-pdf">Select PDF file</button>
                 </div>
-
               </div>
 
               <!-- Import Preview -->
@@ -2015,7 +1993,7 @@
       const page = products.slice(start, start + ITEMS_PER_PAGE);
 
       $(gridSelector).innerHTML = page.map(p => `
-        <div class="card fade-rise${p.featured ? ' is-featured' : ''}" data-product-id="${p.id}">
+        <div class="card${p.featured ? ' is-featured' : ''}" data-product-id="${p.id}">
           <div class="thumb">
             <img src="${p.image || ''}" alt="${p.name}" onerror="this.style.opacity='0'">
             ${p.featured ? '<span class="tag">⭐ Featured</span>' : ''}
@@ -2868,122 +2846,6 @@
       });
     }
 
-    // JSON import
-    $('[data-import-json-btn]').addEventListener('click', () => {
-      const f = $('input[data-import-json]').files[0];
-      if (!f) { showToast('Select a JSON file first'); return; }
-      const reader = new FileReader();
-      reader.onload = e => {
-        try {
-          const data = JSON.parse(e.target.result);
-          if (data.products) {
-            showImportPreview(data.products, 'JSON');
-            // stash settings too if present
-            if (data.settings) pendingImport._settings = data.settings;
-          } else if (Array.isArray(data)) {
-            showImportPreview(rowsToProducts(data), 'JSON');
-          } else {
-            showToast('JSON must have a "products" array');
-          }
-        } catch { showToast('Invalid JSON file'); }
-      };
-      reader.readAsText(f);
-    });
-
-    // CSV import
-    $('[data-import-csv-btn]').addEventListener('click', () => {
-      const f = $('input[data-import-csv]').files[0];
-      if (!f) { showToast('Select a CSV file first'); return; }
-      const reader = new FileReader();
-      reader.onload = e => {
-        const rows = parseCSVText(e.target.result);
-        showImportPreview(rowsToProducts(rows), 'CSV');
-      };
-      reader.readAsText(f);
-    });
-
-    // Excel import
-    $('[data-import-excel-btn]').addEventListener('click', () => {
-      const f = $('input[data-import-excel]').files[0];
-      if (!f) { showToast('Select an Excel file first'); return; }
-      if (typeof XLSX === 'undefined') { showToast('SheetJS not loaded — check internet connection'); return; }
-      const reader = new FileReader();
-      reader.onload = e => {
-        try {
-          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          const ws = wb.Sheets[wb.SheetNames[0]];
-          const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-          showImportPreview(rowsToProducts(rows), 'Excel');
-        } catch { showToast('Could not read Excel file'); }
-      };
-      reader.readAsArrayBuffer(f);
-    });
-
-    // PDF import — extract text then try to detect tabular rows
-    $('[data-import-pdf-btn]').addEventListener('click', async () => {
-      const f = $('input[data-import-pdf]').files[0];
-      if (!f) { showToast('Select a PDF file first'); return; }
-      if (!window.pdfjsLib) { showToast('PDF.js still loading — wait a moment and try again'); return; }
-      showToast('Reading PDF…');
-      try {
-        const buf = await f.arrayBuffer();
-        const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
-        let lines = [];
-        for (let p = 1; p <= pdf.numPages; p++) {
-          const page = await pdf.getPage(p);
-          const tc = await page.getTextContent();
-          // Group items into rows by Y position
-          const byY = {};
-          tc.items.forEach(item => {
-            const y = Math.round(item.transform[5]);
-            if (!byY[y]) byY[y] = [];
-            byY[y].push(item.str);
-          });
-          Object.keys(byY).sort((a,b) => b-a).forEach(y => {
-            lines.push(byY[y].join('\t'));
-          });
-        }
-        // Try to detect header row (contains "name" or "product")
-        const headerIdx = lines.findIndex(l => /name|product/i.test(l));
-        let products = [];
-        if (headerIdx >= 0) {
-          const headers = lines[headerIdx].split('\t');
-          const dataLines = lines.slice(headerIdx + 1).filter(l => l.trim() && !/^page|total/i.test(l));
-          const rows = dataLines.map(l => {
-            const vals = l.split('\t');
-            const obj = {};
-            headers.forEach((h, i) => { obj[h.trim()] = (vals[i] || '').trim(); });
-            return obj;
-          });
-          products = rowsToProducts(rows);
-        }
-        // Fallback: look for lines with price patterns (Rs./₹ followed by digits)
-        if (!products.length) {
-          const priceLines = lines.filter(l => /(?:rs\.?|₹)\s*\d{3,}/i.test(l));
-          products = priceLines.map((l, i) => {
-            const priceMatch = l.match(/(?:rs\.?|₹)\s*(\d+)/i);
-            const clean = l.replace(/(?:rs\.?|₹)\s*\d+/gi, '').replace(/\t/g, ' ').trim();
-            return {
-              id: Date.now().toString() + i,
-              name: clean || `PDF Product ${i+1}`,
-              category: 'Mandir',
-              material: '',
-              size: '',
-              price: priceMatch ? parseInt(priceMatch[1]) : 0,
-              image: '',
-              description: '',
-              featured: false,
-              sold: false
-            };
-          }).filter(p => p.name);
-        }
-        showImportPreview(products, 'PDF');
-        if (products.length === 0) showToast('Could not auto-detect rows — try CSV/Excel instead');
-      } catch (err) {
-        showToast('PDF read error: ' + err.message);
-      }
-    });
-
     // Confirm import
     $('[data-import-confirm]').addEventListener('click', () => {
       if (!pendingImport.length) return;
@@ -3015,8 +2877,148 @@
     // Detail modal
     $('[data-close-detail]').addEventListener('click', () => toggleModal('[data-detail-modal]', false));
 
-    // ── IMAGE UPLOAD ───────────────────────────────────────────
-    $('[data-add-image-file]').addEventListener('change', async (e) => {
+    // ── GLOBAL FILE PICKER (body-level — always works, no modal issues) ──
+    function pickFiles(accept, multiple, cb) {
+      const fp = document.getElementById('_fp');
+      fp.accept = accept || '*/*';
+      fp.multiple = !!multiple;
+      fp.value = '';
+      fp.onchange = e => { if (e.target.files.length) cb([...e.target.files]); fp.value = ''; };
+      fp.click();
+    }
+
+    // ── PRODUCT IMAGE UPLOAD ───────────────────────────────────
+    document.getElementById('btn-add-img-upload')?.addEventListener('click', () => {
+      pickFiles('image/*', false, async ([file]) => {
+        $('[data-upload-progress]').style.display = 'block';
+        const dataUrl = await fileToBase64(file, 900, 0.82);
+        $('[data-add-image]').value = dataUrl;
+        $('[data-upload-progress]').style.display = 'none';
+        showToast('✅ Photo ready');
+      });
+    });
+
+    // ── HERO IMAGE UPLOAD ──────────────────────────────────────
+    document.getElementById('hero-img-upload-btn')?.addEventListener('click', () => {
+      pickFiles('image/*', false, async ([file]) => {
+        showToast('Processing…');
+        const dataUrl = await fileToBase64(file, 1280, 0.85);
+        $('[data-settings-hero-image]').value = dataUrl;
+        const prev = document.getElementById('hero-upload-preview');
+        const img  = document.getElementById('hero-upload-preview-img');
+        if (prev && img) { img.src = dataUrl; prev.style.display = 'block'; }
+        showToast('✅ Photo ready — Save Settings to apply');
+      });
+    });
+
+    document.getElementById('hero-img-clear')?.addEventListener('click', () => {
+      $('[data-settings-hero-image]').value = '';
+      const prev = document.getElementById('hero-upload-preview');
+      if (prev) prev.style.display = 'none';
+    });
+
+    // ── GALLERY UPLOAD ─────────────────────────────────────────
+    document.getElementById('gal-upload-btn')?.addEventListener('click', () => {
+      pickFiles('image/*', true, async (files) => {
+        showToast(`Processing ${files.length} photo${files.length > 1 ? 's' : ''}…`);
+        if (!store.gallery) store.gallery = [];
+        for (const file of files) {
+          const dataUrl = await fileToBase64(file, 900, 0.78);
+          store.gallery.push(dataUrl);
+        }
+        renderGalleryAdmin();
+        renderGallery();
+        showToast(`✅ ${files.length} photo${files.length > 1 ? 's' : ''} added — click Save Gallery!`);
+      });
+    });
+
+    // ── IMPORT: JSON ───────────────────────────────────────────
+    document.getElementById('btn-import-json')?.addEventListener('click', () => {
+      pickFiles('.json', false, ([file]) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (data.products) {
+              showImportPreview(data.products, 'JSON');
+              if (data.settings) pendingImport._settings = data.settings;
+            } else if (Array.isArray(data)) {
+              showImportPreview(rowsToProducts(data), 'JSON');
+            } else { showToast('JSON must have a "products" array'); }
+          } catch { showToast('Invalid JSON file'); }
+        };
+        reader.readAsText(file);
+      });
+    });
+
+    // ── IMPORT: CSV ────────────────────────────────────────────
+    document.getElementById('btn-import-csv')?.addEventListener('click', () => {
+      pickFiles('.csv,.txt', false, ([file]) => {
+        const reader = new FileReader();
+        reader.onload = e => showImportPreview(rowsToProducts(parseCSVText(e.target.result)), 'CSV');
+        reader.readAsText(file);
+      });
+    });
+
+    // ── IMPORT: EXCEL ──────────────────────────────────────────
+    document.getElementById('btn-import-excel')?.addEventListener('click', () => {
+      if (typeof XLSX === 'undefined') { showToast('SheetJS not loaded yet — try again'); return; }
+      pickFiles('.xlsx,.xls', false, ([file]) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            showImportPreview(rowsToProducts(XLSX.utils.sheet_to_json(ws, { defval: '' })), 'Excel');
+          } catch { showToast('Could not read Excel file'); }
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    });
+
+    // ── IMPORT: PDF ────────────────────────────────────────────
+    document.getElementById('btn-import-pdf')?.addEventListener('click', () => {
+      if (!window.pdfjsLib) { showToast('PDF.js loading — wait a moment and try again'); return; }
+      pickFiles('.pdf', false, async ([file]) => {
+        showToast('Reading PDF…');
+        try {
+          const buf = await file.arrayBuffer();
+          const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+          let lines = [];
+          for (let p = 1; p <= pdf.numPages; p++) {
+            const page = await pdf.getPage(p);
+            const tc   = await page.getTextContent();
+            const byY  = {};
+            tc.items.forEach(item => {
+              const y = Math.round(item.transform[5]);
+              if (!byY[y]) byY[y] = [];
+              byY[y].push(item.str);
+            });
+            Object.keys(byY).sort((a,b) => b-a).forEach(y => lines.push(byY[y].join('\t')));
+          }
+          const headerIdx = lines.findIndex(l => /name|product/i.test(l));
+          let products = [];
+          if (headerIdx >= 0) {
+            const headers   = lines[headerIdx].split('\t');
+            const dataLines = lines.slice(headerIdx+1).filter(l => l.trim() && !/^page|total/i.test(l));
+            products = rowsToProducts(dataLines.map(l => {
+              const vals = l.split('\t');
+              const obj  = {};
+              headers.forEach((h,i) => { obj[h.trim()] = (vals[i]||'').trim(); });
+              return obj;
+            }));
+          }
+          if (!products.length) {
+            products = lines.filter(l => /(?:rs\.?|₹)\s*\d{3,}/i.test(l)).map((l,i) => {
+              const m = l.match(/(?:rs\.?|₹)\s*(\d+)/i);
+              return { id: Date.now()+i, name: l.replace(/(?:rs\.?|₹)\s*\d+/gi,'').replace(/\t/g,' ').trim()||`PDF Product ${i+1}`, category:'Mandir', material:'', size:'', price: m?parseInt(m[1]):0, image:'', description:'', featured:false, sold:false };
+            }).filter(p => p.name);
+          }
+          showImportPreview(products, 'PDF');
+          if (!products.length) showToast('Could not detect rows — try CSV/Excel');
+        } catch(err) { showToast('PDF error: '+err.message); }
+      });
+    });
       const file = e.target.files[0];
       if (!file) return;
       if (!authToken) { showToast('Log in to upload images'); return; }
@@ -3663,7 +3665,7 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       sec.style.display = '';
       const wa = store.settings.whatsapp || '918010631117';
       el.innerHTML = `
-        <div class="spotlight-card fade-rise">
+        <div class="spotlight-card">
           <img class="spotlight-img" src="${p.image||''}" alt="${p.name}"
                onerror="this.style.background='var(--stone)'">
           <div class="spotlight-copy">
@@ -3770,21 +3772,6 @@ Rules: Only quote the above contact details. If something is "not set", say to W
     });
 
     // Gallery image upload — compressed locally via Canvas, no R2 needed
-    document.getElementById('gal-upload')?.addEventListener('change', async e => {
-      const files = [...e.target.files];
-      if (!files.length) return;
-      showToast(`Processing ${files.length} photo${files.length > 1 ? 's' : ''}…`);
-      if (!store.gallery) store.gallery = [];
-      for (const file of files) {
-        const dataUrl = await fileToBase64(file, 900, 0.78);
-        store.gallery.push(dataUrl);
-      }
-      renderGalleryAdmin();
-      renderGallery();
-      showToast(`✅ ${files.length} photo${files.length > 1 ? 's' : ''} added — click Save Gallery!`);
-      e.target.value = '';
-    });
-
     document.getElementById('gal-save-btn')?.addEventListener('click', () => {
       store.gallerySettings = {
         eyebrow:  document.getElementById('gal-eyebrow')?.value  || '',
@@ -3794,30 +3781,6 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       saveGallery();
       renderGallery();
       showToast('✅ Gallery saved!');
-    });
-
-    // ── HERO PHOTO UPLOAD ─────────────────────────────────────
-    document.getElementById('hero-img-upload')?.addEventListener('change', async e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      showToast('Processing photo…');
-      const dataUrl = await fileToBase64(file, 1280, 0.85);
-      $('[data-settings-hero-image]').value = dataUrl;
-      const preview    = document.getElementById('hero-upload-preview');
-      const previewImg = document.getElementById('hero-upload-preview-img');
-      if (preview && previewImg) {
-        previewImg.src     = dataUrl;
-        preview.style.display = 'block';
-      }
-      showToast('✅ Photo ready — click Save Settings to apply it');
-      e.target.value = '';
-    });
-
-    document.getElementById('hero-img-clear')?.addEventListener('click', () => {
-      $('[data-settings-hero-image]').value = '';
-      const preview = document.getElementById('hero-upload-preview');
-      if (preview) preview.style.display = 'none';
-      showToast('Hero photo cleared — save settings to restore SVG illustration');
     });
 
     async function saveGallery() {
@@ -3864,6 +3827,9 @@ Rules: Only quote the above contact details. If something is "not set", say to W
       initMobileNav();
     })();
   </script>
+  <!-- GLOBAL FILE PICKER — body level, avoids modal/overflow issues -->
+  <input type="file" id="_fp" style="position:fixed;top:-9999px;left:-9999px;opacity:0;pointer-events:none">
+
   <!-- MOBILE BOTTOM NAV -->
   <nav class="mobile-nav" id="mobile-nav">
     <button class="mobile-nav-btn active" id="mn-home" data-route="home">
