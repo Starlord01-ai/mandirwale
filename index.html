@@ -3019,28 +3019,6 @@
         } catch(err) { showToast('PDF error: '+err.message); }
       });
     });
-      const file = e.target.files[0];
-      if (!file) return;
-      if (!authToken) { showToast('Log in to upload images'); return; }
-      $('[data-upload-progress]').style.display = 'block';
-      try {
-        const fd = new FormData();
-        fd.append('file', file);
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${authToken}` },
-          body: fd
-        });
-        if (res.ok) {
-          const data = await res.json();
-          $('[data-add-image]').value = data.url;
-          showToast('✅ Image uploaded!');
-        } else {
-          showToast('Upload failed — ' + res.status);
-        }
-      } catch (e) { showToast('Upload error'); }
-      $('[data-upload-progress]').style.display = 'none';
-    });
 
     // ── AI FILL FROM IMAGE ─────────────────────────────────────
     $('[data-ai-describe]').addEventListener('click', async () => {
