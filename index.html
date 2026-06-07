@@ -2393,7 +2393,7 @@
     // ── SAVE STATE TO R2 ───────────────────────────────────────
     async function saveState() {
       const ts = Date.now();
-      // Always save full state locally first (base64 images OK in localStorage)
+      // Always save full state locally first
       localStorage.setItem('products',        JSON.stringify(store.products));
       localStorage.setItem('settings',        JSON.stringify(store.settings));
       localStorage.setItem('gallery',         JSON.stringify(store.gallery        || []));
@@ -2402,8 +2402,24 @@
 
       if (!authToken) return;
 
-      // Strip base64 gallery images before sending to R2 — they're too large for the request body
-      // Base64 images stay in localStorage only; only external URLs go to R2
+      // Safety: if store.products is empty, fetch R2 first so we don't wipe existing products
+      let productsToSave = store.products;
+      if (!productsToSave.length) {
+        try {
+          const check = await fetch('/api/state');
+          if (check.ok) {
+            const existing = await check.json();
+            if (existing.products?.length) {
+              productsToSave = existing.products;
+              store.products = productsToSave;
+              localStorage.setItem('products', JSON.stringify(store.products));
+            }
+          }
+        } catch (_) {}
+      }
+
+      // Strip large base64 values before sending to R2 to keep payload small
+      const { heroImage, groqKey, ...serverSettings } = store.settings;
       const galleryForServer = (store.gallery || []).filter(url => !url.startsWith('data:'));
 
       try {
@@ -2411,8 +2427,8 @@
           method: 'POST',
           headers: authHeaders(),
           body: JSON.stringify({
-            products:        store.products,
-            settings:        store.settings,
+            products:        productsToSave,
+            settings:        serverSettings,   // no heroImage base64, no groqKey
             gallery:         galleryForServer,
             gallerySettings: store.gallerySettings || {},
             lastModified:    ts
@@ -2420,9 +2436,9 @@
         });
         const badge = document.getElementById('admin-sync-badge');
         if (res.ok) {
-          if (badge) badge.textContent = '✅ Synced';
+          if (badge) badge.textContent = `✅ Synced (${productsToSave.length} products)`;
         } else {
-          if (badge) badge.textContent = '⚠ Saved locally';
+          if (badge) badge.textContent = '⚠ Saved locally only';
           if (res.status === 401) { authToken = ''; sessionStorage.removeItem('adminToken'); }
         }
       } catch (_) {
