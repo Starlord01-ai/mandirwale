@@ -1922,7 +1922,7 @@
 
     // ── LOAD STATE ─────────────────────────────────────────────
     async function loadState() {
-      // Always read localStorage first — this is the source of truth for the admin's device
+      // Step 1: load localStorage immediately as baseline (fast, offline-safe)
       const lp  = localStorage.getItem('products');
       const ls  = localStorage.getItem('settings');
       const lg  = localStorage.getItem('gallery');
@@ -1933,33 +1933,46 @@
       if (lg)  try { store.gallery         = JSON.parse(lg);  } catch (_) {}
       if (lgs) try { store.gallerySettings = JSON.parse(lgs); } catch (_) {}
 
-      // Only pull from API if localStorage has NO products — i.e. a fresh/cleared browser
-      // Never let the server overwrite products the user has saved locally
-      if (!store.products.length) {
-        try {
-          const res = await fetch('/api/state');
-          if (res.ok) {
-            const data = await res.json();
-            if (data.products?.length) {
-              store.products = data.products;
-              localStorage.setItem('products', JSON.stringify(store.products));
-              localStorage.setItem('stateTs',  String(data.lastModified || Date.now()));
-            }
-            if (data.settings && Object.keys(data.settings).length) {
-              store.settings = { ...data.settings, groqKey: store.settings.groqKey || '' };
-              localStorage.setItem('settings', JSON.stringify(store.settings));
-            }
-            if (data.gallery?.length && !store.gallery.length) {
-              store.gallery = data.gallery;
-              localStorage.setItem('gallery', JSON.stringify(store.gallery));
-            }
-            if (data.gallerySettings) {
-              store.gallerySettings = data.gallerySettings;
-              localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings));
-            }
+      // Step 2: always fetch from R2 — it's the server source of truth
+      // Merge rule: use whichever source has MORE products
+      try {
+        const res = await fetch('/api/state');
+        if (res.ok) {
+          const data = await res.json();
+          const r2Count    = data.products?.length    || 0;
+          const localCount = store.products?.length   || 0;
+
+          if (r2Count > localCount) {
+            // R2 has more products — it wins
+            store.products = data.products;
+            localStorage.setItem('products', JSON.stringify(store.products));
           }
-        } catch (_) { /* offline — local data already loaded */ }
-      }
+          // If local has equal or more products — local wins (don't overwrite)
+
+          // Settings: merge, always keep local-only fields (heroImage, groqKey)
+          if (data.settings && Object.keys(data.settings).length) {
+            store.settings = {
+              ...data.settings,
+              heroImage: store.settings.heroImage || '',
+              groqKey:   store.settings.groqKey   || ''
+            };
+            localStorage.setItem('settings', JSON.stringify(store.settings));
+          }
+
+          // Gallery: use whichever has more items
+          const r2GalCount    = data.gallery?.length       || 0;
+          const localGalCount = store.gallery?.length      || 0;
+          if (r2GalCount > localGalCount && data.gallery?.length) {
+            store.gallery = data.gallery;
+            localStorage.setItem('gallery', JSON.stringify(store.gallery));
+          }
+
+          if (data.gallerySettings && Object.keys(data.gallerySettings).length) {
+            store.gallerySettings = data.gallerySettings;
+            localStorage.setItem('gallerySettings', JSON.stringify(store.gallerySettings));
+          }
+        }
+      } catch (_) { /* offline — local data already loaded */ }
 
       applySettingsToUI();
     }
